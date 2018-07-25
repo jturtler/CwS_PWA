@@ -1,5 +1,5 @@
 var dataCacheName = 'cws-pwa-data-v1.002';
-var cacheName = 'cws-pwa-v1.023';
+var cacheName = 'cws-pwa-v1.024';
 var filesToCache = [
   "./",
   "./index.html",
@@ -32,9 +32,7 @@ var filesToCache = [
   "./scripts/dataManager.js",
   "./scripts/formUtil.js",
 
-  "./data/dcNew1.json",
-  "./data/dsConfig.json",
-  "./data/dsConfig2.json" 
+  "./data/dsConfig.json" 
  ];
 
  var _serverUrl = location.protocol + '//' + location.host;

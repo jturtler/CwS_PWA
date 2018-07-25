@@ -34,9 +34,6 @@ FormUtil.setUp_AppConnModeDetection = function() {
 	FormUtil.currIntv_Online = FormUtil.network_Online;
 	FormUtil.prevIntv_Online = FormUtil.network_Online;
 
-	console.log( 'FormUtil._cwsRenderObj' );
-	console.log( FormUtil._cwsRenderObj );
-
 	setInterval( function() {
 
 		var bNetworkOnline = FormUtil.isOnline();
@@ -72,7 +69,7 @@ FormUtil.setUp_AppConnModeDetection = function() {
 					// This is not being called..
 					if( FormUtil._cwsRenderObj ) 
 					{
-						console.log( 'from reply, this is called.' );
+						//console.log( 'from reply, this is called.' );
 						FormUtil._cwsRenderObj.startBlockExecute();
 					}
 
