@@ -99,6 +99,7 @@ function cwsRender()
 			me.renderBlockButtons( blockJson.buttons, newBlockTag );
 
 			// Render Msg
+			me.renderRenderMessage( blockJson.message, newBlockTag, passedData );
 			// me.renderRenderSec( blockJson.section_Render, newBlockTag );
 
 			renderBlockTag.append( newBlockTag );
@@ -129,8 +130,19 @@ function cwsRender()
 			{
 				if ( passedData.data !== undefined )
 				{
+					var clientId = passedData.data.relationships[0].trackedEntityInstance;
+					var voucherId = passedData.data.trackedEntityInstance;
+
+					formDivSecTag.find( '#countryType' ) .val( "MZ" );
+					formDivSecTag.find( '#cbdCase' ) .val( "Y" );
+					formDivSecTag.find( '#clientId' ) .val( clientId );
+					formDivSecTag.find( '#voucherId' ) .val( voucherId );
+					formDivSecTag.find( '#cbdEnrollOuId' ) .val( passedData.data.relationships[0].cbdEnrollOu );
+					formDivSecTag.find( '#walkInClientCase' ).val( me.getWalkInClientCase ( clientId, voucherId ) );
+
 					try {
-						var attributes = passedData.data.relationships[0].relative.attributes;
+						// var attributes = passedData.data.relationships[0].relative.attributes;
+						var attributes = passedData.data.attributes;
 
 						for ( var i = 0; i < attributes.length; i++ )
 						{
@@ -140,6 +152,8 @@ function cwsRender()
 							var matchingTag = formDivSecTag.find( 'input,select' ).filter( '[uid="' + attrJson.attribute + '"]' );
 							matchingTag.val( attrJson.value );
 						}
+
+
 					}
 					catch(err) {
 					}					
@@ -147,6 +161,42 @@ function cwsRender()
 
 			}			
 		}
+	}
+
+	me.renderRenderMessage = function( messageJson, blockTag, passedData )
+	{
+			formDivSecTag = $( '<div class="formDivSec"></div>' );
+			blockTag.append( formDivSecTag );
+			if( messageJson != undefined && messageJson.type === "responseMessage" )
+			{
+				var arrMsg = passedData.data.msg.split( "-- " );
+				for( var i in arrMsg )
+				{
+					formDivSecTag.append( arrMsg[i] + "<br>" );
+				}
+			}
+	}
+
+	me.getWalkInClientCase = function( clientId, voucherId )
+	{
+		var walkInClientCase = "3";
+		var hasClient = ( clientId !== undefined && clientId !== "" );
+		var hasVoucherId = ( voucherId !== undefined && voucherId !== "" );
+		
+		if ( hasClient && hasVoucherId ) 
+		{
+			walkInClientCase = "1";
+		}
+		else if ( hasClient && !hasVoucherId )
+		{
+			walkInClientCase = "2";
+		}
+		else
+		{
+			walkInClientCase = "3";
+		}
+		
+		return walkInClientCase;
 	}
 
 	me.renderBlockButtons = function( buttonsJson, blockTag )
@@ -330,12 +380,27 @@ function cwsRender()
 
 						if ( statusAction )
 						{
+							var blockJson = me.getObjFromDefinition( statusAction.blockId, me.definitionBlocks );
+									
+							if( passedData.info.status === "success")
+							{
+								/* if ( statusAction.blockId !== undefined )
+								{
+									me.renderBlock( blockJson, statusAction.blockId, me.renderBlockTag, passedData );	
+								} */
+								alert("Redeem success !");
+							}
+							else if ( passedData.info.status === "fail")
+							{
+								if( bockJson.actionType === "alertMsg" )
+								{
+									alert( bockJson.message );
+								}
+							}
 							// TODO: THIS SHOULD BE CALLED WITH REUSE!!!  
 							// ONLY AVAILABLE WITH OPENBLOCK FOR NOW!!!!
-							if ( statusAction.blockId !== undefined )
+							else if ( statusAction.blockId !== undefined )
 							{
-								var blockJson = me.getObjFromDefinition( statusAction.blockId, me.definitionBlocks );
-							
 								me.renderBlock( blockJson, statusAction.blockId, me.renderBlockTag, passedData );	
 							}
 						}
@@ -472,6 +537,11 @@ function cwsRender()
 			}
 			
 			var entryDivTag = $( '<div class="entryDiv"></div>' ).append( entryTag );
+
+			if( inputData.display === "none" )
+			{
+				divInputTag.hide();
+			}
 
 			divInputTag.append( entryDivTag );
 		}

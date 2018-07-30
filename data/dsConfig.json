@@ -123,140 +123,319 @@
 			]
 		},
 
-
-		
-
-		"blockRedeemFormDetails": { 
-			"form": [
-				{ 
-					"defaultName": "Service",
-					"controlType": "DROPDOWN_LIST",
-					"uid": "RsvOTmR2DjO",
-					"options": [
-						{ "value": "COUNS",
-						"defaultName": "Counselling"
-						},
-						{ "value": "Pills",
-						"defaultName": "PIL"
-						},
-						{ "value": "INJ-DEPO",
-						"defaultName": "Injection DEPO"
-						},
-						{ "value": "INJ-SP",
-						"defaultName": "Injection Sayana Press"
-						},
-						{ "value": "IMP",
-						"defaultName": "Implant"
-						},
-						{ "value": "IUD",
-						"defaultName": "IUD"
-						},
-						{ "value": "OTH",
-						"defaultName": "Other"
-						},
-						{ "value": "CON-F",
-						"defaultName": "Condom Female"
-						},
-						{ "value": "NON",
-						"defaultName": "None"
-						},
-						{ "value": "NA",
-						"defaultName": "NA"
-						}
-					]
-				},
-				{ 
-					"defaultName": "Type of user",
-					"controlType": "DROPDOWN_LIST",
-					"uid": "RsvOTmR2DjO",
-					"options": [
-						{ "value": "CONTINUE",
-						"defaultName": "Continue"
-						},
-						{ "value": "SWITCH",
-						"defaultName": "Switch"
-						},
-						{ "value": "FIRSTTIME",
-						"defaultName": "First time"
-						}
-					]
-				},
-				{ 
-					"defaultName": "Ownership of Phone",
-					"controlType": "DROPDOWN_LIST",
-					"uid": "RsvOTmR2DjO",
-					"options": [
-						{ "value": "NO",
-						"defaultName": "No Mobile"
-						},
-						{ "value": "HER",
-						"defaultName": "Her/His Number"
-						},
-						{ "value": "MF",
-						"defaultName": "Parent's Number"
-						},
-						{ "value": "PAR",
-						"defaultName": "Husband/Partner"
-						},
-						{ "value": "SHA",
-						"defaultName": "Shared"
-						}
-					]
-				},
-				{ 
-					"defaultName": "Book page number",
-					"controlType": "SHORT_TEXT",
-					"uid": "RsvOTmR2DjO"
-				}
-			],
-			"buttons": [
-				"btn_Cancel"
-			]
-		},
-
 		"blockRedeemFormInputs": {
 			"form": [
-				{ 
-					"defaultName": "First name",
+				{
+					"id": "countryType",
+					"defaultName": "Country Type",
 					"controlType": "SHORT_TEXT",
-					"uid": "nR9d9xZ5TRJ"
+					"display": "none"
 				},
 				{
-					"id": "lastName",
-					"defaultName": "Last name",
+					"id": "cbdCase",
+					"defaultName": "cbdCase",
 					"controlType": "SHORT_TEXT",
-					"uid": "RsvOTmR2DjO"
+					"display": "none"
+				},
+				{
+					"id": "clientId",
+					"defaultName": "client Id",
+					"controlType": "SHORT_TEXT",
+					"display": "none"
+				},
+				{
+					"id": "voucherId",
+					"defaultName": "Voucher Id",
+					"controlType": "SHORT_TEXT",
+					"display": "none"
+				},
+				{
+					"id": "cbdEnrollOuId",
+					"defaultName": "cbdEnrollOuId",
+					"controlType": "SHORT_TEXT",
+					"display": "none"
+				},
+				{
+					"id": "walkInClientCase",
+					"defaultName": "walkInClientCase",
+					"controlType": "SHORT_TEXT",
+					"display": "none"
 				},
 				{ 	
-					"defaultName": "District of birth",
+					"id": "voucherCode",
+					"defaultName": "Voucher",
+					"controlType": "INT",
+					"uid": "RJO3VHQVIvh"			
+				},
+				{ 	
+					"id": "program",
+					"defaultName": "Program",
 					"controlType": "DROPDOWN_LIST",
-					"uid": "pL3gzBBWOhh",
+					"uid": "Hq7B5uDZRwi",
 					"options": [
-						{ "value": "DIS-70",
-						"defaultName": "Achham (DIS-70)"
+						{ 
+							"value": "FPL",
+							"defaultName": "Family Planning"
 						},
-						{ "value": "DIS-49",
-						"defaultName": "Arghakanchi (DIS-49)"
+						{ 
+							"value": "CCN",
+							"defaultName": "Cervical Cancer"
 						},
-						{ "value": "DIS-44",
-						"defaultName": "Baglung (DIS-44)"
-						},
-						{ "value": "DIS-73",
-						"defaultName": "Baitadi (DIS-73)"
+						{ 
+							"value": "ANC",
+							"defaultName": "Antinatal Care"
 						}
 					]
 				},
-				{
-					"dpId": "birthOrder",
-					"defaultName": "Birth order",
-					"controlType": "INT",
-					"uid": "sUu9QuzgS1Y"
+				{ 	
+					"id": "service",
+					"defaultName": "Service",
+					"controlType": "DROPDOWN_LIST",
+					"options": [
+						{ 
+							"value": "COUNS",
+							"defaultName": "Counselling"
+						},
+						{ 
+							"value": "PIL",
+							"defaultName": "Pills"
+						},
+						{ 
+							"value": "INJ-DEPO",
+							"defaultName": "Injection DEPO"
+						},
+						{ 
+							"value": "INJ-SP",
+							"defaultName": "Injection Sayana Press"
+						},
+						{ 
+							"value": "IMP",
+							"defaultName": "Implant"
+						},
+						{ 
+							"value": "IUD",
+							"defaultName": "IUD"
+						},
+						{ 
+							"value": "OTH",
+							"defaultName": "Other"
+						},
+						{ 
+							"value": "CON-M",
+							"defaultName": "Condom Male"
+						},
+						{ 
+							"value": "CON-F",
+							"defaultName": "Condom Female"
+						},
+						{ 
+							"value": "NON",
+							"defaultName": "None"
+						},
+						{ 
+							"value": "NA",
+							"defaultName": "NA"
+						}
+					]
+				},
+				{ 	
+					"id": "typeOfMethodUser",
+					"defaultName": "Type of user",
+					"controlType": "DROPDOWN_LIST",
+					"options": [
+						{ 
+							"value": "CONTINUE",
+							"defaultName": "Continue"
+						},
+						{ 
+							"value": "SWITCH",
+							"defaultName": "Switch"
+						},
+						{ 
+							"value": "FIRSTTIME",
+							"defaultName": "First time"
+						}
+					]
+				},
+				{ 	
+					"id": "householdDelivery",
+					"defaultName": "Household delivery",
+					"controlType": "DROPDOWN_LIST",
+					"options": [
+						{ 
+							"value": "YES-Microgynon",
+							"defaultName": "Yes Microgynon"
+						},
+						{ 
+							"value": "YES-Microlut",
+							"defaultName": "Yes Microlut"
+						},
+						{ 
+							"value": "YES-Injectables",
+							"defaultName": "Yes Sayana Press"
+						},
+						{ 
+							"value": "YES-Injectables",
+							"defaultName": "Yes Sayana Press"
+						},
+						{ 
+							"value": "NO",
+							"defaultName": "No"
+						}
+					]
+				},
+				{ 	
+					"id": "cycles",
+					"defaultName": "Cycles",
+					"controlType": "DROPDOWN_LIST",
+					"options": [
+						{ 
+							"value": "1",
+							"defaultName": "1"
+						},
+						{ 
+							"value": "2",
+							"defaultName": "2"
+						},
+						{ 
+							"value": "3",
+							"defaultName": "3"
+						}
+					]
+				},
+				{ 	
+					"id": "promoter",
+					"defaultName": "Promoter",
+					"controlType": "DROPDOWN_LIST",
+					"options": [
+						{ 
+							"value": "tdggr5usbev",
+							"defaultName": "_MZ_DEFAULT_CBD"
+						},
+						{ 
+							"value": "ZUF1vSkQaB0",
+							"defaultName": "eRef IPC 8004 [TESTOU]"
+						},
+						{ 
+							"value": "VtleGAH9Vw8",
+							"defaultName": "MZ_TEST_IPC"
+						},
+						{ 
+							"value": "DkvACiUQVIk",
+							"defaultName": "PMT Gloriencia  Aurelio Tsamba(MZ_PMT_3084)"
+						},
+						{ 
+							"value": "wgIojvQpt7Y",
+							"defaultName": "PMT Ivone Ana da Conceicao Semo (MZ_PMT_1832)"
+						},
+						{ 
+							"value": "MZqH3VwEOfx",
+							"defaultName": "PMT Paineta Ernesto Djedje (MZ_PMT_2745)"
+						},
+						{ 
+							"value": "XPYLB2S9pxI",
+							"defaultName": "PMT Rosalina Dinis Magaia Chavane (MZ_PMT_2408)"
+						},
+						{ 
+							"value": "mXNGwwPFjJ9",
+							"defaultName": "PMT Suzana Julia Carlos (MZ_PMT_2714)"
+						}
+					]
+				},
+				{ 	
+					"id": "ownershipOfPhone",
+					"defaultName": "Ownership of Phone",
+					"controlType": "DROPDOWN_LIST",
+					"options": [
+						{ 
+							"value": "NO",
+							"defaultName": "No Mobile"
+						},
+						{ 
+							"value": "HER",
+							"defaultName": "Her/His Number"
+						},
+						{ 
+							"value": "MF",
+							"defaultName": "Parent's Number"
+						},
+						{ 
+							"value": "PAR",
+							"defaultName": "Husband/Partner"
+						},
+						{ 
+							"value": "SHA",
+							"defaultName": "Shared"
+						}
+					]
+				},
+				{ 
+					"id": "phoneNumber",
+					"controlType": "SHORT_TEXT",
+					"defaultName": "Phone number"
+				},
+ 				{ 	
+					"id": "furtherInformationConsent",
+					"defaultName": "Consent to service-related calls/texts",
+					"controlType": "DROPDOWN_LIST",
+					"options": [
+						{ 
+							"value": "NO",
+							"defaultName": "No"
+						},
+						{ 
+							"value": "YESP",
+							"defaultName": "Yes - From PSI"
+						}
+					]
+				 },
+ 				 { 	
+					"id": "furtherInformationConsent2",
+					"defaultName": "Consent to feedback calls/texts ",
+					"controlType": "DROPDOWN_LIST",
+					"options": [
+						{ 
+							"value": "NO",
+							"defaultName": "No"
+						},
+						{ 
+							"value": "YESP",
+							"defaultName": "Yes - From PSI"
+						}
+					]
+				 },
+				{ 
+					"id": "addressCity",
+					"controlType": "SHORT_TEXT",
+					"defaultName": "Address city"
+				},
+				{ 
+					"id": "addressNeighborhood",
+					"controlType": "SHORT_TEXT",
+					"defaultName": "Address neighborhood"
+				},
+				{ 
+					"id": "pointOfReference",
+					"controlType": "SHORT_TEXT",
+					"defaultName": "Address reference point "
+				},
+				{ 
+					"id": "bookPageNumber",
+					"controlType": "SHORT_TEXT",
+					"defaultName": "Book page number"
 				}
 			],
 			"buttons": [
 				"btn_SubmitRedeem",
 				"btn_Cancel"
 			]			
+		}
+	},
+
+	"blockRedeemFormResult":{
+		"message": {
+			"type": "responseMessage",
+			"defaultMessage": "You are Online"
 		}
 	},
 
@@ -367,7 +546,7 @@
 							"blockId": "blockRedeemFormInputs",
 							"actionParameters": {
 								"voucherData": "$${resultJson}",
-								"otherPassInData": { "testVal": "43" }
+								"otherPassInData": { "voucher": "43" }
 							}
 						},
 						"notFound": {
@@ -388,7 +567,29 @@
 			"onClick": [
 				{
 					"actionType": "sendToWS",
-					"note": "sendToWS, payload:dcNew@NP@v1_sendToWSSearchByVoucher_payload.json"
+					"url": "/api/dc/redeem",
+					"payloadHeader": [ "usr", "pwd" ],
+					"payloadBody": [ "voucherCode" ],
+					"wsNACase": {
+						"note": "display message"
+					}
+				},
+				{
+					"actionType": "processWSResult",
+					"resultCase": {
+						"success": {
+							"actionType": "openBlock",
+							"blockId": "blockRedeemFormResult",
+							"actionParameters": {
+								"voucherData": "$${resultJson}",
+								"otherPassInData": { "testVal": "43" }
+							}
+						},
+						"fail": {
+							"actionType": "alertMsg",
+							"message": "Fail"
+						}
+					}
 				}
 			]			
 		},
@@ -426,8 +627,7 @@
 							"actionType": "openBlock",
 							"blockId": "blockRedeemFormInputs",
 							"actionParameters": {
-								"voucherData": "$${resultJson}",
-								"otherPassInData": { "testVal": "43" }
+								"voucherData": "$${resultJson}"
 							}
 						},
 						"notFound": {
@@ -437,8 +637,7 @@
 			
 						}
 					}
-				},
-				
+				}
 			]			
 
 		}
