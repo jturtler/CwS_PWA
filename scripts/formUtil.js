@@ -57,24 +57,7 @@ FormUtil.setUp_AppConnModeDetection = function() {
 			// Ask for the appConnMode Change..
 			if ( FormUtil.appConnMode_Online != FormUtil.currIntv_Online )
 			{
-				var currIntvStr = FormUtil.connStatusStr( FormUtil.currIntv_Online );
-
-				var reply = confirm( "Network changed to " + currIntvStr + ".  Do  you want to switch App Mode to " + currIntvStr + "?" );
-
-				if ( reply )
-				{
-					// Switch the mode to ...
-					FormUtil.setAppConnMode( FormUtil.currIntv_Online );
-
-					// This is not being called..
-					if( FormUtil._cwsRenderObj ) 
-					{
-						//console.log( 'from reply, this is called.' );
-						FormUtil._cwsRenderObj.startBlockExecute();
-					}
-
-					FormUtil.IntvCountBuildUp = 0;
-				}	
+				FormUtil.change_AppConnMode( "interval", FormUtil.currIntv_Online );
 			}
 		}
 
@@ -84,6 +67,47 @@ FormUtil.setUp_AppConnModeDetection = function() {
 	}, FormUtil.IntvTime );
 }
 
+
+FormUtil.change_AppConnMode = function( modeStr, requestConnMode )
+{
+	var changeConnModeTo = false;
+	var questionStr = "Unknown Mode";
+
+	if ( modeStr === "interval" ) 
+	{
+		if ( requestConnMode !== undefined ) changeConnModeTo = requestConnMode;
+		var changeConnStr = FormUtil.connStatusStr( changeConnModeTo );
+	
+		questionStr = "Network changed to '" + changeConnStr + "'.  Do  you want to switch App Mode to '" + changeConnStr + "'?";
+	}
+	else if ( modeStr === "switch" ) 
+	{
+		var currConnStat = FormUtil.appConnMode_Online;
+		var currConnStr = FormUtil.connStatusStr( currConnStat );
+	
+		changeConnModeTo = !currConnStat;	
+		var changeConnStr = FormUtil.connStatusStr( changeConnModeTo );
+
+		questionStr = "App Connection Mode is '" + currConnStr + "'.  Do you want to switch to '" + changeConnStr + "'?";
+	}
+
+	var reply = confirm( questionStr );
+
+	if ( reply )
+	{
+		// Switch the mode to ...
+		FormUtil.setAppConnMode( changeConnModeTo );
+
+		// This is not being called..
+		if ( FormUtil._cwsRenderObj ) 
+		{
+			//console.log( 'from reply, this is called.' );
+			FormUtil._cwsRenderObj.startBlockExecute();
+		}
+
+		if ( modeStr === "interval" ) FormUtil.IntvCountBuildUp = 0;
+	}	
+};
 
 // ----------------------
 // --- AppConnMode ----
@@ -100,7 +124,12 @@ FormUtil.setAppConnMode = function( bOnline ) {
 
 	FormUtil.appConnMode_Online = bOnline;
 
+	// Top Nav Color Set
 	var navBgColor = ( bOnline ) ? '#0D47A1': '#ee6e73';
-
 	$( '#divNav').css( 'background-color', navBgColor );
+
+	// Text set
+    var stat = (bOnline) ? 'online': 'offline';
+    var displayText = (bOnline) ? '[online mode]': '[offline mode]';
+    $( '#appModeConnStatus' ).attr( 'connStat', stat ).text( displayText );	
 }

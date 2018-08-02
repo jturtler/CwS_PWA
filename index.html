@@ -42,18 +42,18 @@
         <div style="display:inline-block;">
           <a href="#" class="brand-logo center">CwS - App</a>
         </div>
-        <div style="float: right; margin-right: 5px; margin-left: -100px;">
-          <table>
+        <div style="float: right; margin-right: 2px; margin-left: -100px;">
+          <table style="border-spacing: 0px;">
             <tr>
               <td>
                   <div id="swRefresh2" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
-                      <span style="font-size: 12px;">v1.024</span> 
+                      <span style="font-size: 12px;">v1.028</span> 
                   </div>
               </td>
               <td>
                   <div id="swRefresh" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
-                      <img src='images/reload.png' style="width: 14px; height: 14px; vertical-align: bottom; margin-bottom: 10px;"/>
-                  </div>                       
+                      <img src='images/reload.png' style="width: 12px; height: 12px; vertical-align: bottom; margin-bottom: 11px;"/>
+                  </div>
               </td>
               <td>          
                 <div id='topRight_loadingDiv' style='display:none'>
@@ -61,7 +61,10 @@
                 </div>   
               </td>
               <td>
-                <span id="connectionStatus" connStat=""></span>
+                <div id="divAppModeConnStatus" style="cursor:pointer;"><span id="appModeConnStatus" connStat="" style="font-size: 11px;"></span></div>
+              </td>
+              <td>
+                <div id="divNetworkStatus"><img id="imgNetworkStatus" src='images/blank.gif' style="width: 10px; height: 10px; vertical-align: bottom; margin-bottom: 12px;"/></div>
               </td>
             </tr>
           </table>

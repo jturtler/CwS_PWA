@@ -76,7 +76,7 @@
 						"defaultName": "Maputo Cidade"
 						},
 						{ "value": "MZ02",
-						"defaultName": "Maputo ProvÃ­ncia"
+						"defaultName": "Maputo Província"
 						},
 						{ "value": "MZ03",
 						"defaultName": "Gaza"
@@ -88,7 +88,7 @@
 						"defaultName": "Sofala"
 						},
 						{ "value": "MZ06",
-						"defaultName": "ZambÃ©zia"
+						"defaultName": "Zambézia"
 						},
 						{ "value": "MZ07",
 						"defaultName": "Nampulae"
@@ -443,7 +443,7 @@
 		"imgBtn_CaptureWithVoucherOption": {
 			"defaultLabel": "Capture with Voucher",
 			"buttonType": "imageButton",
-			"imageSrc": "images/searchByVoucher.jpg",
+			"imageSrc": "images/captureByVoucher.jpg",
 			"onClick": [
 				{
 					"actionType": "clearOtherBlocks"
@@ -457,7 +457,7 @@
 		"imgBtn_CaptureWithDetailsOption": {
 			"defaultLabel": "Search by Details",
 			"buttonType": "imageButton",
-			"imageSrc": "images/searchByWalkIn.jpg",
+			"imageSrc": "images/captureByDetail.jpg",
 			"onClick": [
 				{
 					"actionType": "clearOtherBlocks"

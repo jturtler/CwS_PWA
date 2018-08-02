@@ -44,12 +44,11 @@
 
   function connStatTagUpdate( bOnline ) {
 
-    var stat = (bOnline) ? 'online': 'offline';
-    var displayText = (bOnline) ? '[online]': '[offline]';
+    var imgSrc = ( bOnline ) ? 'images/online.jpg': 'images/offline.jpg';
 
-    console.log( '--> ' + displayText );
+    $( '#imgNetworkStatus' ).attr( 'src', imgSrc );
 
-    $( '#connectionStatus' ).attr( 'connStat', stat ).text( displayText );
+    console.log( '=== Network Online: ' + bOnline );
   }
 
   // ----------------------------------------------------

@@ -10,6 +10,7 @@ function cwsRender()
 
 	// Tags
 	me.renderBlockTag = $( '.renderBlock' );
+	me.divAppModeConnStatusTag = $( '#divAppModeConnStatus' );
 
 	// global variables
 	me.configJson;
@@ -30,6 +31,8 @@ function cwsRender()
 			me.setUpConfigVars( configJson );
 
 			me.startBlockExecute();
+
+			me.setHeaderEvents();
 		});
 	}
 
@@ -45,6 +48,14 @@ function cwsRender()
 		});
 	} 
 	
+	me.setHeaderEvents = function()
+	{
+		// Connection manual change click event: ask first and manually change it.
+		me.divAppModeConnStatusTag.click( function() {
+			FormUtil.change_AppConnMode( "switch" );
+		});
+	}
+
 	// ---------------------------
 
 	me.getDsConfigJson = function( returnFunc )
@@ -122,7 +133,8 @@ function cwsRender()
 				me.renderInput( formJsonArr[i], formDivSecTag );
 			}
 
-
+			console.log( passedData );
+			
 			// Use this to populate data...
 			// <-- How?  It is just a tei voucher data, no?  <-- we need to format it as array with uid, no?
 			// for now, stored in client attribute?
