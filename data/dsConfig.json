@@ -1,0 +1,690 @@
+{
+	"version": "0.01",
+	"countryCode": "NP",
+	"configType": "dataCapture",
+
+	"defaultStartBlockOnline": "blockDefaultOptionsOnline",
+	"defaultStartBlockOffline": "blockDefaultOptionsOffline",
+
+	"definitionBlocks": {
+		
+		"blockDefaultOptionsOnline": {
+
+			"buttons": [
+				"imgBtn_SearchByVoucherOption",
+				"imgBtn_SearchByPhonenumberOption",
+				"imgBtn_SearchByDetailsOption",
+				"imgBtn_RedeemList"
+			],
+			"message": {
+				"defaultMessage": "You are Online"
+			}
+		},
+		"blockDefaultOptionsOffline": {
+			"buttons": [
+				"imgBtn_CaptureWithVoucherOption",
+				"imgBtn_CaptureWithDetailsOption",
+				"imgBtn_RedeemList"
+			],
+			"message": {
+				"defaultMessage": "You are offline"
+			}
+		},
+		"blockSearchByVoucher": { 
+			"form": [
+				{ 	
+					"id": "voucherCode",
+					"defaultName": "Voucher Code",
+					"controlType": "INT",
+					"uid": "UIasdf1ioS"					
+				}
+			],
+			"buttons": [
+				"btn_SearchByVoucher",
+				"btn_Cancel"
+			]
+		},
+		"blockSearchByPhoneNumber": { 
+			"form": [
+				{ 	
+					"id": "phoneNumber",
+					"defaultName": "Phone Number",
+					"controlType": "INT",
+					"uid": "UI------"					
+				}
+			],
+			"buttons": [
+				"btn_Cancel"
+			]
+		},
+		"blockSearchByDetails": { 
+			"form": "form_SearchByDetails",
+			"buttons": [
+				"btn_SearchDetails"
+			]
+		},
+
+		"blockRedeemFormInputs": {
+			"form": "form_RedeemFormInputs",
+			"buttons": [
+				"btn_SubmitRedeem",
+				"btn_Cancel"
+			]			
+		},
+
+		"blockRedeemFormResult": {
+			"message": {
+				"type": "responseMessage",
+				"defaultMessage": "You are Online"
+			}
+		},
+		
+		"blockRedeemList": {
+			"list": "redeemList"
+		}
+		
+	},
+
+	"definitionButtons": {
+		"imgBtn_CaptureWithVoucherOption": {
+			"defaultLabel": "Capture with Voucher",
+			"buttonType": "imageButton",
+			"imageSrc": "images/captureByVoucher.jpg",
+			"onClick": [
+				{
+					"actionType": "clearOtherBlocks"
+				},
+				{
+					"actionType": "openBlock",
+					"blockId": "blockRedeemFormInputs"
+				}
+			]	
+		},
+		"imgBtn_CaptureWithDetailsOption": {
+			"defaultLabel": "Search by Details",
+			"buttonType": "imageButton",
+			"imageSrc": "images/captureByDetail.jpg",
+			"onClick": [
+				{
+					"actionType": "clearOtherBlocks"
+				},
+				{
+					"actionType": "openBlock",
+					"blockId": "blockSearchByDetails",
+					"actionParameters": {
+					}
+				}
+			]	
+		},
+		"imgBtn_SearchByVoucherOption": {
+			"defaultLabel": "Search by Voucher",
+			"buttonType": "imageButton",
+			"imageSrc": "images/searchByVoucher.jpg",
+			"onClick": [
+				{
+					"actionType": "clearOtherBlocks"
+				},
+				{
+					"actionType": "openBlock",
+					"blockId": "blockSearchByVoucher",
+					"actionParameters": {
+						"jsonData": {}
+					}
+				}
+			]	
+		},
+    
+		"imgBtn_SearchByPhonenumberOption": {
+
+			"defaultLabel": "Search by PhoneNumber",
+			"buttonType": "imageButton",
+			"imageSrc": "images/searchByPhone.jpg",
+			"onClick": [
+				{
+					"actionType": "clearOtherBlocks"
+				},
+				{
+					"actionType": "openBlock",
+					"blockId": "blockSearchByPhoneNumber",
+					"actionParameters": {
+					}
+				}
+			]	
+    	},
+
+		"imgBtn_SearchByDetailsOption": {
+
+			"defaultLabel": "Search by Details",
+			"buttonType": "imageButton",
+			"imageSrc": "images/searchByWalkIn.jpg",
+			"onClick": [
+				{
+					"actionType": "clearOtherBlocks"
+				},
+				{
+					"actionType": "openBlock",
+					"blockId": "blockSearchByDetails",
+					"actionParameters": {
+					}
+				}
+			]	
+		},	    
+		
+		"imgBtn_RedeemList": {
+			"defaultLabel": "Redeem List",
+			"buttonType": "imageButton",
+			"imageSrc": "images/listInQueue.jpg",
+			"onClick": [
+				{
+					"actionType": "clearOtherBlocks"
+				},
+				{
+					"actionType": "openBlock",
+					"blockId": "blockRedeemList",
+					"actionParameters": {
+						"jsonData": {}
+					}
+				}
+			]	
+		},
+
+		"btn_SearchByVoucher": { 
+
+			"defaultLabel": "Search",
+			"buttonType": "textButton",
+			"onClick": [
+				{
+					"actionType": "sendToWS",
+					"url": "/api/dc/searchByVoucher",
+					"payloadHeader": [ "usr", "pwd" ],
+					"payloadBody": [ "voucherCode" ],
+					"wsNACase": {
+						"note": "display message"
+					}
+				},
+				{
+					"actionType": "processWSResult",
+					"resultCase": {
+						"foundOne": [
+							{
+								"actionType": "openBlock",
+								"blockId": "blockRedeemFormInputs",
+								"actionParameters": {
+									"voucherData": "$${resultJson}",
+									"otherPassInData": { "voucher": "43" }
+								}
+							}
+						],
+						"notFound": [],
+						"foundMultiple": []
+					}
+				}
+			]
+		},
+
+		"btn_SubmitRedeem": {
+
+			"defaultLabel": "Redeem",
+			"buttonType": "textButton",
+			"onClick": [
+				{
+					"actionType": "sendToWS",
+					"url": "/api/dc/redeem",
+					"alertResult": "true",
+					"redeemListInsert": "true", 
+					"payloadHeader": [ "usr", "pwd" ],
+					"payloadBody": [ "voucherCode" ],
+					"wsNACase": {
+						"note": "display message"
+					}
+				},
+				{
+					"actionType": "processWSResult",
+					"resultCase": {
+						"success": [
+							"closeCurrentBlock",							
+							{
+								"actionType": "openBlock",
+								"blockId": "blockRedeemList",
+								"passData": {
+									"voucherData": "$${resultJson}",
+									"otherPassInData": { "testVal": "43" }
+								}
+							}
+						],
+						"fail": [
+							{
+								"actionType": "alertMsg",
+								"message": "Fail"
+							}
+						],
+						"offline": [
+							"closeCurrentBlock",							
+							{
+								"actionType": "openBlock",
+								"blockId": "blockRedeemList"
+							}							
+						]
+					}
+				}
+			]			
+		},
+
+		"btn_Cancel": {
+			"defaultLabel": "Cancel",
+			"buttonType": "textButton",
+			"onClick": [
+				"closeCurrentBlock"
+			]			
+		},
+
+		"btn_SearchDetails": {
+			"defaultLabel": "Search",
+			"buttonType": "textButton",
+			"onClick": [
+				{
+					"actionType": "sendToWS",
+					"url": "/api/dc/searchByDetails",
+					"payloadHeader": [ "usr", "pwd" ],
+					"payloadBody": [ "firstName", "lastName","birthDistrict", "birderOrder", "age" ],
+					"wsNACase": {
+						"note": "display message"
+					}
+				},
+				{
+					"actionType": "processWSResult",
+					"resultCase": {
+						"foundOne": [
+							"closeCurrentBlock",
+							{
+								"actionType": "openBlock",
+								"blockId": "blockRedeemFormInputs",
+								"actionParameters": {
+									"voucherData": "$${resultJson}"
+								}
+							}
+						],
+						"notFound": [],
+						"foundMultiple": []
+					}
+				}
+			]			
+		}
+	},
+
+	"definitionActions": {
+
+		"closeCurrentBlock": {
+			"actionType": "closeBlock",
+			"closeLevel": "0"
+		}
+	},
+
+	"definitionForms": {
+		
+		"form_SearchByDetails": [
+			{ 
+				"defaultName": "First name",
+				"controlType": "SHORT_TEXT",
+				"id": "walkIn_firstName"
+			},
+			{ 
+				"defaultName": "Last name",
+				"controlType": "SHORT_TEXT",
+				"id": "walkIn_lastName"
+			},
+			{ 
+				"defaultName": "Province of Birth",
+				"controlType": "DROPDOWN_LIST",
+				"id": "walkIn_birthDistrict",
+				"options": [
+					{ "value": "MZ01",
+					"defaultName": "Maputo Cidade"
+					},
+					{ "value": "MZ02",
+					"defaultName": "Maputo Província"
+					},
+					{ "value": "MZ03",
+					"defaultName": "Gaza"
+					},
+					{ "value": "MZ04",
+					"defaultName": "Inhambane"
+					},
+					{ "value": "MZ05",
+					"defaultName": "Sofala"
+					},
+					{ "value": "MZ06",
+					"defaultName": "Zambézia"
+					},
+					{ "value": "MZ07",
+					"defaultName": "Nampulae"
+					},
+					{ "value": "MZ08",
+					"defaultName": "Niassa"
+					},
+					{ "value": "MZ09",
+					"defaultName": "Cabo Delgado"
+					},
+					{ "value": "MZ10",
+					"defaultName": "Tete"
+					},
+					{ "value": "MZ11",
+					"defaultName": "Manica"
+					}
+				]
+			},
+			{ 
+				"defaultName": "Order of Birth",
+				"controlType": "SHORT_TEXT",
+				"id": "walkIn_birthOrder"
+			},
+			{ 
+				"defaultName": "Age",
+				"controlType": "INT",
+				"id": "walkIn_age"
+			}
+		],
+
+		"form_RedeemFormInputs": [
+			{
+				"id": "countryType",
+				"defaultName": "Country Type",
+				"controlType": "SHORT_TEXT",
+				"display": "none"
+			},
+			{
+				"id": "cbdCase",
+				"defaultName": "cbdCase",
+				"controlType": "SHORT_TEXT",
+				"display": "none"
+			},
+			{
+				"id": "clientId",
+				"defaultName": "client Id",
+				"controlType": "SHORT_TEXT",
+				"display": "none"
+			},
+			{
+				"id": "voucherId",
+				"defaultName": "Voucher Id",
+				"controlType": "SHORT_TEXT",
+				"display": "none"
+			},
+			{
+				"id": "cbdEnrollOuId",
+				"defaultName": "cbdEnrollOuId",
+				"controlType": "SHORT_TEXT",
+				"display": "none"
+			},
+			{
+				"id": "walkInClientCase",
+				"defaultName": "walkInClientCase",
+				"controlType": "SHORT_TEXT",
+				"display": "none"
+			},
+			{ 	
+				"id": "voucherCode",
+				"defaultName": "Voucher",
+				"controlType": "INT",
+				"uid": "RJO3VHQVIvh"			
+			},
+			{ 	
+				"id": "program",
+				"defaultName": "Program",
+				"controlType": "DROPDOWN_LIST",
+				"uid": "Hq7B5uDZRwi",
+				"options": [
+					{ 
+						"value": "FPL",
+						"defaultName": "Family Planning"
+					},
+					{ 
+						"value": "CCN",
+						"defaultName": "Cervical Cancer"
+					},
+					{ 
+						"value": "ANC",
+						"defaultName": "Antinatal Care"
+					}
+				]
+			},
+			{ 	
+				"id": "service",
+				"defaultName": "Service",
+				"controlType": "DROPDOWN_LIST",
+				"options": [
+					{ 
+						"value": "COUNS",
+						"defaultName": "Counselling"
+					},
+					{ 
+						"value": "PIL",
+						"defaultName": "Pills"
+					},
+					{ 
+						"value": "INJ-DEPO",
+						"defaultName": "Injection DEPO"
+					},
+					{ 
+						"value": "INJ-SP",
+						"defaultName": "Injection Sayana Press"
+					},
+					{ 
+						"value": "IMP",
+						"defaultName": "Implant"
+					},
+					{ 
+						"value": "IUD",
+						"defaultName": "IUD"
+					},
+					{ 
+						"value": "OTH",
+						"defaultName": "Other"
+					},
+					{ 
+						"value": "CON-M",
+						"defaultName": "Condom Male"
+					},
+					{ 
+						"value": "CON-F",
+						"defaultName": "Condom Female"
+					},
+					{ 
+						"value": "NON",
+						"defaultName": "None"
+					},
+					{ 
+						"value": "NA",
+						"defaultName": "NA"
+					}
+				]
+			},
+			{ 	
+				"id": "typeOfMethodUser",
+				"defaultName": "Type of user",
+				"controlType": "DROPDOWN_LIST",
+				"options": [
+					{ 
+						"value": "CONTINUE",
+						"defaultName": "Continue"
+					},
+					{ 
+						"value": "SWITCH",
+						"defaultName": "Switch"
+					},
+					{ 
+						"value": "FIRSTTIME",
+						"defaultName": "First time"
+					}
+				]
+			},
+			{ 	
+				"id": "householdDelivery",
+				"defaultName": "Household delivery",
+				"controlType": "DROPDOWN_LIST",
+				"options": [
+					{ 
+						"value": "YES-Microgynon",
+						"defaultName": "Yes Microgynon"
+					},
+					{ 
+						"value": "YES-Microlut",
+						"defaultName": "Yes Microlut"
+					},
+					{ 
+						"value": "YES-Injectables",
+						"defaultName": "Yes Sayana Press"
+					},
+					{ 
+						"value": "YES-Injectables",
+						"defaultName": "Yes Sayana Press"
+					},
+					{ 
+						"value": "NO",
+						"defaultName": "No"
+					}
+				]
+			},
+			{ 	
+				"id": "cycles",
+				"defaultName": "Cycles",
+				"controlType": "DROPDOWN_LIST",
+				"options": [
+					{ 
+						"value": "1",
+						"defaultName": "1"
+					},
+					{ 
+						"value": "2",
+						"defaultName": "2"
+					},
+					{ 
+						"value": "3",
+						"defaultName": "3"
+					}
+				]
+			},
+			{ 	
+				"id": "promoter",
+				"defaultName": "Promoter",
+				"controlType": "DROPDOWN_LIST",
+				"options": [
+					{ 
+						"value": "tdggr5usbev",
+						"defaultName": "_MZ_DEFAULT_CBD"
+					},
+					{ 
+						"value": "ZUF1vSkQaB0",
+						"defaultName": "eRef IPC 8004 [TESTOU]"
+					},
+					{ 
+						"value": "VtleGAH9Vw8",
+						"defaultName": "MZ_TEST_IPC"
+					},
+					{ 
+						"value": "DkvACiUQVIk",
+						"defaultName": "PMT Gloriencia  Aurelio Tsamba(MZ_PMT_3084)"
+					},
+					{ 
+						"value": "wgIojvQpt7Y",
+						"defaultName": "PMT Ivone Ana da Conceicao Semo (MZ_PMT_1832)"
+					},
+					{ 
+						"value": "MZqH3VwEOfx",
+						"defaultName": "PMT Paineta Ernesto Djedje (MZ_PMT_2745)"
+					},
+					{ 
+						"value": "XPYLB2S9pxI",
+						"defaultName": "PMT Rosalina Dinis Magaia Chavane (MZ_PMT_2408)"
+					},
+					{ 
+						"value": "mXNGwwPFjJ9",
+						"defaultName": "PMT Suzana Julia Carlos (MZ_PMT_2714)"
+					}
+				]
+			},
+			{ 	
+				"id": "ownershipOfPhone",
+				"defaultName": "Ownership of Phone",
+				"controlType": "DROPDOWN_LIST",
+				"options": [
+					{ 
+						"value": "NO",
+						"defaultName": "No Mobile"
+					},
+					{ 
+						"value": "HER",
+						"defaultName": "Her/His Number"
+					},
+					{ 
+						"value": "MF",
+						"defaultName": "Parent's Number"
+					},
+					{ 
+						"value": "PAR",
+						"defaultName": "Husband/Partner"
+					},
+					{ 
+						"value": "SHA",
+						"defaultName": "Shared"
+					}
+				]
+			},
+			{ 
+				"id": "phoneNumber",
+				"controlType": "SHORT_TEXT",
+				"defaultName": "Phone number"
+			},
+			 { 	
+				"id": "furtherInformationConsent",
+				"defaultName": "Consent to service-related calls/texts",
+				"controlType": "DROPDOWN_LIST",
+				"options": [
+					{ 
+						"value": "NO",
+						"defaultName": "No"
+					},
+					{ 
+						"value": "YESP",
+						"defaultName": "Yes - From PSI"
+					}
+				]
+			 },
+			  { 	
+				"id": "furtherInformationConsent2",
+				"defaultName": "Consent to feedback calls/texts ",
+				"controlType": "DROPDOWN_LIST",
+				"options": [
+					{ 
+						"value": "NO",
+						"defaultName": "No"
+					},
+					{ 
+						"value": "YESP",
+						"defaultName": "Yes - From PSI"
+					}
+				]
+			 },
+			{ 
+				"id": "addressCity",
+				"controlType": "SHORT_TEXT",
+				"defaultName": "Address city"
+			},
+			{ 
+				"id": "addressNeighborhood",
+				"controlType": "SHORT_TEXT",
+				"defaultName": "Address neighborhood"
+			},
+			{ 
+				"id": "pointOfReference",
+				"controlType": "SHORT_TEXT",
+				"defaultName": "Address reference point "
+			},
+			{ 
+				"id": "bookPageNumber",
+				"controlType": "SHORT_TEXT",
+				"defaultName": "Book page number"
+			}
+		]
+	}
+}

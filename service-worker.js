@@ -1,5 +1,5 @@
 var dataCacheName = 'cws-pwa-data-v1.002';
-var cacheName = 'cws-pwa-v1.024';
+var cacheName = 'cws-pwa-v1.033';
 var filesToCache = [
   "./",
   "./index.html",
@@ -14,11 +14,16 @@ var filesToCache = [
   "./images/searchByWalkIn.jpg",
   "./images/searchByVoucher.jpg",
   "./images/searchByPhone.jpg",
+  "./images/captureByVoucher.jpg",
+  "./images/captureByDetail.jpg",
   "./images/listInQueue.jpg",
   "./images/loader-bar.gif",
   "./images/loader-bigCircle.gif",
   "./images/loading_big_black.gif",
   "./images/reload.png",
+  "./images/online.jpg",
+  "./images/offline.jpg",
+  "./images/blank.gif",
 
   "./styles/materialize.css",
   "./styles/style.css",
@@ -31,6 +36,13 @@ var filesToCache = [
   "./scripts/testSection.js",
   "./scripts/dataManager.js",
   "./scripts/formUtil.js",
+
+  "./scripts/classes/action.js",
+  "./scripts/classes/blockForm.js",
+  "./scripts/classes/blockList.js",
+  "./scripts/classes/blockButton.js",
+  "./scripts/classes/blockMsg.js",
+  "./scripts/classes/block.js",
 
   "./data/dsConfig.json" 
  ];

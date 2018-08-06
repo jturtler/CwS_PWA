@@ -87,7 +87,7 @@ button {
     cursor: pointer;                
 }
 
-.queueDiv 
+.queueDiv,.redeemListDiv
 {
   border: 1px solid darkolivegreen; 
   margin: 4px;

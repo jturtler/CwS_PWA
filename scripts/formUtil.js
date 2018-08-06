@@ -13,6 +13,8 @@ FormUtil.IntvCountCheckPoint = 5;
 FormUtil.IntvTime = 500;	// milliseconds - each is .5 sec..
 FormUtil._cwsRenderObj;
 
+FormUtil.staticWSName = 'eRefWSDev3';			// Need to be dynamically retrieved
+
 // -------------------------
 
 FormUtil.isOffline = function() {
@@ -39,12 +41,6 @@ FormUtil.setUp_AppConnModeDetection = function() {
 		var bNetworkOnline = FormUtil.isOnline();
 		FormUtil.currIntv_Online = bNetworkOnline;
 
-		//console.log( 'buildUpCount: ' + FormUtil.IntvCountBuildUp );
-		//console.log( 'network - isOnline: ' + bNetworkOnline );
-		//console.log( 'currIntv_Online: ' + FormUtil.currIntv_Online );
-		//console.log( 'prevIntv_Online: ' + FormUtil.prevIntv_Online );
-		//console.log( 'appConnMode Online: ' + FormUtil.appConnMode_Online );
-
 		var connStateChanged = ( FormUtil.currIntv_Online != FormUtil.prevIntv_Online );
 		
 		// if connection has changed..  (from previous state..)
@@ -57,24 +53,7 @@ FormUtil.setUp_AppConnModeDetection = function() {
 			// Ask for the appConnMode Change..
 			if ( FormUtil.appConnMode_Online != FormUtil.currIntv_Online )
 			{
-				var currIntvStr = FormUtil.connStatusStr( FormUtil.currIntv_Online );
-
-				var reply = confirm( "Network changed to " + currIntvStr + ".  Do  you want to switch App Mode to " + currIntvStr + "?" );
-
-				if ( reply )
-				{
-					// Switch the mode to ...
-					FormUtil.setAppConnMode( FormUtil.currIntv_Online );
-
-					// This is not being called..
-					if( FormUtil._cwsRenderObj ) 
-					{
-						//console.log( 'from reply, this is called.' );
-						FormUtil._cwsRenderObj.startBlockExecute();
-					}
-
-					FormUtil.IntvCountBuildUp = 0;
-				}	
+				FormUtil.change_AppConnMode( "interval", FormUtil.currIntv_Online );
 			}
 		}
 
@@ -84,6 +63,47 @@ FormUtil.setUp_AppConnModeDetection = function() {
 	}, FormUtil.IntvTime );
 }
 
+
+FormUtil.change_AppConnMode = function( modeStr, requestConnMode )
+{
+	var changeConnModeTo = false;
+	var questionStr = "Unknown Mode";
+
+	if ( modeStr === "interval" ) 
+	{
+		if ( requestConnMode !== undefined ) changeConnModeTo = requestConnMode;
+		var changeConnStr = FormUtil.connStatusStr( changeConnModeTo );
+	
+		questionStr = "Network changed to '" + changeConnStr + "'.  Do  you want to switch App Mode to '" + changeConnStr + "'?";
+	}
+	else if ( modeStr === "switch" ) 
+	{
+		var currConnStat = FormUtil.appConnMode_Online;
+		var currConnStr = FormUtil.connStatusStr( currConnStat );
+	
+		changeConnModeTo = !currConnStat;	
+		var changeConnStr = FormUtil.connStatusStr( changeConnModeTo );
+
+		questionStr = "App Connection Mode is '" + currConnStr + "'.  Do you want to switch to '" + changeConnStr + "'?";
+	}
+
+	var reply = confirm( questionStr );
+
+	if ( reply )
+	{
+		// Switch the mode to ...
+		FormUtil.setAppConnMode( changeConnModeTo );
+
+		// This is not being called..
+		if ( FormUtil._cwsRenderObj ) 
+		{
+			//console.log( 'from reply, this is called.' );
+			FormUtil._cwsRenderObj.startBlockExecute();
+		}
+
+		if ( modeStr === "interval" ) FormUtil.IntvCountBuildUp = 0;
+	}	
+};
 
 // ----------------------
 // --- AppConnMode ----
@@ -100,7 +120,94 @@ FormUtil.setAppConnMode = function( bOnline ) {
 
 	FormUtil.appConnMode_Online = bOnline;
 
+	// Top Nav Color Set
 	var navBgColor = ( bOnline ) ? '#0D47A1': '#ee6e73';
-
 	$( '#divNav').css( 'background-color', navBgColor );
+
+	// Text set
+    var stat = (bOnline) ? 'online': 'offline';
+    var displayText = (bOnline) ? '[online mode]': '[offline mode]';
+    $( '#appModeConnStatus' ).attr( 'connStat', stat ).text( displayText );	
+}
+
+
+// ======================================================
+// ==== Other Form Related Utils ======================
+
+FormUtil.getObjFromDefinition = function( def, definitions )
+{
+	var objJson;
+
+	if ( def !== undefined && definitions !== undefined )
+	{
+		if ( typeof def === 'string' )
+		{
+			//console.log( 'get string object: ' + def );
+			// get object from definition
+			objJson = definitions[ def ];
+		}
+		else if ( typeof def === 'object' )
+		{
+			objJson = def;
+		}	
+	}
+
+	return objJson;
+}
+
+// Temporary solution
+FormUtil.getServerUrl = function()
+{
+	return location.protocol + '//' + location.host;
+};
+
+
+FormUtil.generateUrl = function( inputsJson, actionJson )
+{
+	var url = FormUtil.getServerUrl() + "/" + FormUtil.staticWSName + actionJson.url;
+
+	if ( actionJson.urlParamNames !== undefined 
+		&& actionJson.urlParamInputs !== undefined 
+		&& actionJson.urlParamNames.length == actionJson.urlParamInputs.length )
+	{
+		var paramAddedCount = 0;
+
+		for ( var i = 0; i < actionJson.urlParamNames.length; i++ )
+		{
+			var paramName = actionJson.urlParamNames[i];
+			var inputName = actionJson.urlParamInputs[i];
+
+			if ( inputsJson[ inputName ] !== undefined )
+			{
+				var value = inputsJson[ inputName ];
+
+				url += ( paramAddedCount == 0 ) ? '?': '&';
+
+				url += paramName + '=' + value;
+			}
+
+			paramAddedCount++;
+		}
+	}
+
+	return url;
+}
+
+
+FormUtil.generateInputJson = function( formDivSecTag )
+{
+	// Input Tag values
+	var inputsJson = {};
+
+	var inputTags = formDivSecTag.find( 'input,select' );
+
+	inputTags.each( function()
+	{
+		var inputTag = $(this);			
+		var nameVal = inputTag.attr( 'name' );
+		
+		inputsJson[ nameVal ] = inputTag.val();
+	});		
+
+	return inputsJson;
 }
