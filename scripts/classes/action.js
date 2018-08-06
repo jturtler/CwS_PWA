@@ -45,7 +45,7 @@ function Action( cwsRenderObj, blockObj )
 				if ( existingPassData === undefined ) passData.push( {} );
 				else 
 				{
-					console.log( 'existing off sync data: ' );
+					console.log( 'already added passData case: ' );
 					console.log( existingPassData );
 				}
 
@@ -73,13 +73,9 @@ function Action( cwsRenderObj, blockObj )
 			{
 				var closeLevel = Util.getNum( clickActionJson.closeLevel );
 				
-				console.log( 'closeBlock, closeLevel: ' + closeLevel );
-
 				var divBlockTotal = me.renderBlockTag.find( 'div.block:visible' ).length;
 
 				var currBlock = blockDivTag;
-
-				console.log( 'divBlockTotal: ' + divBlockTotal );
 
 				for ( var i = 0; i < divBlockTotal; i++ )
 				{
@@ -87,7 +83,6 @@ function Action( cwsRenderObj, blockObj )
 
 					if ( closeLevel >= i ) 
 					{
-						console.log( 'closing block.. i: ' + i );
 						currBlock.remove();
 					}
 					else break;
@@ -133,13 +128,8 @@ function Action( cwsRenderObj, blockObj )
 
 				if ( !FormUtil.getAppConnMode_Online() )
 				{
-					console.log( 'Offline sendToWS case!! ' );
-
 					if ( clickActionJson.redeemListInsert === "true" )
 					{
-						console.log( 'Redeem Insert ' );
-						console.log( inputsJson );
-						
 						me.blockObj.blockListObj.redeemList_Add( inputsJson, me.blockObj.blockListObj.status_redeem_queued );
 					}
 
@@ -201,14 +191,11 @@ function Action( cwsRenderObj, blockObj )
 											}
 										}			
 										
-										//console.log( 'returned data: ' )
-										//console.log( returnJson );
 										loadingTag.remove();
 
 										// final call..
 										actionIndex++;
 										passData.push( returnJson );
-										//console.log( 'before calling me.recurrsiveActions, actionIndex: ' + actionIndex );
 										me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );
 									}
 								);

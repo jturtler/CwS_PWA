@@ -96,6 +96,13 @@ button {
   cursor: pointer;                
 }
 
+.listItemDetail {
+  margin: 5px;
+  padding: 5px;
+  background-color: #EEE;
+  color: darkblue;
+  font-size: 12px;
+}
 /* =========================== */
 
 /* =========================== */

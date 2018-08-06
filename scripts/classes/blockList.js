@@ -37,14 +37,11 @@ function BlockList( cwsRenderObj, blockObj )
         var dateTimeStr = (new Date() ).toISOString();
     
         var tempJsonData = {};
-        tempJsonData.title = "Voucher: " + data.voucherCode + " " + dateTimeStr;
+        tempJsonData.title = "Voucher: " + data.voucherCode + " - " + dateTimeStr;
         tempJsonData.created = dateTimeStr;
         tempJsonData.id = Util.generateRandomId();
         tempJsonData.status = status;
         tempJsonData.data = data;
-    
-        console.log( 'redeemList_Add' );
-        console.log( tempJsonData );
     
         DataManager.insertData( me.storageName_RedeemList, tempJsonData );	
     }
@@ -52,17 +49,12 @@ function BlockList( cwsRenderObj, blockObj )
     me.redeemList_Display = function( blockTag )
     {
         var jsonStorageData = DataManager.getData( me.storageName_RedeemList );
-    
-        console.log( 'redeemList_Display' );
-        console.log( jsonStorageData );
-    
+        
         me.renderRedeemList( jsonStorageData.list, blockTag );	
     }
     
     me.renderRedeemList = function( redeemList, blockTag )
-    {
-        console.log( redeemList );
-    
+    {    
         if ( redeemList !== undefined )
         {
             //for( var i = 0; i < redeemList.length; i++ )
@@ -77,7 +69,7 @@ function BlockList( cwsRenderObj, blockObj )
     //		- DEPENDS ON THE STATUS - GREEN, RED, GRAY, BLUE
     me.renderRedeemListItem = function( itemData, blockTag )
     {
-        var divTag = $( '<div class="redeemListDiv"></div>' );
+        var divTag = $( '<div class="redeemListDiv" expand="false"></div>' );
     
         //me.setActionTagAttribute( divTag, itemData, 'id' );
         
@@ -97,30 +89,40 @@ function BlockList( cwsRenderObj, blockObj )
         divTag.append( spanTitleTag );
     
         divTag.click( function() {
-            me.submitForListedItem( itemData, $( this ) );
+            me.toggleDetail( itemData, $( this ) );
+            // me.submitForListedItem( itemData, $( this ) );
         } );
-    
-        // TODO: Add click event for display data?
-    
     
         blockTag.append( divTag );
     }
+
     
-    /*
-    RedeemList.setActionTagAttributes = function( actionTag, actionJson )
+    me.toggleDetail = function( itemData, listItemTag )
     {
-        // We could set all the attributes, but for now, just below ones.
-        me.setActionTagAttribute( actionTag, actionJson, 'actionId' );
-        me.setActionTagAttribute( actionTag, actionJson, 'nextBlock' );
-        me.setActionTagAttribute( actionTag, actionJson, 'nextBlock_Offline' );
+        var expandStr = listItemTag.attr( 'expand' );
+
+        if ( expandStr === 'true' )
+        {
+            // collapse - if found
+            listItemTag.find( 'div.listItemDetail' ).hide( 'fast' );
+
+            listItemTag.attr( 'expand', 'false' );
+        }
+        else
+        {
+            // expand - if not exists, create one..
+            listItemTag.find( 'div.listItemDetail' ).remove();
+
+            divListItemDetailTag = $( '<div class="listItemDetail"></div>' ); 
+            listItemTag.append( divListItemDetailTag ).attr( 'expand', 'true' );
+
+            spanDetailTag = $( '<span></span>' ); 
+            spanDetailTag.text( JSON.stringify( itemData ) );
+
+            divListItemDetailTag.append( spanDetailTag );
+        }
     }
-    
-    RedeemList.setActionTagAttribute = function( actionTag, actionJson, propName )
-    {
-        if ( actionJson[ propName ] !== undefined ) actionTag.attr( propName, actionJson[ propName ] );
-    }
-    */	
-    
+
     me.submitForListedItem = function( itemData, queueTag )
     {
         console.log( itemData );
