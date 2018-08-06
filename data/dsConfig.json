@@ -76,7 +76,7 @@
 						"defaultName": "Maputo Cidade"
 						},
 						{ "value": "MZ02",
-						"defaultName": "Maputo Província"
+						"defaultName": "Maputo Provï¿½ncia"
 						},
 						{ "value": "MZ03",
 						"defaultName": "Gaza"
@@ -88,7 +88,7 @@
 						"defaultName": "Sofala"
 						},
 						{ "value": "MZ06",
-						"defaultName": "Zambézia"
+						"defaultName": "Zambï¿½zia"
 						},
 						{ "value": "MZ07",
 						"defaultName": "Nampulae"
@@ -153,7 +153,8 @@
 					"id": "cbdEnrollOuId",
 					"defaultName": "cbdEnrollOuId",
 					"controlType": "SHORT_TEXT",
-					"display": "none"
+					"display": "none",
+					"uid": "cbdEnrollOuId"	
 				},
 				{
 					"id": "walkInClientCase",
@@ -429,14 +430,20 @@
 				"btn_SubmitRedeem",
 				"btn_Cancel"
 			]			
-		}
-	},
+		},
 
-	"blockRedeemFormResult":{
-		"message": {
-			"type": "responseMessage",
-			"defaultMessage": "You are Online"
+		"blockRedeemFormResult":{
+			"form": [
+				{
+					"id": "message",
+					"defaultName": "Message",
+					"controlType": "DIV_CONTENT",
+					"uid": "message",
+					"breakRule": "--"
+				}
+			]
 		}
+
 	},
 
 	"definitionButtons": {
@@ -631,10 +638,12 @@
 							}
 						},
 						"notFound": {
-			
+							"actionType": "alertMsg",
+							"message": "Not match. Please search again."
 						},
-						"foundMultiple": {
-			
+						"foundOneWithoutVoucher": {
+							"actionType": "alertMsg",
+							"message": "Multiple match."
 						}
 					}
 				}

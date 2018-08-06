@@ -109,8 +109,8 @@ function cwsRender()
 			// Render Buttons
 			me.renderBlockButtons( blockJson.buttons, newBlockTag );
 
-			// Render Msg
-			me.renderRenderMessage( blockJson.message, newBlockTag, passedData );
+			// // Render Msg
+			// me.renderRenderMessage( blockJson.message, newBlockTag, passedData );
 			// me.renderRenderSec( blockJson.section_Render, newBlockTag );
 
 			renderBlockTag.append( newBlockTag );
@@ -132,37 +132,47 @@ function cwsRender()
 			{
 				me.renderInput( formJsonArr[i], formDivSecTag );
 			}
-
-			console.log( passedData );
 			
 			// Use this to populate data...
 			// <-- How?  It is just a tei voucher data, no?  <-- we need to format it as array with uid, no?
 			// for now, stored in client attribute?
 			if ( passedData !== undefined )
 			{
-				if ( passedData.data !== undefined )
+				if ( passedData.resultData !== undefined )
 				{
-					var clientId = passedData.data.relationships[0].trackedEntityInstance;
-					var voucherId = passedData.data.trackedEntityInstance;
+					var clientId = passedData.resultData.clientId;
+					var voucherId = passedData.resultData.voucherId;
 
 					formDivSecTag.find( '#countryType' ) .val( "MZ" );
 					formDivSecTag.find( '#cbdCase' ) .val( "Y" );
 					formDivSecTag.find( '#clientId' ) .val( clientId );
 					formDivSecTag.find( '#voucherId' ) .val( voucherId );
-					formDivSecTag.find( '#cbdEnrollOuId' ) .val( passedData.data.relationships[0].cbdEnrollOu );
+					// formDivSecTag.find( '#cbdEnrollOuId' ) .val( passedData.data.relationships[0].cbdEnrollOu );
 					formDivSecTag.find( '#walkInClientCase' ).val( me.getWalkInClientCase ( clientId, voucherId ) );
 
 					try {
 						// var attributes = passedData.data.relationships[0].relative.attributes;
-						var attributes = passedData.data.attributes;
+						var displayData = passedData.displayData;
 
-						for ( var i = 0; i < attributes.length; i++ )
+						for ( var i = 0; i < displayData.length; i++ )
 						{
-							var attrJson = attributes[i];
+							var attrJson = displayData[i];
 
 							// populate the attribute value to matching tag
-							var matchingTag = formDivSecTag.find( 'input,select' ).filter( '[uid="' + attrJson.attribute + '"]' );
+							var matchingTag = formDivSecTag.find( 'input,select' ).filter( '[uid="' + attrJson.id + '"]' );
 							matchingTag.val( attrJson.value );
+
+							// populate the attribute value to matching DIV tag
+							matchingTag = formDivSecTag.find( 'div,span' ).filter( '[uid="' + attrJson.id + '"]' );
+							var message = attrJson.value;
+							if( attrJson.breakRule !== undefined )
+							{
+								matchingTag.html( message.split( attrJson.breakRule ).join("<br>") );
+							}
+							else
+							{
+								matchingTag.html( message );
+							}
 						}
 
 
@@ -181,7 +191,7 @@ function cwsRender()
 			blockTag.append( formDivSecTag );
 			if( messageJson != undefined && messageJson.type === "responseMessage" )
 			{
-				var arrMsg = passedData.data.msg.split( "-- " );
+				var arrMsg = passedData.displayData.msg.split( "-- " );
 				for( var i in arrMsg )
 				{
 					formDivSecTag.append( arrMsg[i] + "<br>" );
@@ -386,27 +396,34 @@ function cwsRender()
 					// 1. Match the case..
 					var passedData = passData[actionIndex - 1];
 
-					if ( passedData.info !== undefined && clickActionJson.resultCase !== undefined )
+					if ( passedData.resultData !== undefined && clickActionJson.resultCase !== undefined )
 					{
-						var statusAction = clickActionJson.resultCase[ passedData.info.status ];
+						var statusAction = clickActionJson.resultCase[ passedData.resultData.status ];
 
 						if ( statusAction )
 						{
 							var blockJson = me.getObjFromDefinition( statusAction.blockId, me.definitionBlocks );
 									
-							if( passedData.info.status === "success")
+							if( passedData.resultData.status === "success")
 							{
-								/* if ( statusAction.blockId !== undefined )
+								if ( statusAction.blockId !== undefined )
 								{
+									var blockJson = me.getObjFromDefinition( statusAction.blockId, me.definitionBlocks );
 									me.renderBlock( blockJson, statusAction.blockId, me.renderBlockTag, passedData );	
-								} */
-								alert("Redeem success !");
+								}
 							}
-							else if ( passedData.info.status === "fail")
+							else if ( passedData.resultData.status === "fail")
 							{
-								if( bockJson.actionType === "alertMsg" )
+								if( statusAction.actionType === "alertMsg" )
 								{
-									alert( bockJson.message );
+									alert( statusAction.message );
+								}
+							}
+							else if( passedData.resultData.status === "notFound" )
+							{
+								if( statusAction.actionType === "alertMsg" )
+								{
+									alert( statusAction.message );
 								}
 							}
 							// TODO: THIS SHOULD BE CALLED WITH REUSE!!!  
@@ -546,6 +563,10 @@ function cwsRender()
 			{
 				entryTag = $( '<select name="' + inputData.id + '" uid="' + inputData.uid + '" ></select>' );
 				Util.populateSelectDefault( entryTag, "Select One", inputData.options, { "name": "defaultName", "val": "value" } );
+			}
+			else if( inputData.controlType === "DIV_CONTENT" )
+			{
+				entryTag = $( '<div name="' + inputData.id + '" uid="' + inputData.uid + '" ></div>' );
 			}
 			
 			var entryDivTag = $( '<div class="entryDiv"></div>' ).append( entryTag );
