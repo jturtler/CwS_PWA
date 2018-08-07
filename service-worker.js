@@ -1,5 +1,5 @@
 var dataCacheName = 'cws-pwa-data-v1.002';
-var cacheName = 'cws-pwa-v1.028';
+var cacheName = 'cws-pwa-v1.033';
 var filesToCache = [
   "./",
   "./index.html",
@@ -36,6 +36,13 @@ var filesToCache = [
   "./scripts/testSection.js",
   "./scripts/dataManager.js",
   "./scripts/formUtil.js",
+
+  "./scripts/classes/action.js",
+  "./scripts/classes/blockForm.js",
+  "./scripts/classes/blockList.js",
+  "./scripts/classes/blockButton.js",
+  "./scripts/classes/blockMsg.js",
+  "./scripts/classes/block.js",
 
   "./data/dsConfig.json" 
  ];

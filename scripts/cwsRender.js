@@ -6,7 +6,6 @@ function cwsRender()
 
 	// Fixed variables
 	me.dsConfigLoc = 'data/dsConfig.json';	// 
-	me.staticWSName = 'eRefWSDev3';			// Need to be dynamically retrieved
 
 	// Tags
 	me.renderBlockTag = $( '.renderBlock' );
@@ -17,16 +16,26 @@ function cwsRender()
 	me.definitionBlocks = {};
 	me.definitionActions = {};
 	me.definitionButtons = {};
+	me.definitionForms = {};
 
-	me.storageName_Queue = "queueList";
+	me.storageName_RedeemList = "redeemList";
 	me._globalMsg = "";
 	me._globalJsonData = undefined;
+
+	// Create separate class for this?
+	me.blockData = {};	// "blockId": { "formData": [], "returnData?": {}, "otherAddedData": {} }
+
+	me.blockObj;
 
 	// =============================================
 	// ---- perform Run --------------
 	me.performRun = function()
 	{
+		me.blockObj = new Block( me );
+
 		me.getDsConfigJson( configJson => {
+
+			console.log( configJson );
 
 			me.setUpConfigVars( configJson );
 
@@ -38,13 +47,11 @@ function cwsRender()
 
 	me.startBlockExecute = function()
 	{
-		//console.log( ' --- startBlockExecute Called ---' );
-
 		// Need to clear out all the div ones...
 		me.renderBlockTag.find( 'div.block' ).remove();
 
 		me.getStartBlockByStatus( FormUtil.getAppConnMode_Online(), me.configJson, ( startBlock, startBlockName ) => {
-			me.renderBlock( startBlock, startBlockName, me.renderBlockTag );
+			me.blockObj.renderBlock( startBlock, startBlockName, me.renderBlockTag );
 		});
 	} 
 	
@@ -81,8 +88,7 @@ function cwsRender()
 		me.definitionBlocks = configJson.definitionBlocks;
 		me.definitionActions = configJson.definitionActions;
 		me.definitionButtons = configJson.definitionButtons;
-
-		console.log( configJson );
+		me.definitionForms = configJson.definitionForms;
 	}
 
 	me.getStartBlockByStatus = function( bOnline, configJson, returnFunc )
@@ -95,7 +101,7 @@ function cwsRender()
 		}
 	}
 
-	// -------------------------------------------
+/*	// -------------------------------------------
 
 	me.renderBlock = function( blockJson, blockId, renderBlockTag, passedData )
 	{
@@ -596,4 +602,6 @@ function cwsRender()
 
 	// Initial Setup - events handler..
 	//me.initSetup();
+	
+	*/
 }

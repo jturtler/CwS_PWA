@@ -216,6 +216,16 @@ Util.isNumeric = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+Util.getNum = function( n ) {
+	var val = 0;
+	
+	try { 
+		if ( n ) val = Number( n ); 
+	}
+	catch ( err ) { }
+	
+	return val;
+};
 // Check Variable Related
 // ----------------------------------
 

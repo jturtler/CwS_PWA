@@ -36,6 +36,7 @@
     }
   });
 
+  
   function updateOnlineStatus(event) {
     FormUtil.network_Online = navigator.onLine;
     connStatTagUpdate( FormUtil.network_Online );
