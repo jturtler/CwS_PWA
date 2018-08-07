@@ -50,7 +50,7 @@ function cwsRender()
 		// Need to clear out all the div ones...
 		me.renderBlockTag.find( 'div.block' ).remove();
 
-		me.getStartBlockByStatus( FormUtil.getAppConnMode_Online(), me.configJson, ( startBlock, startBlockName ) => {
+		me.getStartBlockByStatus( ConnManager.getAppConnMode_Online(), me.configJson, ( startBlock, startBlockName ) => {
 			me.blockObj.renderBlock( startBlock, startBlockName, me.renderBlockTag );
 		});
 	} 
@@ -59,7 +59,7 @@ function cwsRender()
 	{
 		// Connection manual change click event: ask first and manually change it.
 		me.divAppModeConnStatusTag.click( function() {
-			FormUtil.change_AppConnMode( "switch" );
+			ConnManager.change_AppConnMode( "switch" );
 		});
 	}
 

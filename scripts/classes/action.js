@@ -130,20 +130,27 @@ function Action( cwsRenderObj, blockObj )
 				var currBlockId = blockDivTag.attr( 'blockId' );				
 				// generate inputsJson
 				var inputsJson = FormUtil.generateInputJson( formDivSecTag );
+				// generate url
+				var url = FormUtil.generateUrl( inputsJson, clickActionJson );
 
 
-				if ( !FormUtil.getAppConnMode_Online() )
+				var submitJson = {};
+				submitJson.payloadJson = inputsJson;
+				submitJson.url = url;
+				submitJson.actionJson = clickActionJson;	
+
+
+				if ( !ConnManager.getAppConnMode_Online() )
 				{
 					if ( clickActionJson.redeemListInsert === "true" )
 					{
-						me.blockObj.blockListObj.redeemList_Add( inputsJson, me.blockObj.blockListObj.status_redeem_queued );
+						me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_queued );
 					}
 
 					// PUT IT INSIDE OF ABOVE IF CASE?
 					var passedData_Temp = passData[actionIndex - 1];
-
-					var returnJson = { 'info': { 'status': 'offline' } };
 					
+					var returnJson = { 'info': { 'status': 'offline' } };					
 					passData.push( returnJson );
 
 				}
@@ -165,8 +172,7 @@ function Action( cwsRenderObj, blockObj )
 					// TODO: THIS SHOULD BE ADDED TO 'QUEUE' AND LATER CHANGED TO 'SUBMIT'
 					if ( clickActionJson.redeemListInsert === "true" )
 					{
-						//me.blockData[ currBlockId ].formData = inputsJson;
-						me.blockObj.blockListObj.redeemList_Add( inputsJson, me.blockObj.blockListObj.status_redeem_submit );
+						me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_submit );
 					}
 
 					// Send the POST reqesut
@@ -185,7 +191,7 @@ function Action( cwsRenderObj, blockObj )
 									function( returnJson ) 
 									{
 
-										/* if ( clickActionJson.alertResult === "true" )
+										if ( clickActionJson.alertResult === "true" )
 										{
 											if( returnJson.resultData.status === "success")
 											{
@@ -195,7 +201,7 @@ function Action( cwsRenderObj, blockObj )
 											{
 												alert( "Failed!" );
 											}
-										}	*/		
+										}		
 										
 										loadingTag.remove();
 
