@@ -3,13 +3,13 @@
 
   let _registrationObj;
   const _cwsRenderObj = new cwsRender();
-  const _testSection = new testSection();
+  //const _testSection = new testSection();
 
   window.onload = function() {
     // Create a class that represent the object..
-    FormUtil._cwsRenderObj = _cwsRenderObj;
+    ConnManager._cwsRenderObj = _cwsRenderObj;
     _cwsRenderObj.performRun();
-    _testSection.initSetUp();
+    //_testSection.initSetUp();
 
     updateOnlineStatus();
 
@@ -17,8 +17,8 @@
     window.addEventListener('offline', updateOnlineStatus);  
     
     // Set App Connection Mode
-    FormUtil.setAppConnMode_Initial();
-    FormUtil.setUp_AppConnModeDetection();
+    ConnManager.setAppConnMode_Initial();
+    ConnManager.setUp_AppConnModeDetection();
   
   }
 
@@ -38,8 +38,8 @@
 
   
   function updateOnlineStatus(event) {
-    FormUtil.network_Online = navigator.onLine;
-    connStatTagUpdate( FormUtil.network_Online );
+    ConnManager.network_Online = navigator.onLine;
+    connStatTagUpdate( ConnManager.network_Online );
   }
 
 

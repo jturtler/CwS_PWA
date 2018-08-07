@@ -6,10 +6,11 @@ function BlockList( cwsRenderObj, blockObj )
 
     me.cwsRenderObj = cwsRenderObj;
     me.blockObj = blockObj;        
-    
+
     me.storageName_RedeemList = "redeemList";
     me.status_redeem_submit = "submit";
     me.status_redeem_queued = "queued";
+    me.status_redeem_failed = "failed";
 
 	// -----------------------------
 	// ---- Methods ----------------
@@ -32,18 +33,18 @@ function BlockList( cwsRenderObj, blockObj )
 		}
 	}
 
-    me.redeemList_Add = function( data, status )
+    me.redeemList_Add = function( submitJson, status )
     {
         var dateTimeStr = (new Date() ).toISOString();
-    
+
         var tempJsonData = {};
-        tempJsonData.title = "Voucher: " + data.voucherCode + " - " + dateTimeStr;
+        tempJsonData.title = "Voucher: " + submitJson.payloadJson.voucherCode + " - " + dateTimeStr;
         tempJsonData.created = dateTimeStr;
         tempJsonData.id = Util.generateRandomId();
         tempJsonData.status = status;
-        tempJsonData.data = data;
+        tempJsonData.data = submitJson;
     
-        DataManager.insertData( me.storageName_RedeemList, tempJsonData );	
+        DataManager.insertDataItem( me.storageName_RedeemList, tempJsonData );	
     }
     
     me.redeemList_Display = function( blockTag )
@@ -53,9 +54,27 @@ function BlockList( cwsRenderObj, blockObj )
         me.renderRedeemList( jsonStorageData.list, blockTag );	
     }
     
+    me.redeemList_Reload = function( listItemTag )
+    {
+        var blockTag = listItemTag.closest( 'div.block' );
+        blockTag.find( 'div.redeemListDiv' ).remove();
+        me.redeemList_Display( blockTag );
+        // me.toggleDetail( itemData, listItemTag );
+    }
+
     me.renderRedeemList = function( redeemList, blockTag )
     {    
-        if ( redeemList !== undefined )
+        if ( redeemList === undefined || redeemList.length == 0 )
+        {
+            var divTag = $( '<div class="emptyListDiv" style="min-height: 40px; margin: 10px;"></div>' );
+        
+            var spanTag = $( '<span style="color: #888; font-weight: bold;">List is empty.</span>' );
+
+            divTag.append( spanTag );
+
+            blockTag.append( divTag );
+        }
+        else
         {
             //for( var i = 0; i < redeemList.length; i++ )
             for( var i = redeemList.length - 1; i >= 0; i-- )
@@ -65,35 +84,42 @@ function BlockList( cwsRenderObj, blockObj )
         }
     }
     
-    // TODO: NEED TO COLOR THINGS DIFFERENTLY
-    //		- DEPENDS ON THE STATUS - GREEN, RED, GRAY, BLUE
     me.renderRedeemListItem = function( itemData, blockTag )
     {
-        var divTag = $( '<div class="redeemListDiv" expand="false"></div>' );
-    
-        //me.setActionTagAttribute( divTag, itemData, 'id' );
+        var divItemTag = $( '<div class="redeemListDiv" expand="false"></div>' );
         
-        // Set background color of Div
-        var divBgColor = "";
-        
-        if ( itemData.status === me.status_redeem_submit ) divBgColor = 'LightGreen';
-        else if ( itemData.status === me.status_redeem_queued ) divBgColor = 'LightGray';
-                
-        if ( divBgColor != "" ) divTag.css( 'background-color', divBgColor );
-    
-    
+        blockTag.append( divItemTag );
+
+        me.renderRedeemListItemTag( itemData, divItemTag );
+    }
+
+    me.renderRedeemListItemTag = function( itemData, divItemTag )
+    {    
+        // Set status color
+        me.updateDivStatusColor( itemData.status, divItemTag );
+       
         // Set Text..
         var spanTitleTag = $( '<span class="titleSpan"></span>' );
         spanTitleTag.text( itemData.title );
     
-        divTag.append( spanTitleTag );
+        divItemTag.append( spanTitleTag );
     
-        divTag.click( function() {
+        divItemTag.off( 'click' ).click( function() {
             me.toggleDetail( itemData, $( this ) );
             // me.submitForListedItem( itemData, $( this ) );
         } );
-    
-        blockTag.append( divTag );
+    }
+
+    me.updateDivStatusColor = function( status, divTag )
+    {
+        // Set background color of Div
+        var divBgColor = "";
+            
+        if ( status === me.status_redeem_submit ) divBgColor = 'LightGreen';
+        else if ( status === me.status_redeem_queued ) divBgColor = 'LightGray';
+        else if ( status === me.status_redeem_failed ) divBgColor = 'Tomato';
+                
+        if ( divBgColor != "" ) divTag.css( 'background-color', divBgColor );         
     }
 
     
@@ -116,19 +142,82 @@ function BlockList( cwsRenderObj, blockObj )
             divListItemDetailTag = $( '<div class="listItemDetail"></div>' ); 
             listItemTag.append( divListItemDetailTag ).attr( 'expand', 'true' );
 
-            spanDetailTag = $( '<span></span>' ); 
-            spanDetailTag.text( JSON.stringify( itemData ) );
+            var spanDetailTag = $( '<span></span>' ); 
+            spanDetailTag.text( JSON.stringify( itemData.data.payloadJson ) );
 
             divListItemDetailTag.append( spanDetailTag );
+
+
+            // Add buttons - 'close' and 'submit'?
+            var divButtonsTag = $( '<div class="listItemDetailActionButtons" style="margin-top: 5px;"></div>' );
+
+            var btnCloseTag = $( '<button class="actionBtn btnCloseListItemDetail">Close</button>' );
+            var btnRemoveTag = $( '<button class="actionBtn btnRemoveListItemDetail">Remove</button>' );
+            var btnRedeemSubmitTag = $( '<button class="actionBtn btnSubmitRedeem">Redeem Submit</button>' );
+
+            btnCloseTag.click( function(e) {
+                e.stopPropagation();
+                me.toggleDetail( itemData, listItemTag );
+            });
+
+            btnRemoveTag.click( function(e) {
+                e.stopPropagation();                
+                DataManager.removeItemFromData( me.storageName_RedeemList, itemData.id );                
+                me.redeemList_Reload( listItemTag );
+            });
+            
+            btnRedeemSubmitTag.click( function(e) {
+                e.stopPropagation();                
+
+                // if offline, alert it!!
+                if ( ConnManager.isOffline() )
+                {
+                    alert( 'Currently in offline.  Need to be in online for this.' );
+                }
+                else
+                {
+                    var loadingTag = $( '<div class="loadingImg" style="display: inline-block; margin-left: 8px;"><img src="images/loading.gif"></div>' );
+                    divButtonsTag.append( loadingTag );
+                    FormUtil.submitRedeem( itemData.data.url, itemData.data.payloadJson, itemData.data.actionJson, loadingTag, function( success, returnJson )
+                    {
+                        console.log( 'Redeem submittion isSucccess: ' + success );
+    
+                        if ( success )
+                        {
+                            itemData.status = me.status_redeem_submit;
+                            itemData.returnJson = returnJson;
+                            
+                            me.toggleDetail( itemData, listItemTag );
+                        }
+                        else 
+                        {
+                            itemData.status = me.status_redeem_failed;
+                        }    
+                        
+                        DataManager.updateItemFromData( me.storageName_RedeemList, itemData.id, itemData );
+                            
+                        me.renderRedeemListItemTag( itemData, listItemTag );
+                    } );
+                }
+            });
+
+
+            divButtonsTag.append( btnCloseTag );
+            divButtonsTag.append( btnRemoveTag );
+            if ( itemData.status != me.status_redeem_submit ) divButtonsTag.append( btnRedeemSubmitTag );
+            
+            divListItemDetailTag.append( divButtonsTag );
+
         }
     }
+
 
     me.submitForListedItem = function( itemData, queueTag )
     {
         console.log( itemData );
         /*
         // TODO: 'isOffline' works?
-        if ( FormUtil.isOffline() )
+        if ( ConnManager.isOffline() )
         {
             queueTag.css( 'background-color', 'orange' );
     

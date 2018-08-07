@@ -1,5 +1,5 @@
 var dataCacheName = 'cws-pwa-data-v1.002';
-var cacheName = 'cws-pwa-v1.033';
+var cacheName = 'cws-pwa-v1.035';
 var filesToCache = [
   "./",
   "./index.html",
@@ -25,24 +25,24 @@ var filesToCache = [
   "./images/offline.jpg",
   "./images/blank.gif",
 
-  "./styles/materialize.css",
   "./styles/style.css",
 
-  "./scripts/jquery-3.3.1.js",
-  "./scripts/materialize.js",  
-  "./scripts/util.js",
+  "./scripts/libraries/jquery-3.3.1.js", 
+
+  "./scripts/utils/connManager.js",
+  "./scripts/utils/dataManager.js",
+  "./scripts/utils/formUtil.js",
+  "./scripts/utils/util.js",
+  
   "./scripts/app.js",
   "./scripts/cwsRender.js",
-  "./scripts/testSection.js",
-  "./scripts/dataManager.js",
-  "./scripts/formUtil.js",
-
+  
   "./scripts/classes/action.js",
+  "./scripts/classes/block.js",
+  "./scripts/classes/blockButton.js",
   "./scripts/classes/blockForm.js",
   "./scripts/classes/blockList.js",
-  "./scripts/classes/blockButton.js",
   "./scripts/classes/blockMsg.js",
-  "./scripts/classes/block.js",
 
   "./data/dsConfig.json" 
  ];
