@@ -5,6 +5,9 @@
 
 function DataManager() {}
 
+// -------------------------------------
+// ---- Overall Data Save/Get/Delete ---
+
 DataManager.saveData = function( secName, jsonData ) {
 	localStorage[ secName ] = JSON.stringify( jsonData );
 };
@@ -23,9 +26,10 @@ DataManager.deleteData = function( secName ) {
 	localStorage.removeItem( secName );
 };
 
-// ------------------------------
+// -------------------------------------
+// ---- List Item Data Save/Get/Delete ---
 
-DataManager.insertData = function( secName, jsonInsertData ) {
+DataManager.insertDataItem = function( secName, jsonInsertData ) {
 
 	var jsonMainData = DataManager.getData( secName );
 
@@ -34,7 +38,7 @@ DataManager.insertData = function( secName, jsonInsertData ) {
 	jsonMainData.list.push( jsonInsertData );
 
 	DataManager.saveData( secName, jsonMainData );
-}
+};
 
 DataManager.removeItemFromData = function( secName, id ) {
 
@@ -51,3 +55,41 @@ DataManager.removeItemFromData = function( secName, id ) {
 		DataManager.saveData( secName, jsonMainData );
 	}
 };
+
+DataManager.getItemFromData = function( secName, id ) 
+{
+	var itemData;
+
+	if ( secName && id )
+	{
+		var jsonMainData = DataManager.getData( secName );
+
+		// We assume that this has 'list' as jsonArray (of data)
+		if ( jsonMainData.list !== undefined ) 
+		{			
+			itemData = Util.getFromList( jsonMainData.list, id, "id" );			
+		}
+	}
+
+	return itemData;
+};
+
+
+DataManager.updateItemFromData = function( secName, id, jsonDataItem ) 
+{
+	if ( secName && id )
+	{
+		var jsonMainData = DataManager.getData( secName );
+
+		// We assume that this has 'list' as jsonArray (of data)
+		if ( jsonMainData.list !== undefined ) 
+		{			
+			itemData = Util.getFromList( jsonMainData.list, id, "id" );
+
+			Util.copyProperties( jsonDataItem, itemData );
+
+			DataManager.saveData( secName, jsonMainData );			
+		}
+	}
+};
+

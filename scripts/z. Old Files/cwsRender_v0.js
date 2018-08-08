@@ -178,7 +178,7 @@ function cwsRender()
 	me.submitForQueue = function( queueData, queueTag, blockTag )
 	{
 
-		if ( FormUtil.isOffline() )
+		if ( ConnManager.isOffline() )
 		{
 			queueTag.css( 'background-color', 'orange' );
 
@@ -355,7 +355,7 @@ function cwsRender()
 		{
 			// if offline..
 			//if ( )
-			if ( FormUtil.isOffline() )
+			if ( ConnManager.isOffline() )
 			{
 				// save to the storage
 				console.log( 'offline data asked..' );
@@ -403,7 +403,7 @@ function cwsRender()
 		var nextBlock_OnOffline = nextBlock;
 
 		// if current status is offline and 'nextBlock_Offline' exists, use that instead of 'nextBlock'
-		if ( FormUtil.isOffline() && nextBlock_Offline ) nextBlock_OnOffline = nextBlock_Offline;
+		if ( ConnManager.isOffline() && nextBlock_Offline ) nextBlock_OnOffline = nextBlock_Offline;
 		
 		if ( nextBlock_OnOffline )
 		{
