@@ -312,8 +312,11 @@
 						],
 						"notFound": [
 							{
-								"actionType": "alertMsg",
-								"message": "Not match. Please search again."
+								"actionType": "openBlock",
+								"blockId": "blockRedeemFormInputs",
+								"actionParameters": {
+									"voucherData": "$${resultJson}"
+								}
 							}
 						],
 						"foundOneWithoutVoucher": [
@@ -401,18 +404,21 @@
 			}
 		],
 
+
 		"form_RedeemFormInputs": [
 			{
 				"id": "countryType",
 				"defaultName": "Country Type",
 				"controlType": "SHORT_TEXT",
-				"display": "none"
+				"display": "none",
+				"defaultValue": "MZ"
 			},
 			{
 				"id": "cbdCase",
 				"defaultName": "cbdCase",
 				"controlType": "SHORT_TEXT",
-				"display": "none"
+				"display": "none",
+				"defaultValue": "Y"
 			},
 			{
 				"id": "clientId",

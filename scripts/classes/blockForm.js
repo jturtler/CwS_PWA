@@ -60,15 +60,30 @@ function BlockForm( cwsRenderObj, blockObj )
 				|| inputData.controlType === "SHORT_TEXT" )
 			{
 				entryTag = $( '<input name="' + inputData.id + '" uid="' + inputData.uid + '" />' );
+				if( inputData.defaultValue !== undefined )
+				{
+					// Set default data
+					entryTag.val( inputData.defaultValue );	
+				}
 			}
 			else if ( inputData.controlType === "DROPDOWN_LIST" )
 			{
 				entryTag = $( '<select name="' + inputData.id + '" uid="' + inputData.uid + '" ></select>' );
 				Util.populateSelectDefault( entryTag, "Select One", inputData.options, { "name": "defaultName", "val": "value" } );
+				if( inputData.defaultValue !== undefined )
+				{
+					// Set default data
+					entryTag.val( inputData.defaultValue );	
+				}
 			}
 			else if( inputData.controlType === "DIV_CONTENT" )
 			{
 				entryTag = $( '<div name="' + inputData.id + '" uid="' + inputData.uid + '" ></div>' );
+				if( inputData.defaultValue !== undefined )
+				{
+					// Set default data
+					entryTag.html( inputData.defaultValue );	
+				}
 			}
 			
 			
@@ -97,8 +112,8 @@ function BlockForm( cwsRenderObj, blockObj )
 			var clientId = passedData.resultData.clientId;
 			var voucherId = passedData.resultData.voucherId;
 
-			formDivSecTag.find( '#countryType' ).val( "MZ" );
-			formDivSecTag.find( '#cbdCase' ).val( "Y" );
+			// formDivSecTag.find( '#countryType' ).val( "MZ" );
+			// formDivSecTag.find( '#cbdCase' ).val( "Y" );
 			formDivSecTag.find( '#clientId' ).val( clientId );
 			formDivSecTag.find( '#voucherId' ).val( voucherId );
 			// formDivSecTag.find( '#cbdEnrollOuId' ).val( passedData.data.relationships[0].cbdEnrollOu );
