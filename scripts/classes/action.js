@@ -23,11 +23,25 @@ function Action( cwsRenderObj, blockObj )
 
 		var passData = [];
 
-		me.recurrsiveActions( blockDivTag, formDivSecTag, btnOnClickActions, 0, passData, function( finalPassData ) {
+		me.recurrsiveActions( blockDivTag, formDivSecTag, btnOnClickActions, 0, passData, undefined, function( finalPassData ) {
 		} );
 	}
 
-	me.recurrsiveActions = function( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc )
+	me.handleItemClickActions = function( btnTag, btnOnClickActions, itemIdx, clickedItemData )
+	{		
+		var blockDivTag = btnTag.closest( '.block' );
+		var formDivSecTag = blockDivTag.find( '.formDivSec' );
+
+		var passData = [];
+
+		console.log( 'btnOnClickActions' );
+		console.log( btnOnClickActions );
+
+		me.recurrsiveActions( blockDivTag, formDivSecTag, btnOnClickActions, 0, passData, clickedItemData, function( finalPassData ) {
+		} );
+	}
+
+	me.recurrsiveActions = function( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc )
 	{
 		// If 'recurr' reached the end, call 'returnFunc' with data accumulated?  or last one package..
 		if ( actionIndex >= actions.length )
@@ -36,7 +50,7 @@ function Action( cwsRenderObj, blockObj )
 		}
 		else
 		{			
-			var asyncCalled = me.clickActionPerform( actions[actionIndex], blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );
+			var asyncCalled = me.clickActionPerform( actions[actionIndex], blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );
 
 			if ( !asyncCalled )	
 			{
@@ -50,12 +64,12 @@ function Action( cwsRenderObj, blockObj )
 				}
 
 				actionIndex++;
-				me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );
+				me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );
 			}
 		}
 	}
 
-	me.clickActionPerform = function( actionDef, blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc, passedData )
+	me.clickActionPerform = function( actionDef, blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc, passedData )
 	{
 		var asyncCalled = false;
 
@@ -96,6 +110,8 @@ function Action( cwsRenderObj, blockObj )
 				{
 					var blockJson = FormUtil.getObjFromDefinition( clickActionJson.blockId, me.cwsRenderObj.definitionBlocks );
 				
+					// if ( clickedItemData !== undefined ) passedData = clickedItemData;
+
 					me.blockObj.renderBlock( blockJson, clickActionJson.blockId, me.renderBlockTag, passedData );	
 				}
 			}
@@ -118,7 +134,7 @@ function Action( cwsRenderObj, blockObj )
 						for ( var i = 0; i < statusActions.length; i++ )
 						{
 							// NOTE: this should not call 'async' calls?  to webservice?
-							me.clickActionPerform( statusActions[i], blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc, passedData_Temp );
+							me.clickActionPerform( statusActions[i], blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc, passedData_Temp );
 						}
 
 
@@ -130,6 +146,27 @@ function Action( cwsRenderObj, blockObj )
 				var currBlockId = blockDivTag.attr( 'blockId' );				
 				// generate inputsJson
 				var inputsJson = FormUtil.generateInputJson( formDivSecTag );
+
+				if( clickActionJson.payloadBody !== undefined && clickedItemData !== undefined )
+				{
+					passedData = clickedItemData;
+
+					for( var i = 0; i < clickActionJson.payloadBody.length; i++  )
+					{
+						var uid = clickActionJson.payloadBody[i];
+						var value = "";
+						for( var j = 0; j < passedData.displayData.length; j++  )
+						{
+							if( passedData.displayData[j].id === uid )
+							{
+								value = passedData.displayData[j].value;
+							}
+						}
+
+						inputsJson[uid] = value;
+					}
+				}
+
 				// generate url
 				var url = FormUtil.generateUrl( inputsJson, clickActionJson );
 
@@ -208,7 +245,7 @@ function Action( cwsRenderObj, blockObj )
 										// final call..
 										actionIndex++;
 										passData.push( returnJson );
-										me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );
+										me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );
 									}
 								);
 							}
@@ -218,7 +255,7 @@ function Action( cwsRenderObj, blockObj )
 								loadingTag.remove();
 								actionIndex++;
 								passData.push( {} );
-								me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );					
+								me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );					
 							}
 						}
 						else
@@ -227,7 +264,7 @@ function Action( cwsRenderObj, blockObj )
 							loadingTag.remove();
 							actionIndex++;
 							passData.push( {} );
-							me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );				
+							me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );				
 						}
 					});
 				}

@@ -27,6 +27,14 @@ button {
   text-align: left;
 }
 
+.itemBlock{
+  margin: 5px;
+  padding: 3px;
+  background-color: #f4f4f4;
+  border: 1px solid silver;
+  text-align: left;
+} 
+
 .testSec {
   margin: 5px;
   padding: 6px;

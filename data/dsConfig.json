@@ -55,7 +55,7 @@
 				}
 			],
 			"buttons": [
-				"btn_Cancel"
+				"btn_SearchPhoneNumber"
 			]
 		},
 		"blockSearchByDetails": { 
@@ -87,6 +87,14 @@
 		
 		"blockRedeemList": {
 			"list": "redeemList"
+		},
+
+		"blockDataList": {
+			"list": "dataList",
+			"displayResult": ["nR9d9xZ5TRJ", "RsvOTmR2DjO", "pL3gzBBWOhh", "sUu9QuzgS1Y","JM9qqwDihBV"],
+			"itemButtons": [
+				"btn_OpenRedeemFormBySearchList"
+			]
 		}
 		
 	},
@@ -276,6 +284,35 @@
 			]			
 		},
 
+		"btn_OpenRedeemFormBySearchList": { 
+
+			"defaultLabel": "Open Redeem Form",
+			"buttonType": "textButton",
+			"onClickItem": [
+				{
+					"actionType": "sendToWS",
+					"url": "/api/dc/getDetailsByClientId",
+					"payloadHeader": [ "usr", "pwd" ],
+					"payloadBody": [ "clientId" ]
+				},
+				{
+					"actionType": "processWSResult",
+					"resultCase": {
+						"foundOne": [
+							"closeCurrentBlock",
+							{
+								"actionType": "openBlock",
+								"blockId": "blockRedeemFormInputs",
+								"actionParameters": {
+									"voucherData": "$${resultJson}"
+								}
+							}
+						]
+					}
+				}
+			]
+		},
+
 		"btn_Cancel": {
 			"defaultLabel": "Cancel",
 			"buttonType": "textButton",
@@ -283,6 +320,50 @@
 				"closeCurrentBlock"
 			]			
 		},
+
+
+		"btn_SearchPhoneNumber":{
+			"defaultLabel": "Search",
+			"buttonType": "textButton",
+			"onClick": [
+				{
+					"actionType": "sendToWS",
+					"url": "/api/dc/searchByPhoneNumber",
+					"payloadHeader": [ "usr", "pwd" ],
+					"payloadBody": [ "phoneNumber" ],
+					"wsNACase": {
+						"note": "display message"
+					}
+				},
+				{
+					"actionType": "processWSResult",
+					"resultCase": {
+						"foundOne": [
+							"closeCurrentBlock",
+							{
+								"actionType": "openBlock",
+								"blockId": "blockRedeemFormInputs",
+								"actionParameters": {
+									"voucherData": "$${resultJson}"
+								}
+							}
+						],
+						"notFound": [],
+						"foundMultiple": [
+							"closeCurrentBlock",
+							{
+								"actionType": "openBlock",
+								"blockId": "blockDataList",
+								"actionParameters": {
+									"jsonData": {}
+								}
+							}
+						]
+					}
+				}
+			]
+		},
+
 
 		"btn_SearchDetails": {
 			"defaultLabel": "Search",

@@ -14,7 +14,7 @@ function BlockButton( cwsRenderObj, blockObj )
 
 	// -----------------------------------
 
-	me.renderBlockButtons = function( buttonsJson, blockTag )
+	me.renderBlockButtons = function( buttonsJson, blockTag, passedData )
 	{
 		if ( buttonsJson !== undefined )
 		{
@@ -23,7 +23,7 @@ function BlockButton( cwsRenderObj, blockObj )
 
 			for( var i = 0; i < buttonsJson.length; i++ )
 			{
-				me.renderBlockButton( buttonsJson[i], btnDivSecTag );
+				me.renderBlockButton( buttonsJson[i], btnDivSecTag, passedData );
 			}
 		}
 	}
@@ -31,13 +31,13 @@ function BlockButton( cwsRenderObj, blockObj )
 	// -----------------------------------
 	// ---- 2nd level methods -----------
 
-	me.renderBlockButton = function( btnData, divTag )
+	me.renderBlockButton = function( btnData, divTag, passedData )
 	{
 		var btnJson = FormUtil.getObjFromDefinition( btnData, me.cwsRenderObj.definitionButtons );
 
 		var btnTag = me.generateBtnTag( btnJson, btnData );
 			
-		me.setUpBtnClick( btnTag, btnJson );
+		me.setUpBtnClick( btnTag, btnJson, passedData );
 
 		divTag.append( btnTag );	
 	}
@@ -67,12 +67,19 @@ function BlockButton( cwsRenderObj, blockObj )
 		return btnTag;
 	}
 
-	me.setUpBtnClick = function( btnTag, btnJson )
+	me.setUpBtnClick = function( btnTag, btnJson, passedData )
 	{
 		if ( btnJson.onClick !== undefined )
 		{			
 			btnTag.click( function() {
 				me.blockObj.actionObj.handleClickActions( btnTag, btnJson.onClick );
+			});
+		}
+		else if( btnJson.onClickItem !== undefined )
+		{
+			btnTag.click( function() {
+				var idx = btnTag.closest("itemBlock").attr("idx");
+				me.blockObj.actionObj.handleItemClickActions( btnTag, btnJson.onClickItem, idx, passedData );
 			});
 		}
 	}

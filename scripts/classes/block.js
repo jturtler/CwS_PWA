@@ -10,6 +10,7 @@ function Block( cwsRenderObj )
 	me.actionObj;
 	me.blockFormObj;
 	me.blockListObj;
+	me.dataListObj;
 	me.blockButtonObj;
 	me.blockMsgObj;
 
@@ -21,6 +22,7 @@ function Block( cwsRenderObj )
 		me.actionObj = new Action( me.cwsRenderObj, me );
 		me.blockFormObj = new BlockForm( me.cwsRenderObj, me );
 		me.blockListObj = new BlockList( me.cwsRenderObj, me );		
+		me.dataListObj = new DataList( me.cwsRenderObj, me );
 		me.blockButtonObj = new BlockButton( me.cwsRenderObj, me );
 		me.blockMsgObj = new BlockMsg( me.cwsRenderObj, me );
 	}
@@ -40,6 +42,10 @@ function Block( cwsRenderObj )
 
 			// Render List
 			me.blockListObj.renderList( blockJson.list, newBlockTag, passedData );
+
+			// Reder Data List
+			me.dataListObj.initialize( passedData, blockJson );
+			me.dataListObj.renderList( blockJson.list, newBlockTag );
 
 			// Render Buttons
 			me.blockButtonObj.renderBlockButtons( blockJson.buttons, newBlockTag );
