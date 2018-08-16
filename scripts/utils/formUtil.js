@@ -35,32 +35,37 @@ FormUtil.getServerUrl = function()
 
 FormUtil.generateUrl = function( inputsJson, actionJson )
 {
-	var url = FormUtil.getServerUrl() + "/" + FormUtil.staticWSName + actionJson.url;
+	var url;
 
-	if ( actionJson.urlParamNames !== undefined 
-		&& actionJson.urlParamInputs !== undefined 
-		&& actionJson.urlParamNames.length == actionJson.urlParamInputs.length )
+	if ( actionJson.url !== undefined )
 	{
-		var paramAddedCount = 0;
+		url = FormUtil.getServerUrl() + "/" + FormUtil.staticWSName + actionJson.url;
 
-		for ( var i = 0; i < actionJson.urlParamNames.length; i++ )
+		if ( actionJson.urlParamNames !== undefined 
+			&& actionJson.urlParamInputs !== undefined 
+			&& actionJson.urlParamNames.length == actionJson.urlParamInputs.length )
 		{
-			var paramName = actionJson.urlParamNames[i];
-			var inputName = actionJson.urlParamInputs[i];
-
-			if ( inputsJson[ inputName ] !== undefined )
+			var paramAddedCount = 0;
+	
+			for ( var i = 0; i < actionJson.urlParamNames.length; i++ )
 			{
-				var value = inputsJson[ inputName ];
-
-				url += ( paramAddedCount == 0 ) ? '?': '&';
-
-				url += paramName + '=' + value;
+				var paramName = actionJson.urlParamNames[i];
+				var inputName = actionJson.urlParamInputs[i];
+	
+				if ( inputsJson[ inputName ] !== undefined )
+				{
+					var value = inputsJson[ inputName ];
+	
+					url += ( paramAddedCount == 0 ) ? '?': '&';
+	
+					url += paramName + '=' + value;
+				}
+	
+				paramAddedCount++;
 			}
-
-			paramAddedCount++;
 		}
 	}
-
+	
 	return url;
 }
 
@@ -86,7 +91,7 @@ FormUtil.generateInputJson = function( formDivSecTag )
 // -----------------------------
 // ---- Submit Related ----------
 
-FormUtil.submitRedeem = function( url, payloadJson, actionJson, loadingTag, returnFunc )
+FormUtil.submitRedeem = function( url, payloadJson, actionJson, loadingTag, returnFunc, asyncCall, syncCall )
 {
 	// Send the POST reqesut
 	fetch( url, {  
@@ -96,7 +101,7 @@ FormUtil.submitRedeem = function( url, payloadJson, actionJson, loadingTag, retu
 	})
 	.then( function( response ) 
 	{
-		if (response) 
+		if ( response ) 
 		{
 			if ( response.ok )
 			{
@@ -105,43 +110,42 @@ FormUtil.submitRedeem = function( url, payloadJson, actionJson, loadingTag, retu
 					{
 						if ( actionJson.alertResult === "true" )
 						{
-							if( returnJson.info.status === "success")
+							if ( returnJson.resultData )
 							{
-								alert( "Success!" );
-							}
-							else if ( returnJson.info.status === "fail")
-							{
-								alert( "Failed!" );
+								if( returnJson.resultData.status === "success")
+								{
+									alert( "Success!" );
+								}
+								else if ( returnJson.resultData.status === "fail")
+								{
+									alert( "Failed!" );
+								}	
 							}
 						}			
 						
-						if ( loadingTag !== undefined ) loadingTag.remove();
-						if ( returnFunc !== undefined ) returnFunc( true, returnJson );
-						// final call..
-						//actionIndex++;
-						//passData.push( returnJson );
-						//me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );
+						if ( loadingTag ) loadingTag.remove();
+						if ( returnFunc ) returnFunc( true, returnJson );
+
+						if ( asyncCall ) asyncCall( returnJson );
 					}
 				);
 			}
 			else
 			{
 				alert( 'Response Failed' );
-				if ( loadingTag !== undefined ) loadingTag.remove();
-				if ( returnFunc !== undefined ) returnFunc( false );
-				//actionIndex++;
-				//passData.push( {} );
-				//me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );					
+				if ( loadingTag ) loadingTag.remove();
+				if ( returnFunc ) returnFunc( false );
+
+				if ( syncCall ) syncCall();
 			}
 		}
 		else
 		{
 			alert( 'Response Not available' );
-			if ( loadingTag !== undefined ) loadingTag.remove();
-			if ( returnFunc !== undefined ) returnFunc( false );
-			//actionIndex++;
-			//passData.push( {} );
-			//me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );				
+			if ( loadingTag ) loadingTag.remove();
+			if ( returnFunc ) returnFunc( false );
+
+			if ( syncCall ) syncCall();			
 		}
 	});
 }

@@ -1,5 +1,5 @@
 {
-	"version": "0.01",
+	"version": "0.03",
 	"countryCode": "NP",
 	"configType": "dataCapture",
 
@@ -87,6 +87,23 @@
 		
 		"blockRedeemList": {
 			"list": "redeemList"
+		},
+		
+		
+		"blockWsReturnList": {
+			"list": "dataList",
+			"onClick": [
+				{
+					"actionType": "clearOtherBlocks"
+				},
+				{
+					"actionType": "openBlock",
+					"blockId": "blockRedeemList",
+					"actionParameters": {
+						"jsonData": {}
+					}
+				}	
+			]			
 		},
 
 		"blockDataList": {
@@ -395,9 +412,7 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
-								"actionParameters": {
-									"voucherData": "$${resultJson}"
-								}
+								"showCase": "WalkInUserShow"
 							}
 						],
 						"foundOneWithoutVoucher": [
@@ -531,6 +546,20 @@
 				"controlType": "INT",
 				"uid": "RJO3VHQVIvh"			
 			},
+			{ 
+				"defaultName": "First name",
+				"controlType": "SHORT_TEXT",
+				"id": "walkIn_firstName",
+				"display": "none",
+				"showCase": [ "WalkInUserShow" ]
+			},
+			{ 
+				"defaultName": "Last name",
+				"controlType": "SHORT_TEXT",
+				"display": "none",
+				"id": "walkIn_lastName",
+				"showCase": [ "WalkInUserShow" ]
+			},
 			{ 	
 				"id": "program",
 				"defaultName": "Program",
@@ -646,6 +675,18 @@
 						"value": "NO",
 						"defaultName": "No"
 					}
+				],
+				"evalActions": [
+					{ "condition": "'$$(typeOfMethodUser)' === 'SWITCH'",
+						"shows": [ "cycles", "promoter", "$promoterRel" ],
+						"hides": [],
+						"actions": [ { "id": "cycles", "value": "1" } ],
+						"conditionInverse": [ "shows" ]
+					},
+					{ "condition": "!('$$(typeOfMethodUser)' === 'SWITCH')",
+						"hides": [ "cycles", "promoter", "$promoterRel" ],
+						"actions": [ { "id": "cycles", "value": "" } ]
+					}
 				]
 			},
 			{ 	
@@ -665,7 +706,8 @@
 						"value": "3",
 						"defaultName": "3"
 					}
-				]
+				],
+				"display": "none"
 			},
 			{ 	
 				"id": "promoter",
@@ -704,7 +746,8 @@
 						"value": "mXNGwwPFjJ9",
 						"defaultName": "PMT Suzana Julia Carlos (MZ_PMT_2714)"
 					}
-				]
+				],				
+				"display": "none"
 			},
 			{ 	
 				"id": "ownershipOfPhone",

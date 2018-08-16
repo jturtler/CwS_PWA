@@ -16,6 +16,11 @@ button {
   background-color: white !important;
 }
 
+input {
+  border-color: #ccc;
+  border-width: thin;
+}
+
 /* =========================== */
 /* App Custom Style */
 

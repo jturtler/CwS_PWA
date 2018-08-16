@@ -1,5 +1,5 @@
 var dataCacheName = 'cws-pwa-data-v1.002';
-var cacheName = 'cws-pwa-v1.035';
+var cacheName = 'cws-pwa-v1.037';
 var filesToCache = [
   "./",
   "./index.html",

@@ -79,11 +79,23 @@ Util.trimTags = function( tags )
 	});
 };
 
-Util.replaceStr = function( fullText, strReplacing, strReplacedWith )
+Util.replaceAllRegx = function( fullText, strReplacing, strReplacedWith )
 {
 	var rePattern = new RegExp( strReplacing, "g" );
-	return fullText.repalce( rePattern, strReplacedWith );
+	return fullText.replace( rePattern, strReplacedWith );
 };
+
+Util.replaceAll = function( fullText, keyStr, replaceStr )
+{
+	var index = -1;
+	do {
+		fullText = fullText.replace( keyStr, replaceStr );
+		index = fullText.indexOf( keyStr, index + 1 );
+	} while( index != -1 );
+
+	return fullText;
+};
+
 
 Util.stringSearch = function( inputString, searchWord )
 {
@@ -1098,6 +1110,28 @@ Util.getServerUrl = function()
 {
 	return location.protocol + '//' + location.host;
 };
+
+Util.getIndexes = function( inputStr, keyStr )
+{
+	var indexes = [];
+
+	var idx = inputStr.indexOf( keyStr );
+	while ( idx != -1 ) {
+		indexes.push(idx);
+		  idx = inputStr.indexOf( keyStr, idx + 1 );
+	}
+
+	return indexes;
+};
+
+Util.upNumber_IntArr = function( arr, upNumber )
+{
+	for ( var i = 0; i < arr.length; i++ )
+	{
+		arr[i] = arr[i] + upNumber;
+	}
+};
+
 // Others
 // ----------------------------------
 

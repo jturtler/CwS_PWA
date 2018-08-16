@@ -5,7 +5,7 @@ function cwsRender()
 	var me = this;
 
 	// Fixed variables
-	me.dsConfigLoc = 'data/dsConfig.json';	// 
+	me.dsConfigLoc = 'data/dsConfig.json?v1';	// 
 
 	// Tags
 	me.renderBlockTag = $( '.renderBlock' );

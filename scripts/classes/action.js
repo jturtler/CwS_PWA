@@ -110,8 +110,9 @@ function Action( cwsRenderObj, blockObj )
 				{
 					var blockJson = FormUtil.getObjFromDefinition( clickActionJson.blockId, me.cwsRenderObj.definitionBlocks );
 				
-					// if ( clickedItemData !== undefined ) passedData = clickedItemData;
-
+					if ( passedData === undefined ) passedData = {};
+					passedData.showCase = clickActionJson.showCase;
+					
 					me.blockObj.renderBlock( blockJson, clickActionJson.blockId, me.renderBlockTag, passedData );	
 				}
 			}
@@ -170,6 +171,8 @@ function Action( cwsRenderObj, blockObj )
 				// generate url
 				var url = FormUtil.generateUrl( inputsJson, clickActionJson );
 
+				if ( url !== undefined )
+				{
 
 				var submitJson = {};
 				submitJson.payloadJson = inputsJson;
@@ -177,18 +180,19 @@ function Action( cwsRenderObj, blockObj )
 				submitJson.actionJson = clickActionJson;	
 
 
-				if ( !ConnManager.getAppConnMode_Online() )
-				{
-					if ( clickActionJson.redeemListInsert === "true" )
+					if ( !ConnManager.getAppConnMode_Online() )
 					{
-						me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_queued );
-					}
+						// Offline Submission Handling..
+						if ( clickActionJson.redeemListInsert === "true" )
+						{
+							me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_queued );
+						}
 
-					// PUT IT INSIDE OF ABOVE IF CASE?
-					var passedData_Temp = passData[actionIndex - 1];
-					
-					var returnJson = { 'info': { 'status': 'offline' } };					
-					passData.push( returnJson );
+						// PUT IT INSIDE OF ABOVE IF CASE?
+						var passedData_Temp = passData[actionIndex - 1];
+						
+						var returnJson = { 'resultData': { 'status': 'offline' } };					
+						passData.push( returnJson );
 
 				}
 				else if ( clickActionJson.url !== undefined )
@@ -212,61 +216,17 @@ function Action( cwsRenderObj, blockObj )
 						me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_submit );
 					}
 
-					// Send the POST reqesut
-					fetch( url, {  
-						method: 'POST',  
-						headers: { 'usr': '1004', 'pwd': '1234' },  
-						body: JSON.stringify( inputsJson )
-					})
-					.then( function( response ) 
-					{
-						if (response) 
-						{
-							if ( response.ok )
-							{
-								response.json().then(
-									function( returnJson ) 
-									{
-
-										if ( clickActionJson.alertResult === "true" )
-										{
-											if( returnJson.resultData.status === "success")
-											{
-												alert( "Success!" );
-											}
-											else if ( returnJson.resultData.status === "fail")
-											{
-												alert( "Failed!" );
-											}
-										}		
-										
-										loadingTag.remove();
-
-										// final call..
-										actionIndex++;
-										passData.push( returnJson );
-										me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );
-									}
-								);
-							}
-							else
-							{
-								alert( 'Response Failed' );
-								loadingTag.remove();
-								actionIndex++;
-								passData.push( {} );
-								me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );					
-							}
-						}
-						else
-						{
-							alert( 'Response Not available' );
-							loadingTag.remove();
+						FormUtil.submitRedeem( url, inputsJson, clickActionJson, loadingTag, undefined, function( returnJson ) {
+							// final call..
+							actionIndex++;
+							passData.push( returnJson );
+							me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );
+						}, function() {
 							actionIndex++;
 							passData.push( {} );
-							me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );				
-						}
-					});
+							me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc );	
+						});
+					}
 				}
 			}
 		}

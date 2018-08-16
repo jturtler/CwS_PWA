@@ -23,9 +23,11 @@ function BlockForm( cwsRenderObj, blockObj )
 			formDivSecTag = $( '<div class="formDivSec"></div>' );
 			blockTag.append( formDivSecTag );
 
+			var idList = me.getIdList_FormJson( formJsonArr );
+
 			for( var i = 0; i < formJsonArr.length; i++ )
 			{
-				me.renderInput( formJsonArr[i], formDivSecTag );
+				me.renderInput( formJsonArr[i], formDivSecTag, idList, passedData );
 			}
 
 			me.populateFormData( passedData, formDivSecTag );		
@@ -35,7 +37,21 @@ function BlockForm( cwsRenderObj, blockObj )
 	// -----------------------------------
 	// ---- 2nd level methods -----------
 	
-	me.renderInput = function( inputJson, divTag )
+	me.getIdList_FormJson = function( formJsonArr )
+	{
+		var idList = [];
+
+		for( var i = 0; i < formJsonArr.length; i++ )
+		{
+			var inputJson = formJsonArr[i];
+
+			if ( inputJson.id ) idList.push( inputJson.id );
+		}
+
+		return idList;
+	}
+
+	me.renderInput = function( inputJson, formDivSecTag, idList, passedData )
 	{
 		var divInputTag = $( '<div class="inputDiv"></div>' );
 
@@ -45,12 +61,12 @@ function BlockForm( cwsRenderObj, blockObj )
 
 		divInputTag.append( titleDivTag );
 
-		me.renderInputTag( inputJson, divInputTag );
+		me.renderInputTag( inputJson, divInputTag, formDivSecTag, idList, passedData );
 
-		divTag.append( divInputTag );
+		formDivSecTag.append( divInputTag );
 	}
 	
-	me.renderInputTag = function( inputData, divInputTag )
+	me.renderInputTag = function( inputData, divInputTag, formDivSecTag, idList, passedData )
 	{
 		if ( inputData !== undefined )
 		{
@@ -86,24 +102,177 @@ function BlockForm( cwsRenderObj, blockObj )
 				}
 			}
 			
-			
 			var entryDivTag = $( '<div class="entryDiv"></div>' ).append( entryTag );
 
-			if( inputData.display === "none" )
+
+			// Set Tag Visibility
+			if ( inputData.display === "none" )
 			{
 				divInputTag.hide();
 			}
 
+			if ( passedData !== undefined 
+				&& passedData.hideCase !== undefined 
+				&& inputData.hideCase !== undefined
+				&& inputData.hideCase.indexOf( passedData.hideCase ) >= 0 )
+			{
+				divInputTag.hide();
+			}
+
+			if ( passedData !== undefined 
+				&& passedData.showCase !== undefined 
+				&& inputData.showCase !== undefined
+				&& inputData.showCase.indexOf( passedData.showCase ) >= 0 )
+			{
+				divInputTag.show();
+			}
+
+
+			// Set Event
+			entryTag.change( function() {
+				me.performEvalActions( $(this).val(), inputData, formDivSecTag, idList );
+			});
+
+
+			// Finally Set/Attach to the parent tag
 			divInputTag.append( entryDivTag );
 		}
 	}
+
+
+	// ----------------------------------------------------
+	// ---- EVAL Actions Related --------------------------
+
+	me.performEvalActions = function( tagVal, inputData, formDivSecTag, idList )
+	{
+		if ( inputData.evalActions !== undefined )
+		{
+			for ( var i = 0; i < inputData.evalActions.length; i++ )
+			{
+				me.performEvalAction( inputData.evalActions[i], tagVal, formDivSecTag, idList );
+			}
+		}
+	}
+
+	me.performEvalAction = function( evalAction, tagVal, formDivSecTag, idList )
+	{
+		if ( evalAction !== undefined )
+		{
+			if ( me.checkCondition( evalAction.condition, tagVal, formDivSecTag, idList ) )
+			{
+				me.performCondiShowHide( evalAction.shows, formDivSecTag, true );
+				me.performCondiShowHide( evalAction.hides, formDivSecTag, false );
+
+				me.performCondiAction( evalAction.actions, formDivSecTag, false );
+			}
+			else
+			{
+				if ( evalAction.conditionInverse !== undefined )
+				{
+					if ( evalAction.conditionInverse.indexOf( "shows" ) >= 0 ) me.performCondiShowHide( evalAction.shows, formDivSecTag, true );
+					if ( evalAction.conditionInverse.indexOf( "hides" ) >= 0 ) me.performCondiShowHide( evalAction.hides, formDivSecTag, false );
+					if ( evalAction.conditionInverse.indexOf( "actions" ) >= 0 ) me.performCondiAction( evalAction.actions, formDivSecTag, true );
+				}
+			}			
+		}
+	}
+
+	me.checkCondition = function( evalCondition, tagVal, formDivSecTag, idList )
+	{
+		var result = false;
+
+		if ( evalCondition )
+		{
+			try
+			{
+				// var afterCondStr = evalCondition.replace( '$$(this)', tagVal );
+				var afterCondStr = me.conditionVarIdToVal( evalCondition, tagVal, formDivSecTag, idList )
+
+				result = eval( afterCondStr );	
+			}
+			catch(ex) 
+			{
+				console.log( 'Failed during condition eval: ' );
+				console.log( ex );
+				//alert( 'Failed during ' );
+			}
+		}
+
+		return result;
+	};
+
+	
+	me.conditionVarIdToVal = function( evalCondition, tagVal, formDivSecTag, idList )
+	{
+		// Replace 'this' first.
+		evalCondition = Util.replaceAll( evalCondition, '$$(this)', tagVal );
+		
+		// Replace other tag val cases.
+		for ( var i = 0; i < idList.length; i++ )
+		{
+			var idStr = idList[i];
+			var matchKeyStr = '$$(' + idStr + ')';
+
+			var tag = me.getMatchingInputTag( formDivSecTag, idStr );
+
+			evalCondition = Util.replaceAll( evalCondition, matchKeyStr, tag.val() );
+		}
+
+		return evalCondition;
+	}
+
+	me.performCondiAction = function( actions, formDivSecTag, reset )
+	{
+		if ( actions )
+		{
+			for ( var i = 0; i < actions.length; i++ )
+			{
+				var action = actions[i];
+					
+				if ( action.id )
+				{
+					var matchingTag = me.getMatchingInputTag( formDivSecTag, action.id );
+	
+					if ( matchingTag.length > 0 )
+					{
+						if ( reset ) matchingTag.val( '' );
+						else
+						{
+							if ( action.value ) matchingTag.val( action.value );
+						}	
+					}
+				}
+			}				
+		}
+	};
+
+	me.performCondiShowHide = function( idList, formDivSecTag, visible )
+	{
+		if ( idList )
+		{
+			for ( var i = 0; i < idList.length; i++ )
+			{
+				var tag = me.getMatchingInputTag( formDivSecTag, idList[i] ).closest( 'div.inputDiv');
+				( visible ) ? tag.show( 'fast' ) : tag.hide();
+			}
+		}
+	};
+
+	me.getMatchingInputTag = function( formDivSecTag, idStr )
+	{
+		return formDivSecTag.find( 'input[name="' + idStr + '"],select[name="' + idStr + '"]' );
+	};
+
+
+	// ---- EVAL Actions Related --------------------------
+	// ----------------------------------------------------
 
 
 	me.populateFormData = function( passedData, formDivSecTag )
 	{
 		//console.log( passedData );
 
-		if ( passedData !== undefined )
+		if ( passedData !== undefined && passedData.resultData !== undefined )
 		{
 			// TODO: On WebService side, we should simply create
 			//   a list that holds 'id' and 'value' for population...
