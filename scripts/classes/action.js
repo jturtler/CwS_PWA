@@ -85,23 +85,30 @@ function Action( cwsRenderObj, blockObj )
 			}
 			else if ( clickActionJson.actionType === "closeBlock" )
 			{
-				var closeLevel = Util.getNum( clickActionJson.closeLevel );
-				
-				var divBlockTotal = me.renderBlockTag.find( 'div.block:visible' ).length;
-
-				var currBlock = blockDivTag;
-
-				for ( var i = 0; i < divBlockTotal; i++ )
+				if( clickActionJson.closeLevel !== undefined )
 				{
-					var tempPrevBlock = currBlock.prev( 'div.block' );
+					var closeLevel = Util.getNum( clickActionJson.closeLevel );
+				
+					var divBlockTotal = me.renderBlockTag.find( 'div.block:visible' ).length;
 
-					if ( closeLevel >= i ) 
+					var currBlock = blockDivTag;
+
+					for ( var i = 0; i < divBlockTotal; i++ )
 					{
-						currBlock.remove();
-					}
-					else break;
+						var tempPrevBlock = currBlock.prev( 'div.block' );
 
-					currBlock = tempPrevBlock;
+						if ( closeLevel >= i ) 
+						{
+							currBlock.remove();
+						}
+						else break;
+
+						currBlock = tempPrevBlock;
+					}
+				}
+				else if( clickActionJson.blockId != undefined )
+				{
+					me.renderBlockTag.find("[blockid='" + clickActionJson.blockId + "']" ).remove();
 				}
 			}
 			else if ( clickActionJson.actionType === "openBlock" )
@@ -112,8 +119,21 @@ function Action( cwsRenderObj, blockObj )
 				
 					if ( passedData === undefined ) passedData = {};
 					passedData.showCase = clickActionJson.showCase;
+					passedData.hideCase = clickActionJson.hideCase;
 					
 					me.blockObj.renderBlock( blockJson, clickActionJson.blockId, me.renderBlockTag, passedData );	
+				}
+			}
+			else if ( clickActionJson.actionType === "filledData" )
+			{
+				var dataFromDivTag =  me.renderBlockTag.find("[blockid='" + clickActionJson.fromBlockId + "']" );
+				var dataToDivTag =  me.renderBlockTag.find("[blockid='" + clickActionJson.toBlockId + "']" );
+				var dataItems = clickActionJson.dataItems;
+				
+				for ( var i = 0; i < dataItems.length; i++ )
+				{
+					var value = dataFromDivTag.find("[name='" + dataItems[i] + "']").val()
+					dataToDivTag.find("[name='" + dataItems[i] + "']").val( value );
 				}
 			}
 			else if ( clickActionJson.actionType === "alertMsg" )
@@ -154,7 +174,7 @@ function Action( cwsRenderObj, blockObj )
 
 					for( var i = 0; i < clickActionJson.payloadBody.length; i++  )
 					{
-						var uid = clickActionJson.payloadBody[i];
+						var uid = clickActionJson.payloadBody[i].id;
 						var value = "";
 						for( var j = 0; j < passedData.displayData.length; j++  )
 						{

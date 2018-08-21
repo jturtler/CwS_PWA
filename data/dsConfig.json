@@ -247,7 +247,8 @@
 								}
 							}
 						],
-						"notFound": [],
+						"notFound": [
+						],
 						"foundMultiple": []
 					}
 				}
@@ -412,13 +413,27 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
-								"showCase": "WalkInUserShow"
+								"showCase": "WalkInUserShow",
+								"hideCase": "WalkInUserShow"
+							},
+							{
+								"actionType": "filledData",
+								"fromBlockId": "blockSearchByDetails",
+								"toBlockId": "blockRedeemFormInputs",
+								"dataItems": ["walkIn_firstName", "walkIn_lastName","walkIn_birthDistrict", "walkIn_birthOrder", "walkIn_age"]
+							},
+							{
+								"actionType": "closeBlock",
+								"blockId": "blockSearchByDetails"
 							}
 						],
 						"foundOneWithoutVoucher": [
+							"closeCurrentBlock",
 							{
-								"actionType": "alertMsg",
-								"message": "Multiple match."
+								"actionType": "openBlock",
+								"blockId": "blockRedeemFormInputs",
+								"showCase": "WalkInUserFoundOneWithoutVoucher",
+								"hideCase": "WalkInUserFoundOneWithoutVoucher"
 							}
 						]
 					}
@@ -544,27 +559,88 @@
 				"id": "voucherCode",
 				"defaultName": "Voucher",
 				"controlType": "INT",
-				"uid": "RJO3VHQVIvh"			
+				"uid": "RJO3VHQVIvh",
+				"hideCase": [ "WalkInUserShow", "WalkInUserFoundOneWithoutVoucher" ]	
 			},
 			{ 
 				"defaultName": "First name",
 				"controlType": "SHORT_TEXT",
 				"id": "walkIn_firstName",
 				"display": "none",
-				"showCase": [ "WalkInUserShow" ]
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ]	
 			},
 			{ 
 				"defaultName": "Last name",
 				"controlType": "SHORT_TEXT",
 				"display": "none",
 				"id": "walkIn_lastName",
-				"showCase": [ "WalkInUserShow" ]
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ]
+			},
+			{ 
+				"defaultName": "Province of Birth",
+				"controlType": "DROPDOWN_LIST",
+				"id": "walkIn_birthDistrict",
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ],
+				"options": [
+					{ "value": "MZ01",
+					"defaultName": "Maputo Cidade"
+					},
+					{ "value": "MZ02",
+					"defaultName": "Maputo Província"
+					},
+					{ "value": "MZ03",
+					"defaultName": "Gaza"
+					},
+					{ "value": "MZ04",
+					"defaultName": "Inhambane"
+					},
+					{ "value": "MZ05",
+					"defaultName": "Sofala"
+					},
+					{ "value": "MZ06",
+					"defaultName": "Zambézia"
+					},
+					{ "value": "MZ07",
+					"defaultName": "Nampulae"
+					},
+					{ "value": "MZ08",
+					"defaultName": "Niassa"
+					},
+					{ "value": "MZ09",
+					"defaultName": "Cabo Delgado"
+					},
+					{ "value": "MZ10",
+					"defaultName": "Tete"
+					},
+					{ "value": "MZ11",
+					"defaultName": "Manica"
+					}
+				]
+			},
+			{ 
+				"defaultName": "Order of Birth",
+				"controlType": "SHORT_TEXT",
+				"id": "walkIn_birthOrder",
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ]
+			},
+			{ 
+				"defaultName": "Age",
+				"controlType": "INT",
+				"id": "walkIn_age",
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ]
 			},
 			{ 	
 				"id": "program",
 				"defaultName": "Program",
 				"controlType": "DROPDOWN_LIST",
 				"uid": "Hq7B5uDZRwi",
+				"hideCase": [ "WalkInUserShow" ],
+				"defaultValue": "FPL",
 				"options": [
 					{ 
 						"value": "FPL",
@@ -584,6 +660,7 @@
 				"id": "service",
 				"defaultName": "Service",
 				"controlType": "DROPDOWN_LIST",
+				"uid": "VVsw6EFkmiX",
 				"options": [
 					{ 
 						"value": "COUNS",
@@ -635,6 +712,7 @@
 				"id": "typeOfMethodUser",
 				"defaultName": "Type of user",
 				"controlType": "DROPDOWN_LIST",
+				"uid": "LtS1y98lsdF",
 				"options": [
 					{ 
 						"value": "CONTINUE",
@@ -654,6 +732,7 @@
 				"id": "householdDelivery",
 				"defaultName": "Household delivery",
 				"controlType": "DROPDOWN_LIST",
+				"uid": "wxAMVtMTUtp",
 				"options": [
 					{ 
 						"value": "YES-Microgynon",
@@ -693,6 +772,7 @@
 				"id": "cycles",
 				"defaultName": "Cycles",
 				"controlType": "DROPDOWN_LIST",
+				"uid": "XUgZlajwMXz",
 				"options": [
 					{ 
 						"value": "1",
@@ -706,13 +786,13 @@
 						"value": "3",
 						"defaultName": "3"
 					}
-				],
-				"display": "none"
+				]
 			},
 			{ 	
 				"id": "promoter",
 				"defaultName": "Promoter",
 				"controlType": "DROPDOWN_LIST",
+				"uid" : "mH1V0z0TLfC",
 				"options": [
 					{ 
 						"value": "tdggr5usbev",
@@ -746,13 +826,13 @@
 						"value": "mXNGwwPFjJ9",
 						"defaultName": "PMT Suzana Julia Carlos (MZ_PMT_2714)"
 					}
-				],				
-				"display": "none"
+				]
 			},
 			{ 	
 				"id": "ownershipOfPhone",
 				"defaultName": "Ownership of Phone",
 				"controlType": "DROPDOWN_LIST",
+				"uid": "P01PEz2ikrY",
 				"options": [
 					{ 
 						"value": "NO",
@@ -779,12 +859,14 @@
 			{ 
 				"id": "phoneNumber",
 				"controlType": "SHORT_TEXT",
-				"defaultName": "Phone number"
+				"defaultName": "Phone number",
+				"uid": "uwjJhJ6kjN6"
 			},
 			 { 	
 				"id": "furtherInformationConsent",
 				"defaultName": "Consent to service-related calls/texts",
 				"controlType": "DROPDOWN_LIST",
+				"uid": "OdKxvdYZXMU",
 				"options": [
 					{ 
 						"value": "NO",
@@ -800,6 +882,7 @@
 				"id": "furtherInformationConsent2",
 				"defaultName": "Consent to feedback calls/texts ",
 				"controlType": "DROPDOWN_LIST",
+				"uid": "h0E5ky3fOQc",
 				"options": [
 					{ 
 						"value": "NO",
@@ -814,22 +897,26 @@
 			{ 
 				"id": "addressCity",
 				"controlType": "SHORT_TEXT",
-				"defaultName": "Address city"
+				"defaultName": "Address city",
+				"uid": "mxZEw3EqaO5"
 			},
 			{ 
 				"id": "addressNeighborhood",
 				"controlType": "SHORT_TEXT",
-				"defaultName": "Address neighborhood"
+				"defaultName": "Address neighborhood",
+				"uid": "glSegJYFQJN"
 			},
 			{ 
 				"id": "pointOfReference",
 				"controlType": "SHORT_TEXT",
-				"defaultName": "Address reference point "
+				"defaultName": "Address reference point",
+				"uid": "zym4msrV4dt"
 			},
 			{ 
 				"id": "bookPageNumber",
 				"controlType": "SHORT_TEXT",
-				"defaultName": "Book page number"
+				"defaultName": "Book page number",
+				"uid": "RM3xkYLSmzD"
 			}
 		]
 	}

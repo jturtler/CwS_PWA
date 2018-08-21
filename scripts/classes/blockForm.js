@@ -116,6 +116,7 @@ function BlockForm( cwsRenderObj, blockObj )
 				&& inputData.hideCase !== undefined
 				&& inputData.hideCase.indexOf( passedData.hideCase ) >= 0 )
 			{
+				divInputTag.find("input,select").remove();
 				divInputTag.hide();
 			}
 
@@ -279,14 +280,16 @@ function BlockForm( cwsRenderObj, blockObj )
 			//	regardless of type 'tei attribute val', 'dataElement value'
 
 			var clientId = passedData.resultData.clientId;
+			clientId = ( clientId === undefined ) ? "" : clientId;
 			var voucherId = passedData.resultData.voucherId;
+			voucherId = ( voucherId === undefined ) ? "" : voucherId;
 
 			// formDivSecTag.find( '#countryType' ).val( "MZ" );
 			// formDivSecTag.find( '#cbdCase' ).val( "Y" );
-			formDivSecTag.find( '#clientId' ).val( clientId );
-			formDivSecTag.find( '#voucherId' ).val( voucherId );
+			formDivSecTag.find( '[name="clientId"]' ).val( clientId );
+			formDivSecTag.find( '[name="voucherId"]' ).val( voucherId );
 			// formDivSecTag.find( '#cbdEnrollOuId' ).val( passedData.data.relationships[0].cbdEnrollOu );
-			formDivSecTag.find( '#walkInClientCase' ).val( me.getWalkInClientCase ( clientId, voucherId ) );
+			formDivSecTag.find( '[name="walkInClientCase"]' ).val( me.getWalkInClientCase ( clientId, voucherId ) );
 
 			try 
 			{
