@@ -19,6 +19,7 @@ button {
 input {
   border-color: #ccc;
   border-width: thin;
+  padding: 2px;
 }
 
 /* =========================== */

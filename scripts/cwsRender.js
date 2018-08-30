@@ -26,23 +26,33 @@ function cwsRender()
 	me.blockData = {};	// "blockId": { "formData": [], "returnData?": {}, "otherAddedData": {} }
 
 	me.blockObj;
+	me.LoginObj;
+
+	// =============================================
+
+	me.initialize = function()
+	{
+		me.blockObj = new Block( me );
+		me.LoginObj = new Login( me );
+
+		me.setHeaderEvents();
+	}
 
 	// =============================================
 	// ---- perform Run --------------
 	me.performRun = function()
 	{
-		me.blockObj = new Block( me );
+		// Login starts with 
+		me.LoginObj.openForm();
+	}
 
-		me.getDsConfigJson( configJson => {
+	me.startWithConfigLoad = function( configJson )
+	{
+		console.log( configJson );
 
-			console.log( configJson );
+		me.setUpConfigVars( configJson );
 
-			me.setUpConfigVars( configJson );
-
-			me.startBlockExecute();
-
-			me.setHeaderEvents();
-		});
+		me.startBlockExecute();
 	}
 
 	me.startBlockExecute = function()
@@ -60,6 +70,7 @@ function cwsRender()
 		// Connection manual change click event: ask first and manually change it.
 		me.divAppModeConnStatusTag.click( function() {
 			ConnManager.change_AppConnMode( "switch" );
+			return false;
 		});
 	}
 
@@ -101,4 +112,7 @@ function cwsRender()
 		}
 	}
 
+	// ======================================
+
+	me.initialize();
 }

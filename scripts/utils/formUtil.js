@@ -4,6 +4,10 @@
 function FormUtil() {}
 
 FormUtil.staticWSName = 'eRefWSDev3';			// Need to be dynamically retrieved
+FormUtil.login_UserName = '';
+FormUtil.login_Password = '';
+FormUtil.orgUnitData;
+FormUtil.dcdConfig;
 
 // ==== Methods ======================
 
@@ -39,7 +43,7 @@ FormUtil.generateUrl = function( inputsJson, actionJson )
 
 	if ( actionJson.url !== undefined )
 	{
-		url = FormUtil.getServerUrl() + "/" + FormUtil.staticWSName + actionJson.url;
+		url = FormUtil.getWsUrl( actionJson.url );
 
 		if ( actionJson.urlParamNames !== undefined 
 			&& actionJson.urlParamInputs !== undefined 
@@ -93,59 +97,155 @@ FormUtil.generateInputJson = function( formDivSecTag )
 
 FormUtil.submitRedeem = function( url, payloadJson, actionJson, loadingTag, returnFunc, asyncCall, syncCall )
 {
-	// Send the POST reqesut
-	fetch( url, {  
-		method: 'POST',  
-		headers: { 'usr': '1004', 'pwd': '1234' },  
-		body: JSON.stringify( payloadJson )
-	})
-	.then( function( response ) 
+
+	FormUtil.wsSubmitGeneral( url, payloadJson, loadingTag, function( success, returnJson )
 	{
-		if ( response ) 
+		if ( success )
 		{
-			if ( response.ok )
+			if ( actionJson.alertResult === "true" )
 			{
-				response.json().then(
-					function( returnJson ) 
+				if ( returnJson.resultData )
+				{
+					if( returnJson.resultData.status === "success")
 					{
-						if ( actionJson.alertResult === "true" )
-						{
-							if ( returnJson.resultData )
-							{
-								if( returnJson.resultData.status === "success")
-								{
-									alert( "Success!" );
-								}
-								else if ( returnJson.resultData.status === "fail")
-								{
-									alert( "Failed!" );
-								}	
-							}
-						}			
-						
-						if ( loadingTag ) loadingTag.remove();
-						if ( returnFunc ) returnFunc( true, returnJson );
-
-						if ( asyncCall ) asyncCall( returnJson );
+						alert( "Success!" );
 					}
-				);
-			}
-			else
-			{
-				alert( 'Response Failed' );
-				if ( loadingTag ) loadingTag.remove();
-				if ( returnFunc ) returnFunc( false );
-
-				if ( syncCall ) syncCall();
-			}
+					else if ( returnJson.resultData.status === "fail")
+					{
+						alert( "Failed!" );
+					}	
+				}
+			}			
+			
+			if ( returnFunc ) returnFunc( true, returnJson );
+			if ( asyncCall ) asyncCall( returnJson );
 		}
 		else
 		{
-			alert( 'Response Not available' );
-			if ( loadingTag ) loadingTag.remove();
 			if ( returnFunc ) returnFunc( false );
-
-			if ( syncCall ) syncCall();			
+			if ( syncCall ) syncCall();
 		}
 	});
+}
+
+
+FormUtil.submitLogin = function( userName, password, loadingTag, returnFunc )
+{
+	var url = FormUtil.getWsUrl( '/api/loginCheck' );
+
+	// FormUtil.orgUnitData <-- Reset before?
+	var payloadJson = { 'submitLogin': true, 'submitLogin_usr': userName, 'submitLogin_pwd': password, 'dcConfigGet': 'Y' };
+
+	FormUtil.wsSubmitGeneral( url, payloadJson, loadingTag, function( success, returnJson )
+	{
+		if ( success )
+		{
+			// Check the login success message in content.. ..			
+			var loginStatus = ( returnJson && returnJson.loginStatus );
+			//var orgUnitData = ( returnJson.orgUnitData ) ? returnJson.orgUnitData : undefined;
+
+			if ( loginStatus )
+			{		
+				FormUtil.login_UserName = userName;
+				FormUtil.login_Password = password;
+				FormUtil.orgUnitData = returnJson.orgUnitData;
+				FormUtil.dcdConfig = returnJson.dcdConfig;
+			}
+
+			if ( returnFunc ) returnFunc( loginStatus, returnJson );
+		}
+	});
+}
+
+
+// -----------------------------------
+// ---- Login And Fetch WS Related ------
+
+FormUtil.setLogin = function( userName, password )
+{
+	FormUtil.login_UserName = userName;
+	FormUtil.login_Password = password;	
+}
+
+FormUtil.checkLoginSubmitCase = function( payloadJson )
+{
+	return ( payloadJson && payloadJson.submitLogin );
+}
+
+FormUtil.checkLogin = function()
+{
+	return ( FormUtil.login_UserName && FormUtil.login_Password );
+}
+
+FormUtil.getWsUrl = function( subUrl )
+{
+	return FormUtil.getServerUrl() + "/" + FormUtil.staticWSName + subUrl;
+}
+
+FormUtil.getFetchWSJson = function( payloadJson )
+{
+	var fetchJson = {
+		method: 'POST'
+		,headers: { 'usr': '', 'pwd': '' }
+		,body: '{}'
+	};
+
+
+	if ( FormUtil.checkLoginSubmitCase( payloadJson ) )
+	{
+		fetchJson.headers.usr = payloadJson.submitLogin_usr;
+		fetchJson.headers.pwd = payloadJson.submitLogin_pwd;	
+	}
+	else
+	{
+		fetchJson.headers.usr = FormUtil.login_UserName;
+		fetchJson.headers.pwd = FormUtil.login_Password;	
+	}
+		
+	if ( payloadJson ) fetchJson.body = JSON.stringify( payloadJson );
+	
+	return fetchJson;
+}
+
+FormUtil.wsSubmitGeneral = function( url, payloadJson, loadingTag, returnFunc )
+{	
+	// headers info change? or pass as body??
+	if ( !FormUtil.checkLoginSubmitCase( payloadJson ) && !FormUtil.checkLogin() )
+	{
+		alert( 'Not Loggged In!' );
+		returnFunc( false );
+	}
+	else
+	{
+		// Send the POST reqesut
+		fetch( url, FormUtil.getFetchWSJson( payloadJson ) )
+		.then( function( response ) 
+		{
+			if ( response ) 
+			{
+				if ( response.ok )
+				{
+					response.json().then(
+						function( returnJson ) 
+						{
+							if ( loadingTag ) loadingTag.remove();
+							if ( returnFunc ) returnFunc( true, returnJson );
+						}
+					);
+				}
+				else
+				{
+					alert( 'Response Failed' );
+					if ( loadingTag ) loadingTag.remove();
+					if ( returnFunc ) returnFunc( false );
+				}
+			}
+			else
+			{
+				alert( 'Response Not available' );
+				if ( loadingTag ) loadingTag.remove();
+				if ( returnFunc ) returnFunc( false );
+			}
+		});
+	}
 }

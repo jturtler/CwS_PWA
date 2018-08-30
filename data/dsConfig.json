@@ -88,8 +88,7 @@
 		"blockRedeemList": {
 			"list": "redeemList"
 		},
-		
-		
+
 		"blockWsReturnList": {
 			"list": "dataList",
 			"onClick": [
@@ -247,8 +246,7 @@
 								}
 							}
 						],
-						"notFound": [
-						],
+						"notFound": [],
 						"foundMultiple": []
 					}
 				}

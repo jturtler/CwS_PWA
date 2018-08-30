@@ -25,14 +25,22 @@
     <link rel="icon" type="image/png" href="images/icons/icon-144x144.png">
 
     <script type="text/javascript" src="scripts/libraries/jquery-3.3.1.js"></script>
-    <link rel="manifest" href="./manifest.json"> <!-- changed from href="/manifest.json" -->
+    <script type="text/javascript" src="scripts/libraries/jquery.blockUI.js"></script>
+    <script type="text/javascript" src="scripts/libraries/jquery-ui.js"></script>
+
     <link rel="stylesheet" type="text/css" href="styles/style.css?v=1.0.2">
+    <link rel="stylesheet" type="text/css" href="styles/jquery-ui.css">
+
+    <link rel="manifest" href="./manifest.json"> <!-- changed from href="/manifest.json" -->
 
   </head>
   <body>
 
     <nav>
       <div id="divNav" class="nav-wrapper">
+        <div id="loggedInDiv" style="display:none; float: left; margin-left: 4px; cursor: pointer;">
+          <span id="spanOuName" style="font-style: italic; color: #90efef;"></span>
+        </div>
         <div style="display:inline-block;">
           <span class="brand-logo center">CwS - App</span>
         </div>
@@ -41,7 +49,7 @@
             <tr>
               <td>
                   <div id="swRefresh2" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
-                      <span style="font-size: 12px;">v1.037</span> 
+                      <span style="font-size: 12px;">v1.038</span> 
                   </div>
               </td>
               <td>
@@ -77,24 +85,43 @@
             <input id="testFetchInput" style="width: 90%;"> <button id="testFetchBtn">Get</button>
           </div>
         </div>
+
+        <div id="loginFormDiv" class="ui-widget" formWidth="300" formHeight="400" style="margin:0; padding:0; display:none;">
+          <div id="loginFormDivContent" style="padding:3px; margin:3px;	border: 1px solid #999;">
+  
+            <div style="margin: 5px;">
+              User Name: <input id="loginUserName" size="10" />
+            </div>
+            <div style="margin: 5px;">
+              Password: <input id="loginPassword" type="password" size="10" />
+            </div>
+            <div id="loginBtnDiv" style="margin: 5px;">
+                <div><button id="loginBtn">Login</button></div>
+            </div>
+    
+          </div>
+        </div>
+
         <div style="margin-top: 15px;" class="renderBlock"></div>
       </div>
+
     </main>
 
-    <script type="text/javascript" src="scripts/utils/util.js?v1"></script>
-    <script type="text/javascript" src="scripts/utils/connManager.js"></script>
-    <script type="text/javascript" src="scripts/utils/dataManager.js"></script>
-    <script type="text/javascript" src="scripts/utils/formUtil.js?v=1.0.1"></script>
+    <script type="text/javascript" src="scripts/utils/util.js?v=1.0.1"></script>
+    <script type="text/javascript" src="scripts/utils/connManager.js?v=1.0.2"></script>
+    <script type="text/javascript" src="scripts/utils/dataManager.js?v=1.0.1"></script>
+    <script type="text/javascript" src="scripts/utils/formUtil.js?v=1.0.5"></script>
 
+    <script type="text/javascript" src="scripts/classes/login.js?v=1.0.7"></script>
     <script type="text/javascript" src="scripts/classes/action.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/classes/blockForm.js"></script>
+    <script type="text/javascript" src="scripts/classes/blockForm.js?v=1.0.1"></script>
     <script type="text/javascript" src="scripts/classes/blockList.js?v=1.0.1"></script>
     <script type="text/javascript" src="scripts/classes/dataList.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/classes/blockButton.js"></script>
-    <script type="text/javascript" src="scripts/classes/blockMsg.js"></script>
-    <script type="text/javascript" src="scripts/classes/block.js"></script>
+    <script type="text/javascript" src="scripts/classes/blockButton.js?v=1.0.1"></script>
+    <script type="text/javascript" src="scripts/classes/blockMsg.js?v=1.0.1"></script>
+    <script type="text/javascript" src="scripts/classes/block.js?v=1.0.1"></script>
 
-    <script type="text/javascript" src="scripts/cwsRender.js"></script>
-    <script type="text/javascript" src="scripts/app.js"></script>
+    <script type="text/javascript" src="scripts/cwsRender.js?v=1.0.1"></script>
+    <script type="text/javascript" src="scripts/app.js?v=1.0.1"></script>
   </body>
 </html>

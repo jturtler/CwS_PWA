@@ -194,10 +194,10 @@ function Action( cwsRenderObj, blockObj )
 				if ( url !== undefined )
 				{
 
-				var submitJson = {};
-				submitJson.payloadJson = inputsJson;
-				submitJson.url = url;
-				submitJson.actionJson = clickActionJson;	
+					var submitJson = {};
+					submitJson.payloadJson = inputsJson;
+					submitJson.url = url;
+					submitJson.actionJson = clickActionJson;	
 
 
 					if ( !ConnManager.getAppConnMode_Online() )
@@ -214,27 +214,27 @@ function Action( cwsRenderObj, blockObj )
 						var returnJson = { 'resultData': { 'status': 'offline' } };					
 						passData.push( returnJson );
 
-				}
-				else if ( clickActionJson.url !== undefined )
-				{					
-					// generate url
-					var url = FormUtil.generateUrl( inputsJson, clickActionJson );
-					//console.log( 'url: ' + url );
-					//console.log( 'inputsJson: ' + JSON.stringify( inputsJson ) );
-					
-					asyncCalled = true;
-
-					var btnDivSecTag = blockDivTag.find( 'div.btnDivSec' );
-					var loadingTag = $( '<div class="loadingImg" style="display: inline-block; margin-left: 8px;"><img src="images/loading.gif"></div>' );
-					btnDivSecTag.append( loadingTag );
-
-
-					// NOTE: This form data is saved in owner form block
-					// TODO: THIS SHOULD BE ADDED TO 'QUEUE' AND LATER CHANGED TO 'SUBMIT'
-					if ( clickActionJson.redeemListInsert === "true" )
-					{
-						me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_submit );
 					}
+					else if ( clickActionJson.url !== undefined )
+					{					
+						// generate url
+						var url = FormUtil.generateUrl( inputsJson, clickActionJson );
+						//console.log( 'url: ' + url );
+						//console.log( 'inputsJson: ' + JSON.stringify( inputsJson ) );
+						
+						asyncCalled = true;
+
+						var btnDivSecTag = blockDivTag.find( 'div.btnDivSec' );
+						var loadingTag = $( '<div class="loadingImg" style="display: inline-block; margin-left: 8px;"><img src="images/loading.gif"></div>' );
+						btnDivSecTag.append( loadingTag );
+
+
+						// NOTE: This form data is saved in owner form block
+						// TODO: THIS SHOULD BE ADDED TO 'QUEUE' AND LATER CHANGED TO 'SUBMIT'
+						if ( clickActionJson.redeemListInsert === "true" )
+						{
+							me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_submit );
+						}
 
 						FormUtil.submitRedeem( url, inputsJson, clickActionJson, loadingTag, undefined, function( returnJson ) {
 							// final call..
