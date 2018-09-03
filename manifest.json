@@ -1,5 +1,6 @@
 {
-  "name": "CwS - Apps",
+  "name": "CwS - Apps v1.0.10",
+  "version": "1.0.10",
   "short_name": "CwS - Apps",
   "icons": [{
     "src": "images/icons/icon-128x128.png",

@@ -88,7 +88,8 @@
 		"blockRedeemList": {
 			"list": "redeemList"
 		},
-
+		
+		
 		"blockWsReturnList": {
 			"list": "dataList",
 			"onClick": [
@@ -240,13 +241,15 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
+								"hideCase": "foundOne",
 								"actionParameters": {
 									"voucherData": "$${resultJson}",
 									"otherPassInData": { "voucher": "43" }
 								}
 							}
 						],
-						"notFound": [],
+						"notFound": [
+						],
 						"foundMultiple": []
 					}
 				}
@@ -319,6 +322,7 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
+								"hideCase": "foundOne",
 								"actionParameters": {
 									"voucherData": "$${resultJson}"
 								}
@@ -359,9 +363,7 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
-								"actionParameters": {
-									"voucherData": "$${resultJson}"
-								}
+								"hideCase": "foundOne"
 							}
 						],
 						"notFound": [],
@@ -369,10 +371,7 @@
 							"closeCurrentBlock",
 							{
 								"actionType": "openBlock",
-								"blockId": "blockDataList",
-								"actionParameters": {
-									"jsonData": {}
-								}
+								"blockId": "blockDataList"
 							}
 						]
 					}
@@ -545,7 +544,8 @@
 				"id": "cbdEnrollOuId",
 				"defaultName": "cbdEnrollOuId",
 				"controlType": "SHORT_TEXT",
-				"display": "none"
+				"display": "none",
+				"uid": "cbdEnrollOuId"
 			},
 			{
 				"id": "walkInClientCase",
@@ -566,7 +566,7 @@
 				"id": "walkIn_firstName",
 				"display": "none",
 				"showCase": [ "WalkInUserShow" ],
-				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ]	
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOne" ]	
 			},
 			{ 
 				"defaultName": "Last name",
@@ -574,14 +574,14 @@
 				"display": "none",
 				"id": "walkIn_lastName",
 				"showCase": [ "WalkInUserShow" ],
-				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ]
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOne" ]
 			},
 			{ 
 				"defaultName": "Province of Birth",
 				"controlType": "DROPDOWN_LIST",
 				"id": "walkIn_birthDistrict",
 				"showCase": [ "WalkInUserShow" ],
-				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOne" ],
 				"options": [
 					{ "value": "MZ01",
 					"defaultName": "Maputo Cidade"
@@ -623,14 +623,14 @@
 				"controlType": "SHORT_TEXT",
 				"id": "walkIn_birthOrder",
 				"showCase": [ "WalkInUserShow" ],
-				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ]
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOne" ]
 			},
 			{ 
 				"defaultName": "Age",
 				"controlType": "INT",
 				"id": "walkIn_age",
 				"showCase": [ "WalkInUserShow" ],
-				"hideCase": [ "WalkInUserFoundOneWithoutVoucher" ]
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOne" ]
 			},
 			{ 	
 				"id": "program",

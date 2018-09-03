@@ -79,8 +79,8 @@ function BlockButton( cwsRenderObj, blockObj )
 		{
 			btnTag.click( function() {
 				var idx = btnTag.closest("itemBlock").attr("idx");
-				// me.blockObj.actionObj.handleItemClickActions( btnTag, btnJson.onClickItem, idx, passedData );
-				me.blockObj.actionObj.handleItemClickActions( btnTag, btnJson.onClickItem, idx );
+				me.blockObj.actionObj.handleItemClickActions( btnTag, btnJson.onClickItem, idx, passedData );
+				// me.blockObj.actionObj.handleItemClickActions( btnTag, btnJson.onClickItem, idx );
 			});
 		}
 	}

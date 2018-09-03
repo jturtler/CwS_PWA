@@ -460,6 +460,26 @@ Util.copyProperties = function( source, dest )
 	}
 };
 
+Util.RemoveFromArray = function( list, propertyName, value )
+{
+	var index;
+
+	$.each( list, function( i, item )
+	{
+		if ( item[ propertyName ] == value ) 
+		{
+			index = i;
+			return false;
+		}
+	});
+
+	if ( index !== undefined ) 
+	{
+		list.splice( index, 1 );
+	}
+
+	return index;
+};
 
 Util.getObjPropertyCount = function( list )
 {

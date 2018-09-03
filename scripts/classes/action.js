@@ -174,7 +174,7 @@ function Action( cwsRenderObj, blockObj )
 
 					for( var i = 0; i < clickActionJson.payloadBody.length; i++  )
 					{
-						var uid = clickActionJson.payloadBody[i].id;
+						var uid = clickActionJson.payloadBody[i];
 						var value = "";
 						for( var j = 0; j < passedData.displayData.length; j++  )
 						{

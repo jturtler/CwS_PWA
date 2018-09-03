@@ -28,18 +28,20 @@
     <script type="text/javascript" src="scripts/libraries/jquery.blockUI.js"></script>
     <script type="text/javascript" src="scripts/libraries/jquery-ui.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="styles/style.css?v=1.0.2">
-    <link rel="stylesheet" type="text/css" href="styles/jquery-ui.css">
+    <script> var _ver = '1.0.10'; </script>
 
-    <link rel="manifest" href="./manifest.json"> <!-- changed from href="/manifest.json" -->
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" type="text/css" href="styles/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css?v=1.0.10">
 
   </head>
   <body>
 
     <nav>
       <div id="divNav" class="nav-wrapper">
-        <div id="loggedInDiv" style="display:none; float: left; margin-left: 4px; cursor: pointer;">
-          <span id="spanOuName" style="font-style: italic; color: #90efef;"></span>
+        <div id="loggedInDiv" style="float: left; margin-left: 4px; cursor: pointer;">
+          <span id="spanOuName" style="font-style: italic; color: #90efef;">[LogIn]</span>
         </div>
         <div style="display:inline-block;">
           <span class="brand-logo center">CwS - App</span>
@@ -49,7 +51,7 @@
             <tr>
               <td>
                   <div id="swRefresh2" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
-                      <span style="font-size: 12px;">v1.038</span> 
+                      <span id="spanVersion" style="font-size: 12px;">v</span> 
                   </div>
               </td>
               <td>
@@ -107,21 +109,40 @@
 
     </main>
 
-    <script type="text/javascript" src="scripts/utils/util.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/utils/connManager.js?v=1.0.2"></script>
-    <script type="text/javascript" src="scripts/utils/dataManager.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/utils/formUtil.js?v=1.0.5"></script>
+    <script type="text/javascript" src="scripts/utils/util.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/utils/connManager.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/utils/dataManager.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/utils/formUtil.js?v=1.0.10"></script>
 
-    <script type="text/javascript" src="scripts/classes/login.js?v=1.0.7"></script>
-    <script type="text/javascript" src="scripts/classes/action.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/classes/blockForm.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/classes/blockList.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/classes/dataList.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/classes/blockButton.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/classes/blockMsg.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/classes/block.js?v=1.0.1"></script>
+    <script type="text/javascript" src="scripts/classes/login.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/classes/action.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/classes/blockForm.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/classes/blockList.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/classes/dataList.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/classes/blockButton.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/classes/blockMsg.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/classes/block.js?v=1.0.10"></script>
 
-    <script type="text/javascript" src="scripts/cwsRender.js?v=1.0.1"></script>
-    <script type="text/javascript" src="scripts/app.js?v=1.0.1"></script>
+    <script type="text/javascript" src="scripts/cwsRender.js?v=1.0.10"></script>
+    <script type="text/javascript" src="scripts/app.js?v=1.0.10"></script>
+
+    <!-- 
+    <script> document.write("<script src='scripts/utils/util.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/utils/connManager.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/utils/dataManager.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/utils/formUtil.js?v=" + _ver + "'><\/script>"); </script>
+
+    <script> document.write("<script src='scripts/classes/login.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/classes/action.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/classes/blockForm.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/classes/blockList.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/classes/dataList.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/classes/blockButton.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/classes/blockMsg.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/classes/block.js?v=" + _ver + "'><\/script>"); </script>
+
+    <script> document.write("<script src='scripts/cwsRender.js?v=" + _ver + "'><\/script>"); </script>
+    <script> document.write("<script src='scripts/app.js?v=" + _ver + "'><\/script>"); </script>
+    -->
   </body>
 </html>
