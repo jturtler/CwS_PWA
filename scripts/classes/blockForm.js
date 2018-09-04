@@ -110,10 +110,12 @@ function BlockForm( cwsRenderObj, blockObj )
 			{
 				divInputTag.hide();
 			}
-if( inputData.defaultName == "Province of Birth" )
-{
-	var dfad = 0;
-}
+			
+			if( inputData.defaultName == "Province of Birth" )
+			{
+				var dfad = 0;
+			}
+			
 			if ( passedData !== undefined 
 				&& passedData.hideCase !== undefined 
 				&& inputData.hideCase !== undefined

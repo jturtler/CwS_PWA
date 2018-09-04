@@ -28,6 +28,9 @@ function cwsRender()
 	me.blockObj;
 	me.LoginObj;
 
+	me._localConfigUse = false;
+
+
 	// =============================================
 
 	me.initialize = function()
@@ -48,21 +51,20 @@ function cwsRender()
 
 	me.startWithConfigLoad = function( configJson )
 	{
-		// ------------------- JAMES CODE -------------------------
-		// console.log( configJson );
-		// me.setUpConfigVars( configJson );
+		if ( me._localConfigUse )
+		{
+			me.getDsConfigJson( function( configDataFile ) {
 
-		// me.startBlockExecute();
-
-
-		// ------------------- TRAN modified to use for development-------------------------
-		
-		me.getDsConfigJson( function( configDataFile ){
-			me.setUpConfigVars( configDataFile );
-
+				me.setUpConfigVars( configDataFile );
+				me.startBlockExecute();
+			});		
+		}
+		else
+		{
+			console.log( configJson );
+			me.setUpConfigVars( configJson );
 			me.startBlockExecute();
-		});
-
+		}
 	}
 
 	me.startBlockExecute = function()
