@@ -30,7 +30,7 @@ function BlockForm( cwsRenderObj, blockObj )
 				me.renderInput( formJsonArr[i], formDivSecTag, idList, passedData );
 			}
 
-			me.populateFormData( passedData, formDivSecTag );		
+			me.populateFormData( passedData, formDivSecTag );
 		}
 	}
 	
@@ -154,7 +154,7 @@ function BlockForm( cwsRenderObj, blockObj )
 				var entryTag = divInputTag.find( "select,input" );
 				entryTag.attr( rule.name, rule.value );
 
-				if( rule.name === "mandatory" && rule.name === "true" )
+				if( rule.name === "mandatory" && rule.value === "true" )
 				{
 					var titleTag = divInputTag.find( ".titleDiv" );
 					titleTag.append("<span style='color:red;'> * </span>")

@@ -8,6 +8,7 @@ function Block( cwsRenderObj )
 		
 	// -- Sub class objects -----
 	me.actionObj;
+	me.validationObj;
 	me.blockFormObj;
 	me.blockListObj;
 	me.dataListObj;
@@ -20,6 +21,7 @@ function Block( cwsRenderObj )
 	me.initialize = function()
 	{
 		me.actionObj = new Action( me.cwsRenderObj, me );
+		me.validationObj = new Validation( me.cwsRenderObj, me );
 		me.blockFormObj = new BlockForm( me.cwsRenderObj, me );
 		me.blockListObj = new BlockList( me.cwsRenderObj, me );		
 		me.dataListObj = new DataList( me.cwsRenderObj, me );

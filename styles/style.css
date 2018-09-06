@@ -161,4 +161,10 @@ a.brand-logo {
   text-decoration: none;
 }
 
+.errorMsg
+{
+  color: red;
+  font-style: italic;
+  font-size: 10px;
+}
 /* =========================== */

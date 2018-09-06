@@ -550,6 +550,10 @@
 						"value": "number"
 					},
 					{
+						"name": "isNumber",
+						"value": "true"
+					},
+					{
 						"name": "pattern",
 						"value": "\\d*"
 					}
@@ -724,8 +728,16 @@
 						"value": "true"
 					},
 					{
-						"name": "minLength",
-						"value": "2"
+						"name": "type",
+						"value": "number"
+					},
+					{
+						"name": "isNumber",
+						"value": "true"
+					},
+					{
+						"name": "pattern",
+						"value": "\\d*"
 					}
 				]
 			},
@@ -738,6 +750,10 @@
 				"rules":[
 					{
 						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "isNumber",
 						"value": "true"
 					},
 					{
@@ -982,7 +998,13 @@
 				"id": "phoneNumber",
 				"controlType": "SHORT_TEXT",
 				"defaultName": "Phone number",
-				"uid": "uwjJhJ6kjN6"
+				"uid": "uwjJhJ6kjN6",
+				"rules":[
+					{
+						"name": "phoneNumber",
+						"value": "true"
+					}
+				]
 			},
 			 { 	
 				"id": "furtherInformationConsent",

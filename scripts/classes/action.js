@@ -21,10 +21,13 @@ function Action( cwsRenderObj, blockObj )
 		var blockDivTag = btnTag.closest( '.block' );
 		var formDivSecTag = blockDivTag.find( '.formDivSec' );
 
-		var passData = [];
+		if( me.blockObj.validationObj.checkFormEntryTagsData( formDivSecTag ) )
+		{
+			var passData = [];
 
-		me.recurrsiveActions( blockDivTag, formDivSecTag, btnOnClickActions, 0, passData, undefined, function( finalPassData ) {
-		} );
+			me.recurrsiveActions( blockDivTag, formDivSecTag, btnOnClickActions, 0, passData, undefined, function( finalPassData ) {
+			} );
+		}
 	}
 
 	me.handleItemClickActions = function( btnTag, btnOnClickActions, itemIdx, clickedItemData )
@@ -32,13 +35,16 @@ function Action( cwsRenderObj, blockObj )
 		var blockDivTag = btnTag.closest( '.block' );
 		var formDivSecTag = blockDivTag.find( '.formDivSec' );
 
-		var passData = [];
+		if( me.blockObj.validationObj.checkFormEntryTagsData( formDivSecTag ) )
+		{
+			var passData = [];
 
-		console.log( 'btnOnClickActions' );
-		console.log( btnOnClickActions );
+			console.log( 'btnOnClickActions' );
+			console.log( btnOnClickActions );
 
-		me.recurrsiveActions( blockDivTag, formDivSecTag, btnOnClickActions, 0, passData, clickedItemData, function( finalPassData ) {
-		} );
+			me.recurrsiveActions( blockDivTag, formDivSecTag, btnOnClickActions, 0, passData, clickedItemData, function( finalPassData ) {
+			} );
+		}
 	}
 
 	me.recurrsiveActions = function( blockDivTag, formDivSecTag, actions, actionIndex, passData, clickedItemData, returnFunc )
