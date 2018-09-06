@@ -31,6 +31,8 @@ function BlockForm( cwsRenderObj, blockObj )
 			}
 
 			me.populateFormData( passedData, formDivSecTag );
+
+			me.blockObj.validationObj.setUp_Events( formDivSecTag );
 		}
 	}
 	

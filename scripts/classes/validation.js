@@ -15,6 +15,16 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 		me.setUp_isNumberOnly_OlderBrowserSupport( me.pageTag );
 	} */
 	
+    me.setUp_Events = function( formTag )
+    {
+        formTag.find( "input,select,textarea" ).each( function() {
+            var inputTag = $(this);
+            inputTag.change( function(){
+                me.checkValidations( inputTag );
+            });
+        });
+    }
+
 	// ================================
 	// == Tag Validations
 	
