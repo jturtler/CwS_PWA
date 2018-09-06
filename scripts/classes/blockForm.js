@@ -111,11 +111,6 @@ function BlockForm( cwsRenderObj, blockObj )
 				divInputTag.hide();
 			}
 			
-			if( inputData.defaultName == "Province of Birth" )
-			{
-				var dfad = 0;
-			}
-			
 			if ( passedData !== undefined 
 				&& passedData.hideCase !== undefined 
 				&& inputData.hideCase !== undefined
@@ -133,7 +128,6 @@ function BlockForm( cwsRenderObj, blockObj )
 				divInputTag.show();
 			}
 
-
 			// Set Event
 			entryTag.change( function() {
 				me.performEvalActions( $(this).val(), inputData, formDivSecTag, idList );
@@ -142,9 +136,33 @@ function BlockForm( cwsRenderObj, blockObj )
 
 			// Finally Set/Attach to the parent tag
 			divInputTag.append( entryDivTag );
+
+			
+			// Add rules for IMPUT fields
+			me.addRuleForField( divInputTag, inputData );
 		}
 	}
 
+	me.addRuleForField = function( divInputTag, inputData )
+	{
+		if( inputData.rules !== undefined )
+		{
+			for( var i in inputData.rules )
+			{
+				var rule = inputData.rules[i];
+
+				var entryTag = divInputTag.find( "select,input" );
+				entryTag.attr( rule.name, rule.value );
+
+				if( rule.name === "mandatory" && rule.name === "true" )
+				{
+					var titleTag = divInputTag.find( ".titleDiv" );
+					titleTag.append("<span style='color:red;'> * </span>")
+				}
+			}
+		}
+
+	}
 
 	// ----------------------------------------------------
 	// ---- EVAL Actions Related --------------------------
@@ -175,8 +193,8 @@ function BlockForm( cwsRenderObj, blockObj )
 			{
 				if ( evalAction.conditionInverse !== undefined )
 				{
-					if ( evalAction.conditionInverse.indexOf( "shows" ) >= 0 ) me.performCondiShowHide( evalAction.shows, formDivSecTag, true );
-					if ( evalAction.conditionInverse.indexOf( "hides" ) >= 0 ) me.performCondiShowHide( evalAction.hides, formDivSecTag, false );
+					if ( evalAction.conditionInverse.indexOf( "shows" ) >= 0 ) me.performCondiShowHide( evalAction.shows, formDivSecTag, false );
+					if ( evalAction.conditionInverse.indexOf( "hides" ) >= 0 ) me.performCondiShowHide( evalAction.hides, formDivSecTag, true );
 					if ( evalAction.conditionInverse.indexOf( "actions" ) >= 0 ) me.performCondiAction( evalAction.actions, formDivSecTag, true );
 				}
 			}			

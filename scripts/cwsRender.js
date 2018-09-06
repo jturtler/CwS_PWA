@@ -28,8 +28,8 @@ function cwsRender()
 	me.blockObj;
 	me.LoginObj;
 
-	me._localConfigUse = false;
-
+	// me._localConfigUse = false; // Get dsConfig on server
+	me._localConfigUse = true; // Get dsConfig file
 
 	// =============================================
 
