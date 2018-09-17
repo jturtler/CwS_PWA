@@ -21,6 +21,7 @@ function Action( cwsRenderObj, blockObj )
 		var blockDivTag = btnTag.closest( '.block' );
 		var formDivSecTag = blockDivTag.find( '.formDivSec' );
 
+		// NOTE: TRAN VALIDATION
 		if( me.blockObj.validationObj.checkFormEntryTagsData( formDivSecTag ) )
 		{
 			var passData = [];
@@ -35,6 +36,7 @@ function Action( cwsRenderObj, blockObj )
 		var blockDivTag = btnTag.closest( '.block' );
 		var formDivSecTag = blockDivTag.find( '.formDivSec' );
 
+		// NOTE: TRAN VALIDATION
 		if( me.blockObj.validationObj.checkFormEntryTagsData( formDivSecTag ) )
 		{
 			var passData = [];

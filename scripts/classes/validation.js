@@ -101,6 +101,22 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 	};
 	
 	
+	me.getMessage = function( type, defaultMessage )
+	{
+		var message = me.cwsRenderObj.definitionMessages[type];
+		if( message === undefined )
+		{
+			message = defaultMessage;
+		}
+		
+		if( message === undefined )
+		{
+			message = "The value is violated the rule " + type;
+		}
+
+		return message;
+	};
+
 	// ------------------------------
 	// -- Each type validation
 
@@ -111,12 +127,14 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 
 		if( !value && !me.checkFalseEvalSpecialCase() )
 		{
-			divTag.append( me.getErrorSpanTag( 'This field is required' ) );
+			var message = me.getMessage( "mandatory", "This field is required" );
+			divTag.append( me.getErrorSpanTag( message ) );
 			valid = false;
 		}
 		
 		return valid;
 	};
+	
 	
 	me.checkValueLen = function( inputTag, divTag, type, length )
 	{		
@@ -125,17 +143,26 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 		
 		if ( value && type == 'min' && value.length < length )
 		{
-			divTag.append( me.getErrorSpanTag( 'Please enter at least ' + length  + ' characters' ) );
+			var message = me.getMessage( type, 'Please enter at least ' + length  + ' characters' );
+			message = message.replace("$$length", length);
+			divTag.append( me.getErrorSpanTag( message ) );
+
 			valid = false;
 		}
 		else if ( value && type == 'max' && value.length > length )
 		{
-			divTag.append( me.getErrorSpanTag( 'Please enter at most ' + length + ' characters' ) );
+			var message = me.getMessage( type, 'Please enter at most ' + length + ' characters' );
+			message = message.replace("$$length", length);
+			divTag.append( me.getErrorSpanTag( message ) );
+			
 			valid = false;
 		}
 		else if ( value && type == 'exactlength' && value.length != length )
 		{
-			divTag.append( me.getErrorSpanTag( 'Please enter exactly ' + length + ' characters' ) );
+			var message = me.getMessage( type, 'Please enter exactly ' + length + ' characters' );
+			message = message.replace("$$length", length);
+			divTag.append( me.getErrorSpanTag( message ) );
+			
 			valid = false;
 		}
 		
@@ -151,7 +178,10 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 		
 		if ( value && ( valFrom > value || valTo < value ) )
 		{
-			divTag.append( me.getErrorSpanTag( 'The value should be less than or equal to ' + valTo ) );
+			var message = me.getMessage( type, 'The value should be less than or equal to ' + valTo );
+			message = message.replace("$$length", length);
+			divTag.append( me.getErrorSpanTag( message ) );
+
 			valid = false;
 		}
 		
@@ -166,7 +196,9 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 		
 		if ( value && !reg.test( value ) )
 		{
-			divTag.append( me.getErrorSpanTag( 'Please enter number only' ) );
+			var message = me.getMessage( type, 'Please enter number only' );
+			divTag.append( me.getErrorSpanTag( message ) );
+			
 			valid = false;
 		}
 		
@@ -212,7 +244,7 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 		{
 			if ( !( value.length >= 12 && value.length <= 15 ) )
 			{
-				msg += 'Number should be 9 digits long (w/o country code)';
+				msg += me.getMessage( "phone9Len", 'Number should be 9 digits long (w/o country code' );
 			}
 			else
 			{
@@ -225,7 +257,7 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 		{
 			if ( value.length != 10 )
 			{
-				msg += "Number should start with '+2588' or '002588'";
+				msg += me.getMessage( "phoneStartWith", "Number should start with '+2588' or '002588'" );
 			}
 			else
 			{
@@ -246,7 +278,7 @@ function Validation( cwsRenderObj, blockObj, pageTag )
 		}
 		else
 		{
-			msg += "Number should start with '+2588' or '002588'";
+			msg += me.getMessage( "phoneStartWith", "Number should start with '+2588' or '002588'" );
 		}
 
 		

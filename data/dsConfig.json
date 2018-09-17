@@ -1063,5 +1063,16 @@
 				"uid": "RM3xkYLSmzD"
 			}
 		]
+	},
+
+	"definitionMessages":{
+		"mandatory": "This field is required",
+		"min": "Please enter at least $$length charactors",
+		"max": "Please enter at most $$length characters",
+		"exactlength": "Please enter exactly $$length characters",
+		"isNumber": "Please enter number only",
+		"phone9Len": "Number should be 9 digits long (w/o country code)",
+		"phoneStartWith": "Number should start with '+2588' or '002588'"
 	}
+
 }

@@ -32,6 +32,7 @@ function BlockForm( cwsRenderObj, blockObj )
 
 			me.populateFormData( passedData, formDivSecTag );
 
+			// NOTE: TRAN VALIDATION
 			me.blockObj.validationObj.setUp_Events( formDivSecTag );
 		}
 	}
@@ -139,7 +140,7 @@ function BlockForm( cwsRenderObj, blockObj )
 			// Finally Set/Attach to the parent tag
 			divInputTag.append( entryDivTag );
 
-			
+			// NOTE: TRAN VALIDATION
 			// Add rules for IMPUT fields
 			me.addRuleForField( divInputTag, inputData );
 		}

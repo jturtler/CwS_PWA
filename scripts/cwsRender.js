@@ -17,6 +17,7 @@ function cwsRender()
 	me.definitionActions = {};
 	me.definitionButtons = {};
 	me.definitionForms = {};
+	me.definitionMessages = {};
 
 	me.storageName_RedeemList = "redeemList";
 	me._globalMsg = "";
@@ -112,6 +113,7 @@ function cwsRender()
 		me.definitionActions = configJson.definitionActions;
 		me.definitionButtons = configJson.definitionButtons;
 		me.definitionForms = configJson.definitionForms;
+		me.definitionMessages = configJson.definitionMessages;
 	}
 
 	me.getStartBlockByStatus = function( bOnline, configJson, returnFunc )
