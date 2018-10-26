@@ -6,6 +6,13 @@ function BlockMsg( cwsRenderObj, blockObj )
 
     me.cwsRenderObj = cwsRenderObj;
 	me.blockObj = blockObj;
+	
+	
+	// TODO: NEED TO IMPLEMENT
+	// =============================================
+	// === TEMPLATE METHODS ========================
+
+
 
 	// -----------------------------
 	// ---- Methods ----------------
@@ -21,7 +28,7 @@ function BlockMsg( cwsRenderObj, blockObj )
 
 		if( messageJson != undefined && messageJson.type === "responseMessage" )
 		{
-			var arrMsg = passedData.data.msg.split( "-- " );
+			var arrMsg = passedData.resultData.msg.split( "-- " );
 
 			for( var i in arrMsg )
 			{

@@ -1,6 +1,6 @@
 {
-  "name": "CwS - Apps",
-  "short_name": "CwS - Apps",
+  "name": "CwS - Apps UI",
+  "short_name": "CwS - Apps UI",
   "icons": [{
     "src": "images/icons/icon-128x128.png",
       "sizes": "128x128",
@@ -22,7 +22,7 @@
       "sizes": "256x256",
       "type": "image/png"
     }],
-  "start_url": "./index.html",
+  "start_url": "./index.html?v1.0.12a",
   "display": "standalone",
   "background_color": "#3E4EB8",
   "theme_color": "#2F3BA2"
