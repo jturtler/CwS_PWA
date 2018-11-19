@@ -1138,11 +1138,12 @@ Util.parseInt = function( input )
 	}
 };
 
-
+/*
 Util.getServerUrl = function()
 {
 	return location.protocol + '//' + location.host;
 };
+*/
 
 Util.getIndexes = function( inputStr, keyStr )
 {

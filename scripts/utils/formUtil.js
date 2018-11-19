@@ -11,6 +11,8 @@ FormUtil.dcdConfig;
 
 FormUtil.blockType_MainTab = 'mainTab';
 FormUtil.blockType_MainTabContent = 'mainTabContent';
+FormUtil._serverUrl = location.protocol + '//' + location.host;
+// 'https://apps.psi-mis.org';  <-- white listing try
 
 // ==== Methods ======================
 
@@ -37,7 +39,8 @@ FormUtil.getObjFromDefinition = function( def, definitions )
 
 FormUtil.getServerUrl = function()
 {
-	return location.protocol + '//' + location.host;
+	return FormUtil._serverUrl; 
+	//location.protocol + '//' + location.host;
 };
 
 FormUtil.generateUrl = function( inputsJson, actionJson )

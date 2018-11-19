@@ -1,6 +1,6 @@
 {
 	"0.Info": "James Local",
-	"version": "0.08",
+	"version": "0.09",
 	"countryCode": "MZ",
 	"configType": "dataCapture",
 	
@@ -381,7 +381,14 @@
 			"defaultLabel": "Search",
 			"buttonType": "textButton",
 			"onClick": [
+				"closeCurrentBlock",
 				{
+					"actionType": "openBlock",
+					"blockId": "blockRedeemFormInputs"
+				}
+			],
+			"onClick_back": [
+					{
 					"actionType": "sendToWS",
 					"url": "/api/dc/searchByPhoneNumber",
 					"payloadHeader": [
