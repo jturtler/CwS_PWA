@@ -84,6 +84,11 @@ function cwsRender()
 
 		// loggedIn Name Link Click Event - opens Login Form
 		me.loggedInDivTag.click( function() {
+			// hide menuDiv if visible (when logging out)
+			if ( me.menuDivTag.is( ":visible" ) && me.menuTopRightIconTag.is( ":visible" ) )
+			{
+				me.menuTopRightIconTag.click();
+			}
 			me.LoginObj.openForm();
 		});
 	}
@@ -136,7 +141,7 @@ function cwsRender()
 			ConfigUtil.getDsConfigJson( me.dsConfigLoc, function( configDataFile ) {
 
 				console.log( 'local config' );
-				console.log( configDataFile );
+				//console.log( configDataFile );
 	
 				me.configJson = configDataFile;
 

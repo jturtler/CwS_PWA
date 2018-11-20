@@ -149,12 +149,20 @@ function Login( cwsRenderObj )
 			FormUtil.submitLogin( userName, password, loadingTag, function( success, loginData ) 
 			{
 				if ( success )
-				{							
-					//console.log( 'online data use: ' + JSON.stringify( loginData ) );
+				{
 
 					me.loginSuccessProcess( loginData );
 
-					DataManager.saveData( userName, loginData );						
+					/* START: create 'session' information block  */
+					var newSaveObj = Object.assign( {} , loginData);
+					var dtmNow = ( new Date() ).toISOString();
+					var sessionData = { createdDate: dtmNow, lastUpdated: dtmNow };
+
+					newSaveObj.session = sessionData;
+
+					/* END: create 'session' information block  */
+
+					DataManager.saveData( userName, newSaveObj );						
 				}
 				else
 				{
