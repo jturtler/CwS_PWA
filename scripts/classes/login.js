@@ -64,8 +64,20 @@ function Login( cwsRenderObj )
 			var loginUserNameVal = parentTag.find( 'input.loginUserName' ).val();
 			var loginUserPinVal = parentTag.find( 'input.loginUserPin' ).val();
 
-			me.processLogin( loginUserNameVal, loginUserPinVal, $( this ) );
+			// greg: use location.host for server parameter?
+			me.processLogin( loginUserNameVal, loginUserPinVal, '', $( this ) );
 		});
+
+		// New UI Button click
+		$( '.loginBtnAdv' ).click( function() {
+			var parentTag = $( this ).parent();
+			var loginServer = parentTag.find( 'input.loginServerAdv' ).val();
+			var loginUserNameVal = parentTag.find( 'input.loginUserNameAdv' ).val();
+			var loginUserPinVal = parentTag.find( 'input.loginUserPinAdv' ).val();
+
+			me.processLogin( loginUserNameVal, loginUserPinVal, loginServer, $( this ) );
+		});
+
 	}
 
 
@@ -122,12 +134,14 @@ function Login( cwsRenderObj )
 	}
 
 
-	me.processLogin = function( userName, password, btnTag )
+	me.processLogin = function( userName, password, server, btnTag )
 	{
 		var parentTag = btnTag.parent();
 		parentTag.find( 'div.loadingImg' ).remove();
 
 		//console.log( 'userName: ' + userName + ', password: ' + password );
+
+		FormUtil.login_server = server;
 
 		// ONLINE vs OFFLINE HANDLING HERE!!!!
 		if ( ConnManager.getAppConnMode_Offline() )
@@ -145,7 +159,6 @@ function Login( cwsRenderObj )
 		{
 			var loadingTag = FormUtil.generateLoadingTag( btnTag );
 
-
 			FormUtil.submitLogin( userName, password, loadingTag, function( success, loginData ) 
 			{
 				if ( success )
@@ -156,7 +169,7 @@ function Login( cwsRenderObj )
 					/* START: create 'session' information block  */
 					var newSaveObj = Object.assign( {} , loginData);
 					var dtmNow = ( new Date() ).toISOString();
-					var sessionData = { createdDate: dtmNow, lastUpdated: dtmNow };
+					var sessionData = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server };
 
 					newSaveObj.session = sessionData;
 

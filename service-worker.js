@@ -60,11 +60,7 @@ var filesToCache = [
   "./data/dsConfig.json" 
  ];
 
-// var _serverUrl = location.protocol + '//' + location.host;
-// NOTE: also defined in 'formUtil' since these don't talk to eath other.
-var _serverUrl = location.protocol + '//' + location.host;
-// 'https://apps.psi-mis.org'; <-- white listing try
-
+ var _serverUrl = location.protocol + '//' + location.host;
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');

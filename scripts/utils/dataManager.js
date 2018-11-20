@@ -9,6 +9,10 @@ function DataManager() {}
 // ---- Overall Data Save/Get/Delete ---
 
 DataManager.saveData = function( secName, jsonData ) {
+	// delete if exists: ensures last entry in localStorage was last verified login
+	if (localStorage[ secName ]){
+		localStorage.removeItem( secName );
+	}
 	localStorage[ secName ] = JSON.stringify( jsonData );
 };
 

@@ -66,7 +66,7 @@
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-      .register('./service-worker.js?v1')
+      .register('./service-worker.js')
       .then(function( registration ) 
       { 
         _registrationObj = registration;

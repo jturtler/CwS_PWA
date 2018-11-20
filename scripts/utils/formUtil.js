@@ -6,13 +6,12 @@ function FormUtil() {}
 FormUtil.staticWSName = 'eRefWSDev3';			// Need to be dynamically retrieved
 FormUtil.login_UserName = '';
 FormUtil.login_Password = '';
+FormUtil.login_server = '';
 FormUtil.orgUnitData;
 FormUtil.dcdConfig;
 
 FormUtil.blockType_MainTab = 'mainTab';
 FormUtil.blockType_MainTabContent = 'mainTabContent';
-FormUtil._serverUrl = location.protocol + '//' + location.host;
-// 'https://apps.psi-mis.org';  <-- white listing try
 
 // ==== Methods ======================
 
@@ -39,8 +38,15 @@ FormUtil.getObjFromDefinition = function( def, definitions )
 
 FormUtil.getServerUrl = function()
 {
-	return FormUtil._serverUrl; 
-	//location.protocol + '//' + location.host;
+	if (FormUtil.login_server)
+	{
+		return FormUtil.login_server; 
+	} 
+	else
+	{
+		return location.protocol + '//' + location.host;
+	}
+	
 };
 
 FormUtil.generateUrl = function( inputsJson, actionJson )
@@ -170,7 +176,7 @@ FormUtil.submitRedeem = function( url, payloadJson, actionJson, loadingTag, retu
 FormUtil.submitLogin = function( userName, password, loadingTag, returnFunc )
 {
 	var url = FormUtil.getWsUrl( '/api/loginCheck' );
-
+	
 	// FormUtil.orgUnitData <-- Reset before?
 	var payloadJson = { 'submitLogin': true, 'submitLogin_usr': userName, 'submitLogin_pwd': password, 'dcConfigGet': 'Y' };
 
