@@ -165,8 +165,12 @@ function cwsRender()
 
 		if ( me.areaList )
 		{
+			// 
+			var newMenuData = { id: "about", name: "About" };
+			me.areaList.push ( newMenuData );
+			var newMenuData = { id: "logOut", name: "Log out" };
+			me.areaList.push ( newMenuData );
 			var startMenuTag = me.populateMenuList( me.areaList );
-
 			if ( startMenuTag ) startMenuTag.click();
 		}
 	} 

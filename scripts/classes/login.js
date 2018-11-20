@@ -169,10 +169,9 @@ function Login( cwsRenderObj )
 					/* START: create 'session' information block  */
 					var newSaveObj = Object.assign( {} , loginData);
 					var dtmNow = ( new Date() ).toISOString();
-					var sessionData = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server };
 
-					newSaveObj.session = sessionData;
-
+					newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: btoa(btoa(password)) };
+					newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor };
 					/* END: create 'session' information block  */
 
 					DataManager.saveData( userName, newSaveObj );						
