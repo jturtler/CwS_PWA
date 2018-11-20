@@ -1,8 +1,8 @@
-var dataCacheName = 'cws-pwa-data-v1.002';
-var cacheName = 'cws-pwa-v1.0.11';
+var dataCacheName = 'cws-pwa-data-v1.0.13g';
+var cacheName = 'cws-pwa-v1.0.13g';
 var filesToCache = [
   "./",
-  "./index.html?v1.0.11b",
+  "./index.html?1.0.13g",
   "./manifest.json",
   "./service-worker.js",
 
@@ -49,6 +49,7 @@ var filesToCache = [
   "./scripts/app.js",
   "./scripts/cwsRender.js",
   
+  "./scripts/classes/validation.js",
   "./scripts/classes/login.js",
   "./scripts/classes/action.js",
   "./scripts/classes/block.js",

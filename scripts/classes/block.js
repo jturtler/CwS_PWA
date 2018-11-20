@@ -19,6 +19,7 @@ function Block( cwsRenderObj, blockJson, blockId, parentTag, passedData, options
 
 	// -- Sub class objects -----
 	me.actionObj;
+	me.validationObj;
 	me.blockFormObj;
 	me.blockListObj;
 	me.dataListObj;
@@ -101,6 +102,7 @@ function Block( cwsRenderObj, blockJson, blockId, parentTag, passedData, options
 	me.initialize = function()
 	{
 		me.actionObj = new Action( me.cwsRenderObj, me );
+		me.validationObj = new Validation( me.cwsRenderObj, me );
 		me.blockFormObj = new BlockForm( me.cwsRenderObj, me ); // Do this only if exists/needed
 		me.blockListObj = new BlockList( me.cwsRenderObj, me );	// Do this only if exists/needed		
 		me.dataListObj = new DataList( me.cwsRenderObj, me );	// Do this only if exists/needed
