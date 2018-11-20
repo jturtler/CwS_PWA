@@ -103,7 +103,7 @@ function cwsRender()
 			else if ( jsonData.renderType === "queueList" )
 			{
 
-				var jsonStorageData = DataManager.getOrCreateData( me.storageName_Queue );
+				var jsonStorageData = DataManager.getData( me.storageName_Queue );
 
 				me.renderQueueList( jsonStorageData.list, blockTag );
 				// me.renderQueueList( jsonData.selections, blockTag );

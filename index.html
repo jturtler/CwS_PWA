@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-color">
+<html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,238 +25,75 @@
     <link rel="icon" type="image/png" href="images/icons/icon-144x144.png">
 
     <script type="text/javascript" src="scripts/libraries/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="scripts/libraries/jquery.blockUI.js"></script>
-    <script type="text/javascript" src="scripts/libraries/jquery-ui.js"></script>
-    <script type="text/javascript" src="scripts/libraries/jquery-dateformat.min.js"></script>
+    <link rel="manifest" href="./manifest.json"> <!-- changed from href="/manifest.json" -->
+    <link rel="stylesheet" type="text/css" href="styles/style.css?v=1.0.1">
 
-
-    <script> var _ver = '1.0.12a'; </script>
-
-
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" type="text/css" href="styles/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="styles/style.css?v=1.0.12a">
-
-    <!--link rel="stylesheet" href="css/openSans.css"-->
-    <link rel="stylesheet" href="css/style.css?v=1.0.12a">
-    <link rel="stylesheet" href="css/responsive.css?v=1.0.12a">
-    <!--link rel="stylesheet" href="css/log.css?v=1.0.12a"-->
-  
   </head>
   <body>
 
-  <nav class="bg-color-program">
-      <div class='logo_top nav_child'>
-        <img src='img/logo_top.svg'>
-      </div>
-      <div class='logo_desc nav_child'>
-        <div class="logo-desc-all">Service provision</div>
-        <div style="float: left;"><img src='img/net.svg' class="tab-image"></div>
-        <div id="loggedInDiv" style="float: left; margin-left: 6px; margin-top: 2px; cursor: pointer;">
-          <span id="spanOuName" style="font-style: italic; color: darkseagreen;">[LogIn]</span>
-        </div>  
-      </div>
-
-      <div id="menuTopDiv" class='m_top_cont nav_child' style="width: 4%;">
-        <!-- fully expanded menu displayed on top?  No good?-->
-        <div class='m_top'>
-          <label id='menu_2' class="lab_m" for="">Menu 1</label>
-          <label id='menu_3' class="lab_m" for="">Menu 2</label>
-          <label id='menu_4' class="lab_m" for="">Menu 3</label>
+    <nav>
+      <div id="divNav" class="nav-wrapper">
+        <div style="display:inline-block;">
+          <span class="brand-logo center">CwS - App</span>
         </div>
-        <div id='menu_e' class="close">
-          <img src='img/menu_icon.svg'>
+        <div style="float: right; margin-right: 2px; margin-left: -100px;">
+          <table style="border-spacing: 0px;">
+            <tr>
+              <td>
+                  <div id="swRefresh2" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
+                      <span style="font-size: 12px;">v1.035</span> 
+                  </div>
+              </td>
+              <td>
+                  <div id="swRefresh" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
+                      <img src='images/reload.png' style="width: 12px; height: 12px; vertical-align: bottom; margin-bottom: 11px;"/>
+                  </div>
+              </td>
+              <td>          
+                <div id='topRight_loadingDiv' style='display:none'>
+                  <img src='images/loader-bar.gif'/>
+                </div>   
+              </td>
+              <td>
+                <div id="divAppModeConnStatus" style="cursor:pointer;"><span id="appModeConnStatus" connStat="" style="font-size: 11px;"></span></div>
+              </td>
+              <td>
+                <div id="divNetworkStatus"><img id="imgNetworkStatus" src='images/blank.gif' style="width: 10px; height: 10px; vertical-align: bottom; margin-bottom: 12px;"/></div>
+              </td>
+            </tr>
+          </table>
         </div>
-      </div>
-
-      <div id="pwa_tools" style="float: right; margin-right: 2px; margin-top: 5px;">
-        <table class="topIconsTbl" style="border-spacing: 0px;">
-          <tr>
-            <td>
-                <div id="swRefresh2" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
-                    <span id="spanVersion" style="font-size: 12px;">v</span> 
-                </div>
-            </td>
-            <td>
-                <div id="swRefresh" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
-                    <img src='images/reload.png' style="width: 12px; height: 12px; vertical-align: bottom; margin-bottom: 0px;"/>
-                </div>
-            </td>
-            <td>          
-              <div id='topRight_loadingDiv' style='display:none'>
-                <img src='images/loader-bar.gif'/>
-              </div>   
-            </td>
-            <td>
-              <div id="divAppModeConnStatus" style="cursor:pointer;"><span id="appModeConnStatus" connStat="" style="font-size: 11px;"></span></div>
-            </td>
-            <td>
-              <div id="divNetworkStatus"><img id="imgNetworkStatus" src='images/blank.gif' style="width: 10px; height: 10px; vertical-align: bottom; margin-bottom: 2px;"/></div>
-            </td>
-          </tr>
-        </table>
       </div>
 
     </nav>
-    
-    <div id="menuDiv" class="menu-mobile">
-    </div>
-        
 
-    <!-- LOGIN FORM DIV -->
-    <div id="loginFormDiv">
-
-        <div class='logo_log reget'>
-          <img src='img/logo_log.svg'>
-        </div>
-
-        <div name="top-body" class="bodytop bg-color-program-son"></div>
-        <section class="wrapper-log">
-
-          <!-- LARGE WIDTH MODE DISPLAY -->
-          <ul class="tabs">
-            <li tabId="1" class="active">
-              <img src='img/key.svg' class="tab-image">
-              <label> Simple options</label>
-            </li>
-            <li tabId="2">
-              <img src='img/settings.svg' class="tab-image">
-              <label> Advanced options</label>
-            </li>
-          </ul>
-      
-
-          <div class="menu-wrapper">
-            <ul class="tab_content">
-              <li tabId="1" class="active">
-                <a class="expandable expanded" id="s-opt">
-                  <div class="icon-row"><img src="img/key.svg"> Simple options</div>
-                  <div class="icon-arrow"><img class="expandable-arrow" src="img/arrow_down.svg"></div>
-                </a>
-                <div>
-                  <ul class="content_log">
-                    <li>
-                      <div>
-                        <div class="tb-content-d-log">
-                          <label class="from-string">User name</label>
-                          <input autocomplete="off" class="form-type-text loginUserName" type="text">
-                        </div>
-                        <div class="tb-content-d-log">
-                          <label class="from-string">PIN</label>
-                          <input autocomplete="off" class="form-type-text loginUserPin" type="password">
-                        </div>
-                        <div class="tb-content-buttom-log divBtn loginBtn">LOG IN</div>
-                        
-                        <div id="skipLoginDiv" style="cursor: pointer;">skip login</div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li tabId="2">
-                <a class="expandable" id="a-opt">
-                  <div class="icon-row"><img src="img/settings.svg"> Advanced options</div>
-                  <div class="icon-arrow"><img class="expandable-arrow" src="img/arrow_down.svg"></div>
-                </a>
-                <div>
-                  <ul>
-                    <li>
-                      <div class="tb-content-d-log">
-                        <label class="from-string">Server URL</label>
-                        <input autocomplete="off" class="form-type-text loginServerAdv" type="text">
-                      </div>
-                      <div class="tb-content-d-log">
-                        <label class="from-string">User name</label>
-                        <input autocomplete="off" class="form-type-text loginUserNameAdv" type="text">
-                      </div>
-                      <div class="tb-content-d-log">
-                        <label class="from-string">PIN</label>
-                        <input autocomplete="off" class="form-type-text loginUserPinAdv" type="password">
-                      </div>
-                      <div class="tb-content-buttom-log divBtn loginBtnAdv">LOG IN</div>
-                      <div class="tb-content-buttom-log-out divBtn loginBtnClear">CLEAR AND LOG OUT</div>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
+    <main class="container">
+      <div class="mainDiv">
+        <div class="testSec" style="text-align: left; display: none;"> 
+          <input id="testInput" class="cssDefault" size="3" />
+          <button id="testBtn" class="cssDefault">Test</button>  
+          <div id="testDiv" style="display:inline-block;"></div> 
+          <div id="testFetchDiv">
+            <input id="testFetchInput" style="width: 90%;"> <button id="testFetchBtn">Get</button>
           </div>
-      
-        </section>
-
-    </div>
-
-
-    <!-- AFTER LOGIN - MAIN APP CONTENT DIV -->
-    <div id="pageDiv" style="display:none;">
-
-      <div name="top-body" class="bodytop bg-color-program-son"></div>
-
-      <section class="wrapper">
-
-        <main class="container">
-          <div class="mainDiv">
-
-            <div id="renderBlock" style="margin-top: 15px;" class="renderBlock"></div>
-
-          </div>
-        </main>
-
-      </section>
-
-    </div>
-
-
-    <!-- LIST, FLOATING ICON TEMPLATE DIV -->
-    <div id="listTemplateDiv" style="display:none;">
-
-      <div class="listDiv">
-
-        <ul class="o-one">
-          <li class="active">
-            <img src='img/active.svg' class="tab-image">
-            <label> Active</label>
-          </li>
-        </ul>
-
-        <ul class="tab__content_act">
-        </ul>
-
-        <div class="title-act-mobile"><img src='img/active.svg' class="tab-image"><label> Active</label></div>
-
-        <div class="floatListMenuIcon fixed_father pointer off">
-          <img class="buttom-plus" src="img/plus.svg">
         </div>
-
-        <div class="floatListMenuSubIcons fixed_child">
-          <img class="pointer" src="img/request.svg">
-          <img class="pointer" src="img/contact.svg">
-          <img class="pointer" src="img/service.svg">
-        </div>
-        
+        <div style="margin-top: 15px;" class="renderBlock"></div>
       </div>
+    </main>
 
-    </div>
+    <script type="text/javascript" src="scripts/utils/util.js"></script>
+    <script type="text/javascript" src="scripts/utils/connManager.js"></script>
+    <script type="text/javascript" src="scripts/utils/dataManager.js"></script>
+    <script type="text/javascript" src="scripts/utils/formUtil.js"></script>
 
- 
-    <script type="text/javascript" src="scripts/utils/util.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/utils/connManager.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/utils/dataManager.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/utils/formUtil.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/utils/configUtil.js?v=1.0.12a"></script>
+    <script type="text/javascript" src="scripts/classes/action.js"></script>
+    <script type="text/javascript" src="scripts/classes/blockForm.js"></script>
+    <script type="text/javascript" src="scripts/classes/blockList.js"></script>
+    <script type="text/javascript" src="scripts/classes/blockButton.js"></script>
+    <script type="text/javascript" src="scripts/classes/blockMsg.js"></script>
+    <script type="text/javascript" src="scripts/classes/block.js"></script>
 
-    <script type="text/javascript" src="scripts/classes/login.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/classes/action.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/classes/blockForm.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/classes/blockList.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/classes/dataList.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/classes/blockButton.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/classes/blockMsg.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/classes/block.js?v=1.0.12a"></script>
-
-    <script type="text/javascript" src="scripts/cwsRender.js?v=1.0.12a"></script>
-    <script type="text/javascript" src="scripts/app.js?v=1.0.12a"></script>
-
-    <!-- script> document.write("<script src='scripts/utils/util.js?v=" + _ver + "'><\/script>"); </script-->
+    <script type="text/javascript" src="scripts/cwsRender.js"></script>
+    <script type="text/javascript" src="scripts/app.js"></script>
   </body>
 </html>

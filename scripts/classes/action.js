@@ -23,25 +23,11 @@ function Action( cwsRenderObj, blockObj )
 
 		var passData = [];
 
-		me.recurrsiveActions( blockDivTag, formDivSecTag, btnTag, btnOnClickActions, 0, passData, undefined, function( finalPassData ) {
+		me.recurrsiveActions( blockDivTag, formDivSecTag, btnOnClickActions, 0, passData, function( finalPassData ) {
 		} );
 	}
 
-	me.handleItemClickActions = function( btnTag, btnOnClickActions, itemIdx, clickedItemData )
-	{		
-		var blockDivTag = btnTag.closest( '.block' );
-		var formDivSecTag = blockDivTag.find( '.formDivSec' );
-
-		var passData = [];
-
-		console.log( 'btnOnClickActions' );
-		console.log( btnOnClickActions );
-
-		me.recurrsiveActions( blockDivTag, formDivSecTag, btnTag, btnOnClickActions, 0, passData, clickedItemData, function( finalPassData ) {
-		} );
-	}
-
-	me.recurrsiveActions = function( blockDivTag, formDivSecTag, btnTag, actions, actionIndex, passData, clickedItemData, returnFunc )
+	me.recurrsiveActions = function( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc )
 	{
 		// If 'recurr' reached the end, call 'returnFunc' with data accumulated?  or last one package..
 		if ( actionIndex >= actions.length )
@@ -50,7 +36,7 @@ function Action( cwsRenderObj, blockObj )
 		}
 		else
 		{			
-			var asyncCalled = me.clickActionPerform( actions[actionIndex], blockDivTag, formDivSecTag, btnTag, actions, actionIndex, passData, clickedItemData, returnFunc );
+			var asyncCalled = me.clickActionPerform( actions[actionIndex], blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );
 
 			if ( !asyncCalled )	
 			{
@@ -64,18 +50,16 @@ function Action( cwsRenderObj, blockObj )
 				}
 
 				actionIndex++;
-				me.recurrsiveActions( blockDivTag, formDivSecTag, btnTag, actions, actionIndex, passData, clickedItemData, returnFunc );
+				me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );
 			}
 		}
 	}
 
-	me.clickActionPerform = function( actionDef, blockDivTag, formDivSecTag, btnTag, actions, actionIndex, passData, clickedItemData, returnFunc, passedData )
+	me.clickActionPerform = function( actionDef, blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc, passedData )
 	{
-		// TODO: all the blockDivTag related should be done by 'block' class method
-		
 		var asyncCalled = false;
 
-		var clickActionJson = FormUtil.getObjFromDefinition( actionDef, me.cwsRenderObj.configJson.definitionActions );
+		var clickActionJson = FormUtil.getObjFromDefinition( actionDef, me.cwsRenderObj.definitionActions );
 
 		if ( clickActionJson !== undefined )
 		{
@@ -87,79 +71,42 @@ function Action( cwsRenderObj, blockObj )
 			}
 			else if ( clickActionJson.actionType === "closeBlock" )
 			{
-				if( clickActionJson.closeLevel !== undefined )
-				{
-					var closeLevel = Util.getNum( clickActionJson.closeLevel );
+				var closeLevel = Util.getNum( clickActionJson.closeLevel );
 				
-					var divBlockTotal = me.renderBlockTag.find( 'div.block:visible' ).length;
+				var divBlockTotal = me.renderBlockTag.find( 'div.block:visible' ).length;
 
-					var currBlock = blockDivTag;
+				var currBlock = blockDivTag;
 
-					for ( var i = 0; i < divBlockTotal; i++ )
-					{
-						var tempPrevBlock = currBlock.prev( 'div.block' );
-
-						if ( closeLevel >= i ) 
-						{
-							currBlock.remove();
-						}
-						else break;
-
-						currBlock = tempPrevBlock;
-					}
-				}
-				else if( clickActionJson.blockId != undefined )
+				for ( var i = 0; i < divBlockTotal; i++ )
 				{
-					me.renderBlockTag.find("[blockid='" + clickActionJson.blockId + "']" ).remove();
+					var tempPrevBlock = currBlock.prev( 'div.block' );
+
+					if ( closeLevel >= i ) 
+					{
+						currBlock.remove();
+					}
+					else break;
+
+					currBlock = tempPrevBlock;
 				}
-			}
-			else if ( clickActionJson.actionType === "hideBlock" )
-			{
-				//blockDivTag.hide();
-				me.blockObj.hideBlock();
 			}
 			else if ( clickActionJson.actionType === "openBlock" )
 			{
 				if ( clickActionJson.blockId !== undefined )
 				{
-					var blockJson = FormUtil.getObjFromDefinition( clickActionJson.blockId, me.cwsRenderObj.configJson.definitionBlocks );
+					var blockJson = FormUtil.getObjFromDefinition( clickActionJson.blockId, me.cwsRenderObj.definitionBlocks );
 				
-					if ( passedData === undefined ) passedData = {};
-					passedData.showCase = clickActionJson.showCase;
-					passedData.hideCase = clickActionJson.hideCase;
-					
-					// Hide block if action is doing 'openBlock'
-					me.blockObj.hideBlock();
-
-					var newBlockObj = new Block( me.cwsRenderObj, blockJson, clickActionJson.blockId, me.blockObj.parentTag, passedData, { 'notClear': true } );	
-					//var newBlockObj = new Block( me.cwsRenderObj, blockJson, clickActionJson.blockId, me.renderBlockTag, passedData, { 'notClear': true } );	
-					newBlockObj.renderBlock();
+					me.blockObj.renderBlock( blockJson, clickActionJson.blockId, me.renderBlockTag, passedData );	
 				}
-			}
-			else if ( clickActionJson.actionType === "filledData" )
-			{
-				var dataFromDivTag =  me.renderBlockTag.find("[blockid='" + clickActionJson.fromBlockId + "']" );
-				var dataToDivTag =  me.renderBlockTag.find("[blockid='" + clickActionJson.toBlockId + "']" );
-				var dataItems = clickActionJson.dataItems;
-				
-				for ( var i = 0; i < dataItems.length; i++ )
-				{
-					var value = dataFromDivTag.find("[name='" + dataItems[i] + "']").val()
-					dataToDivTag.find("[name='" + dataItems[i] + "']").val( value );
-				}
-			}
-			else if ( clickActionJson.actionType === "alertMsg" )
-			{
-				alert( clickActionJson.message );
 			}
 			else if ( clickActionJson.actionType === "processWSResult" ) 
 			{
 				// 1. Match the case..
 				var passedData_Temp = passData[actionIndex - 1];
 
-				if ( passedData_Temp.resultData !== undefined && clickActionJson.resultCase !== undefined )
+				if ( passedData_Temp.info !== undefined && clickActionJson.resultCase !== undefined )
 				{
-					var statusActions = clickActionJson.resultCase[ passedData_Temp.resultData.status ];
+					var statusActions = clickActionJson.resultCase[ passedData_Temp.info.status ];
 
 					if ( statusActions && statusActions.length > 0 )
 					{
@@ -167,107 +114,121 @@ function Action( cwsRenderObj, blockObj )
 						for ( var i = 0; i < statusActions.length; i++ )
 						{
 							// NOTE: this should not call 'async' calls?  to webservice?
-							me.clickActionPerform( statusActions[i], blockDivTag, formDivSecTag, btnTag, actions, actionIndex, passData, clickedItemData, returnFunc, passedData_Temp );
+							me.clickActionPerform( statusActions[i], blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc, passedData_Temp );
 						}
 					}
 				}
-			}
+			}				
 			else if ( clickActionJson.actionType === "sendToWS" ) 
 			{
 				var currBlockId = blockDivTag.attr( 'blockId' );				
+
 				// generate inputsJson
 				var inputsJson = FormUtil.generateInputJson( formDivSecTag );
-
-
-
-				// ????  How to describe this?  We need to step through this process and make it 
-				// easier to follow.
-				if( clickActionJson.payloadBody !== undefined && clickedItemData !== undefined )
-				{
-					passedData = clickedItemData;
-
-					for( var i = 0; i < clickActionJson.payloadBody.length; i++  )
-					{
-						var uid = clickActionJson.payloadBody[i];
-						var value = "";
-						for( var j = 0; j < passedData.displayData.length; j++  )
-						{
-							if( passedData.displayData[j].id === uid )
-							{
-								value = passedData.displayData[j].value;
-							}
-						}
-
-						inputsJson[uid] = value;
-					}
-				}
-
 				// generate url
 				var url = FormUtil.generateUrl( inputsJson, clickActionJson );
 
-				if ( url !== undefined )
+
+				var submitJson = {};
+				submitJson.payloadJson = inputsJson;
+				submitJson.url = url;
+				submitJson.actionJson = clickActionJson;	
+
+
+				if ( !ConnManager.getAppConnMode_Online() )
 				{
-
-					var submitJson = {};
-					submitJson.payloadJson = inputsJson;
-					submitJson.url = url;
-					submitJson.actionJson = clickActionJson;	
-
-
-					if ( !ConnManager.getAppConnMode_Online() )
+					if ( clickActionJson.redeemListInsert === "true" )
 					{
-						// Offline Submission Handling..
-						if ( clickActionJson.redeemListInsert === "true" )
-						{
-							me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_queued );
-						}
-
-						// PUT IT INSIDE OF ABOVE IF CASE?
-						var passedData_Temp = passData[actionIndex - 1];
-						
-						var returnJson = { 'resultData': { 'status': 'offline' } };					
-						passData.push( returnJson );
-
+						me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_queued );
 					}
-					else if ( clickActionJson.url !== undefined )
-					{					
-						// generate url
-						var url = FormUtil.generateUrl( inputsJson, clickActionJson );
-						//console.log( 'url: ' + url );
-						//console.log( 'inputsJson: ' + JSON.stringify( inputsJson ) );
-						
-						asyncCalled = true;
 
-						// Loading Tag part..
-						var loadingTag = FormUtil.generateLoadingTag( btnTag );
+					// PUT IT INSIDE OF ABOVE IF CASE?
+					var passedData_Temp = passData[actionIndex - 1];
+					
+					var returnJson = { 'info': { 'status': 'offline' } };					
+					passData.push( returnJson );
 
-						
-						// NOTE: This form data is saved in owner form block
-						// TODO: THIS SHOULD BE ADDED TO 'QUEUE' AND LATER CHANGED TO 'SUBMIT'
-						if ( clickActionJson.redeemListInsert === "true" )
+				}
+				else if ( clickActionJson.url !== undefined )
+				{					
+					// generate url
+					var url = FormUtil.generateUrl( inputsJson, clickActionJson );
+					//console.log( 'url: ' + url );
+					//console.log( 'inputsJson: ' + JSON.stringify( inputsJson ) );
+					
+					asyncCalled = true;
+
+					var btnDivSecTag = blockDivTag.find( 'div.btnDivSec' );
+					var loadingTag = $( '<div class="loadingImg" style="display: inline-block; margin-left: 8px;"><img src="images/loading.gif"></div>' );
+					btnDivSecTag.append( loadingTag );
+
+
+					// NOTE: This form data is saved in owner form block
+					// TODO: THIS SHOULD BE ADDED TO 'QUEUE' AND LATER CHANGED TO 'SUBMIT'
+					if ( clickActionJson.redeemListInsert === "true" )
+					{
+						me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_submit );
+					}
+
+					// Send the POST reqesut
+					fetch( url, {  
+						method: 'POST',  
+						headers: { 'usr': '1004', 'pwd': '1234' },  
+						body: JSON.stringify( inputsJson )
+					})
+					.then( function( response ) 
+					{
+						if (response) 
 						{
-							me.blockObj.blockListObj.redeemList_Add( submitJson, me.blockObj.blockListObj.status_redeem_submit );
-						}
+							if ( response.ok )
+							{
+								response.json().then(
+									function( returnJson ) 
+									{
 
-						FormUtil.submitRedeem( url, inputsJson, clickActionJson, loadingTag, undefined, function( returnJson ) {
-							// final call..
-							actionIndex++;
-							passData.push( returnJson );
-							me.recurrsiveActions( blockDivTag, formDivSecTag, btnTag, actions, actionIndex, passData, clickedItemData, returnFunc );
-						}, function() {
+										if ( clickActionJson.alertResult === "true" )
+										{
+											if( returnJson.info.status === "success")
+											{
+												alert( "Success!" );
+											}
+											else if ( returnJson.info.status === "fail")
+											{
+												alert( "Failed!" );
+											}
+										}			
+										
+										loadingTag.remove();
+
+										// final call..
+										actionIndex++;
+										passData.push( returnJson );
+										me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );
+									}
+								);
+							}
+							else
+							{
+								alert( 'Response Failed' );
+								loadingTag.remove();
+								actionIndex++;
+								passData.push( {} );
+								me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );					
+							}
+						}
+						else
+						{
+							alert( 'Response Not available' );
+							loadingTag.remove();
 							actionIndex++;
 							passData.push( {} );
-							me.recurrsiveActions( blockDivTag, formDivSecTag, btnTag, actions, actionIndex, passData, clickedItemData, returnFunc );	
-						});
-					}
+							me.recurrsiveActions( blockDivTag, formDivSecTag, actions, actionIndex, passData, returnFunc );				
+						}
+					});
 				}
 			}
 		}
 
 		return asyncCalled;
 	}
-
-	// ========================================================
-	
-
 }

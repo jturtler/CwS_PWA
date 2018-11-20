@@ -8,7 +8,7 @@
   window.onload = function() {
     // Create a class that represent the object..
     ConnManager._cwsRenderObj = _cwsRenderObj;
-    _cwsRenderObj.render();
+    _cwsRenderObj.performRun();
     //_testSection.initSetUp();
 
     updateOnlineStatus();
@@ -24,33 +24,23 @@
 
   // ----------------------------------------------------
 
-  $( '#spanVersion' ).text( 'v' + _ver );
-  
+//  $( '#swRefresh' ).click( () => {
   $( '.reget' ).click( () => {
-
-    if ( ConnManager.isOffline() )
+    if ( _registrationObj !== undefined )
     {
-      alert( 'Only re-register service-worker while online, please.' );
+      _registrationObj.unregister().then(function(boolean) {
+        console.log('Service Worker UnRegistered');
+        // if boolean = true, unregister is successful
+        location.reload(true);
+      });
     }
-    else
-    {
-      if ( _registrationObj !== undefined )
-      {
-        _registrationObj.unregister().then(function(boolean) {
-          //console.log('Service Worker UnRegistered');
-          // if boolean = true, unregister is successful
-          location.reload(true);
-        });
-      }  
-    }
-
   });
 
-  function updateOnlineStatus( event ) {
-
+  
+  function updateOnlineStatus(event) {
     ConnManager.network_Online = navigator.onLine;
     connStatTagUpdate( ConnManager.network_Online );
-  };
+  }
 
 
   function connStatTagUpdate( bOnline ) {
@@ -59,8 +49,8 @@
 
     $( '#imgNetworkStatus' ).attr( 'src', imgSrc );
 
-    //console.log( '=== Network Online: ' + bOnline );
-  };
+    console.log( '=== Network Online: ' + bOnline );
+  }
 
   // ----------------------------------------------------
 
@@ -72,5 +62,5 @@
         _registrationObj = registration;
         console.log('Service Worker Registered'); 
       });
-  };
+  }
 })();

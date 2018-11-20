@@ -47,10 +47,6 @@ ConnManager.getAppConnMode_Online = function() {
 	return ConnManager.appConnMode_Online;
 }
 
-ConnManager.getAppConnMode_Offline = function() {
-	return !ConnManager.appConnMode_Online;
-}
-
 ConnManager.setAppConnMode_Initial = function() {
 	// 1. 1st status when coming is the starting status
 	ConnManager.setAppConnMode( ConnManager.isOnline() );
@@ -161,7 +157,7 @@ ConnManager.change_AppConnMode = function( modeStr, requestConnMode )
 		if ( ConnManager._cwsRenderObj ) 
 		{
 			//console.log( 'from reply, this is called.' );
-			ConnManager._cwsRenderObj.startBlockExecuteAgain();
+			ConnManager._cwsRenderObj.startBlockExecute();
 		}
 
 		if ( modeStr === "interval" ) ConnManager.IntvCountBuildUp = 0;
