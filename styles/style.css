@@ -16,16 +16,34 @@ button {
   background-color: white !important;
 }
 
+input {
+  border-color: #ccc;
+  border-width: thin;
+  padding: 2px;
+}
+
 /* =========================== */
 /* App Custom Style */
 
-.block {
+.reget {
+  cursor:pointer;
+}
+
+.blockStyle {
+  /*margin: 5px;
+  padding: 3px;*/
+  background-color: #f4f4f4;
+  /* border: 1px solid silver; */
+  text-align: left;
+}
+
+.itemBlock{
   margin: 5px;
   padding: 3px;
   background-color: #f4f4f4;
   border: 1px solid silver;
   text-align: left;
-}
+} 
 
 .testSec {
   margin: 5px;
@@ -111,9 +129,10 @@ button {
 body{
   margin: 0;
   display: block;
-  font-size: 14px;
+  /*font-size: 14px;*/
 }
 
+/*
 nav {
   color: #fff;
   background-color: #5c5c5c;
@@ -126,6 +145,7 @@ nav {
 
   display: block;
 }
+*/
 
 nav .nav-wrapper {
   position: relative;
@@ -145,6 +165,10 @@ a.brand-logo {
   font-size: 22px;
   color: white;
   text-decoration: none;
+}
+
+.topIconsTbl td {
+  padding: 1px 2px;
 }
 
 /* =========================== */

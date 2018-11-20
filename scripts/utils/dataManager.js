@@ -9,6 +9,10 @@ function DataManager() {}
 // ---- Overall Data Save/Get/Delete ---
 
 DataManager.saveData = function( secName, jsonData ) {
+	// delete if exists: ensures last entry in localStorage was last verified login
+	if (localStorage[ secName ]){
+		localStorage.removeItem( secName );
+	}
 	localStorage[ secName ] = JSON.stringify( jsonData );
 };
 
@@ -17,8 +21,15 @@ DataManager.getData = function( secName ) {
 
 	var dataStr = localStorage[ secName ];
 	if ( dataStr ) jsonData = JSON.parse( dataStr );
-	else jsonData = { "list": [] };
+	//else jsonData = {}; // "list": [] };		// This 'list' should be more generic?  '{}'..  
+	// Create 'list' type get?
 
+	return jsonData;
+};
+
+DataManager.getOrCreateData = function( secName ) {
+	var jsonData = DataManager.getData( secName );
+	if ( !jsonData ) jsonData = {};
 	return jsonData;
 };
 
@@ -29,9 +40,20 @@ DataManager.deleteData = function( secName ) {
 // -------------------------------------
 // ---- List Item Data Save/Get/Delete ---
 
-DataManager.insertDataItem = function( secName, jsonInsertData ) {
+/*
+DataManager.getListData = function( secName ) {
 
 	var jsonMainData = DataManager.getData( secName );
+
+	if ( !jsonMainData.list ) jsonMainData.list = [];
+
+	return jsonMainData;
+}
+*/
+
+DataManager.insertDataItem = function( secName, jsonInsertData ) {
+
+	var jsonMainData = DataManager.getOrCreateData( secName );
 
 	// We assume that this has 'list' as jsonArray (of data)
 	if ( jsonMainData.list === undefined ) jsonMainData.list = [];
@@ -44,7 +66,7 @@ DataManager.removeItemFromData = function( secName, id ) {
 
 	if ( secName && id )
 	{
-		var jsonMainData = DataManager.getData( secName );
+		var jsonMainData = DataManager.getOrCreateData( secName );
 
 		// We assume that this has 'list' as jsonArray (of data)
 		if ( jsonMainData.list !== undefined ) 
@@ -62,7 +84,7 @@ DataManager.getItemFromData = function( secName, id )
 
 	if ( secName && id )
 	{
-		var jsonMainData = DataManager.getData( secName );
+		var jsonMainData = DataManager.getOrCreateData( secName );
 
 		// We assume that this has 'list' as jsonArray (of data)
 		if ( jsonMainData.list !== undefined ) 
@@ -79,7 +101,7 @@ DataManager.updateItemFromData = function( secName, id, jsonDataItem )
 {
 	if ( secName && id )
 	{
-		var jsonMainData = DataManager.getData( secName );
+		var jsonMainData = DataManager.getOrCreateData( secName );
 
 		// We assume that this has 'list' as jsonArray (of data)
 		if ( jsonMainData.list !== undefined ) 

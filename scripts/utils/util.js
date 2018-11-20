@@ -79,10 +79,21 @@ Util.trimTags = function( tags )
 	});
 };
 
-Util.replaceStr = function( fullText, strReplacing, strReplacedWith )
+Util.replaceAllRegx = function( fullText, strReplacing, strReplacedWith )
 {
 	var rePattern = new RegExp( strReplacing, "g" );
-	return fullText.repalce( rePattern, strReplacedWith );
+	return fullText.replace( rePattern, strReplacedWith );
+};
+
+Util.replaceAll = function( fullText, keyStr, replaceStr )
+{
+	var index = -1;
+	do {
+		fullText = fullText.replace( keyStr, replaceStr );
+		index = fullText.indexOf( keyStr, index + 1 );
+	} while( index != -1 );
+
+	return fullText;
 };
 
 Util.stringSearch = function( inputString, searchWord )
@@ -116,7 +127,6 @@ Util.endsWith = function( input, suffix )
 Util.clearList = function( selector ) {
 	selector.children().remove();
 };
-
 
 Util.moveSelectedById = function( fromListId, targetListId ) {
 	return !$('#' + fromListId + ' option:selected').remove().appendTo('#' + targetListId ); 
@@ -157,6 +167,11 @@ Util.valueUnescape = function( input )
 	input = input.replace( '\"', '"' );
 
 	return input;
+};
+
+Util.reverseArray = function( arr )
+{
+	return arr.reverse();
 };
 
 // ----------------------------------
@@ -273,20 +288,23 @@ Util.getFromList = function( list, value, propertyName )
 {
 	var item;
 
-	// If propertyName being compare to has not been passed, set it as 'id'.
-	if ( propertyName === undefined )
+	if ( list )
 	{
-		propertyName = "id";
-	}
-
-	for( i = 0; i < list.length; i++ )
-	{
-		var listItem = list[i];
-
-		if ( listItem[propertyName] == value )
+		// If propertyName being compare to has not been passed, set it as 'id'.
+		if ( propertyName === undefined )
 		{
-			item = listItem;
-			break;
+			propertyName = "id";
+		}
+
+		for( i = 0; i < list.length; i++ )
+		{
+			var listItem = list[i];
+
+			if ( listItem[propertyName] && listItem[propertyName] === value )
+			{
+				item = listItem;
+				break;
+			}
 		}
 	}
 
@@ -548,6 +566,33 @@ Util.populateSelectDefault = function( selectObj, selectNoneName, json_Data, inp
 	}
 };
 
+Util.populateSelect_newOption = function( selectObj, json_Data, inputOption )
+{
+	selectObj.empty();
+
+	selectObj.append( '<option selected disabled="disabled">Choose an option</option>' );
+
+	var valuePropStr = "id";
+	var namePropStr = "name";
+
+	if ( inputOption !== undefined )
+	{
+		valuePropStr = inputOption.val;
+		namePropStr = inputOption.name;
+	}
+
+	if ( json_Data !== undefined )
+	{
+		$.each( json_Data, function( i, item ) 
+		{
+			var optionTag = $( '<option></option>' );
+
+			optionTag.attr( "value", item[ valuePropStr ] ).text( item[ namePropStr ] );
+				
+			selectObj.append( optionTag );
+		});
+	}
+};
 
 Util.populateSelect = function( selectObj, selectName, json_Data, dataType )
 {
@@ -1098,6 +1143,28 @@ Util.getServerUrl = function()
 {
 	return location.protocol + '//' + location.host;
 };
+
+Util.getIndexes = function( inputStr, keyStr )
+{
+	var indexes = [];
+
+	var idx = inputStr.indexOf( keyStr );
+	while ( idx != -1 ) {
+		indexes.push(idx);
+		  idx = inputStr.indexOf( keyStr, idx + 1 );
+	}
+
+	return indexes;
+};
+
+Util.upNumber_IntArr = function( arr, upNumber )
+{
+	for ( var i = 0; i < arr.length; i++ )
+	{
+		arr[i] = arr[i] + upNumber;
+	}
+};
+
 // Others
 // ----------------------------------
 
@@ -1111,6 +1178,7 @@ Util.delayOnceTimeAction = function( delay, id, action ) {
 	// set a new timer to execute delay milliseconds from last call
 	Util.oneTimeActions[id] = setTimeout( action, delay );
 };
+
 // ---------------------------------------
 // Prototypes.  Extensions.
 

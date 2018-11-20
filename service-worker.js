@@ -1,8 +1,8 @@
 var dataCacheName = 'cws-pwa-data-v1.002';
-var cacheName = 'cws-pwa-v1.035';
+var cacheName = 'cws-pwa-v1.0.11';
 var filesToCache = [
   "./",
-  "./index.html",
+  "./index.html?v1.0.11b",
   "./manifest.json",
   "./service-worker.js",
 
@@ -11,6 +11,13 @@ var filesToCache = [
   "./images/icons/icon-152x152.png",
   "./images/icons/icon-192x192.png",
   "./images/icons/icon-256x256.png",
+  "./styles/images/ui-icons_444444_256x240.png",
+  "./styles/images/ui-icons_555555_256x240.png",
+  "./styles/images/ui-icons_777620_256x240.png",
+  "./styles/images/ui-icons_777777_256x240.png",
+  "./styles/images/ui-icons_cc0000_256x240.png",
+  "./styles/images/ui-icons_ffffff_256x240.png",
+
   "./images/searchByWalkIn.jpg",
   "./images/searchByVoucher.jpg",
   "./images/searchByPhone.jpg",
@@ -26,9 +33,14 @@ var filesToCache = [
   "./images/blank.gif",
 
   "./styles/style.css",
+  "./styles/jquery-ui.css",
 
   "./scripts/libraries/jquery-3.3.1.js", 
+  "./scripts/libraries/jquery.blockUI.js", 
+  "./scripts/libraries/jquery-ui.js", 
+  "./scripts/libraries/jquery-dateformat.min.js",
 
+  "./scripts/utils/configUtil.js",
   "./scripts/utils/connManager.js",
   "./scripts/utils/dataManager.js",
   "./scripts/utils/formUtil.js",
@@ -37,6 +49,7 @@ var filesToCache = [
   "./scripts/app.js",
   "./scripts/cwsRender.js",
   
+  "./scripts/classes/login.js",
   "./scripts/classes/action.js",
   "./scripts/classes/block.js",
   "./scripts/classes/blockButton.js",
@@ -80,7 +93,10 @@ self.addEventListener('fetch', function(e) {
   console.log('[Service Worker] Fetch', e.request.url);
 
   // A. If FETCH url is part of the web service ones, cache it...
-  var wsUrl = _serverUrl + '/eRefWSTest/api';
+  var wsUrl = _serverUrl + '/eRefWSDev3/api';
+
+  console.log( 'fetch listener - wsUrl: ' + wsUrl );
+  
   if (e.request.url.indexOf(wsUrl) > -1) 
   {
     e.respondWith(
