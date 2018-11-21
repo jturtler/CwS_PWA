@@ -18,6 +18,8 @@ function cwsRender()
 	me.floatListMenuSubIconsTag = $( '.floatListMenuSubIcons' );
 
 	me.loggedInDivTag = $( '#loggedInDiv' );
+	me.headerLogoTag = $( '.headerLogo' );
+	me.aboutFormDivTag = $( '#aboutFormDiv' );
 
 
 	// global variables
@@ -91,6 +93,28 @@ function cwsRender()
 			}
 			me.LoginObj.openForm();
 		});
+
+		me.headerLogoTag.click(function() {
+
+			me.aboutFormDivTag.find( 'div.aboutListDiv' ).empty();
+
+			if ( localStorage.length )
+			{
+				var aboutObj = JSON.parse(localStorage.getItem(localStorage.key(localStorage.length-1))).about;
+				me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<table>' );
+
+				$.each(aboutObj, function(k, v) {
+					me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<tr><td align=right><strong> '+k+'</strong>: </td><td align=left> ' + v + ' </td></tr>' );
+				})
+
+				me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '</table>' );
+				me.aboutFormDivTag.show( 'fast' ).delay(5000).hide( 'fast' );
+
+			}
+
+		});
+
+		
 	}
 
 	// -------------------------
@@ -114,6 +138,20 @@ function cwsRender()
 			{
 				var startBlockObj = new Block( me, me.configJson.definitionBlocks[ clicked_area.startBlockName ], clicked_area.startBlockName, me.renderBlockTag );
 				startBlockObj.renderBlock();  // should been done/rendered automatically?  			
+			}
+			else
+			{
+				if (clicked_areaId === 'logOut')
+				{
+
+					if ( me.menuDivTag.is( ":visible" ) && me.menuTopRightIconTag.is( ":visible" ) )
+					{
+						me.menuTopRightIconTag.click();
+					}
+
+					me.LoginObj.openForm();
+
+				}
 			}
 	
 			// hide the menu
@@ -166,8 +204,8 @@ function cwsRender()
 		if ( me.areaList )
 		{
 			// 
-			var newMenuData = { id: "about", name: "About" };
-			me.areaList.push ( newMenuData );
+			/*var newMenuData = { id: "about", name: "About" };
+			me.areaList.push ( newMenuData );*/
 			var newMenuData = { id: "logOut", name: "Log out" };
 			me.areaList.push ( newMenuData );
 			var startMenuTag = me.populateMenuList( me.areaList );

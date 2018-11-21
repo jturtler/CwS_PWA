@@ -1194,3 +1194,24 @@ $.fn.outerHTML = function(){
           return contents;
     })(this[0]));
 };
+
+
+Util.encryptPin = function (seed,loops) 
+{
+	let retPin = seed;
+	for ( i = 0; i < loops; i++ )
+	{
+		retPin = btoa(retPin);
+	}
+	return retPin;
+}
+
+Util.decryptPin = function (garbage,loops) 
+{
+	let seed = garbage;
+	for ( i = 0; i < loops; i++ )
+	{
+		seed = atob(seed);
+	}
+	return seed;
+}

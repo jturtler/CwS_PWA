@@ -51,6 +51,8 @@ function Login( cwsRenderObj )
 
 		me.setSkipLoginBtnClick();
 
+		me.setloginBtnClearClick();
+
 		//me.setUpEnterKeyLogin(); // Not working, thus, disabled for now
 	}
 
@@ -64,8 +66,8 @@ function Login( cwsRenderObj )
 			var loginUserNameVal = parentTag.find( 'input.loginUserName' ).val();
 			var loginUserPinVal = parentTag.find( 'input.loginUserPin' ).val();
 
-			// greg: use location.host for server parameter?
-			me.processLogin( loginUserNameVal, loginUserPinVal, '', $( this ) );
+			// greg: use location.origin for server parameter? Always records server location
+			me.processLogin( loginUserNameVal, loginUserPinVal, location.origin, $( this ) );
 		});
 
 		// New UI Button click
@@ -101,6 +103,20 @@ function Login( cwsRenderObj )
 		} );	
 	}
 
+	me.setloginBtnClearClick = function()
+	{
+		$( '.loginBtnClear' ).click( function() {
+	
+			$( 'input.loginUserName' ).val('');
+			$( 'input.loginUserPin' ).val('');
+			$( 'input.loginUserNameAdv' ).val('');
+			$( 'input.loginUserPinAdv' ).val('');
+
+			me.openForm();
+ 
+		} );	
+	}
+	
 	me.setUpEnterKeyLogin = function()
 	{
 		/*
@@ -124,6 +140,7 @@ function Login( cwsRenderObj )
 		me.pageDivTag.hide();		
 		me.loginFormDivTag.show( 'fast' );
 		me.menuTopDivTag.hide();
+		me.spanOuNameTag.text( '[Login]' ).attr( 'title', '' );
 	}
 
 	me.closeForm = function()
@@ -170,8 +187,8 @@ function Login( cwsRenderObj )
 					var newSaveObj = Object.assign( {} , loginData);
 					var dtmNow = ( new Date() ).toISOString();
 
-					newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: btoa(btoa(password)) };
-					newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor };
+					newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: Util.encryptPin(password,4) };
+					newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor, config_version: loginData.dcdConfig.version, countrycode: loginData.dcdConfig.countryCode, dhis_server: loginData.orgUnitData.dhisServer, login_server: FormUtil.login_server };
 					/* END: create 'session' information block  */
 
 					DataManager.saveData( userName, newSaveObj );						
