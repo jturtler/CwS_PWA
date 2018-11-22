@@ -44,7 +44,7 @@ self.__precacheManifest = [
   },
   {
     "url": "data/dsConfig.json",
-    "revision": "24b2a0b1cffc3b3cedb3e8fec8d4b5d0"
+    "revision": "40553c88ce22892b32951e5402bbc52a"
   },
   {
     "url": "data/old/dcNew1_back.json",
@@ -256,7 +256,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/blockForm.js",
-    "revision": "06fde46820613c9624a8718626fee47d"
+    "revision": "f2ee4e5fe3baf1d7621c102867647e66"
   },
   {
     "url": "scripts/classes/blockList.js",
@@ -280,7 +280,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/cwsRender.js",
-    "revision": "ac1ec3a625c964a121d8eb883c5c376e"
+    "revision": "65e059a9694a4c967517ae2d1c1d2084"
   },
   {
     "url": "scripts/libraries/jquery-3.3.1.js",
@@ -316,7 +316,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/utils/formUtil.js",
-    "revision": "d682b88361a2bcde827775c063ea21da"
+    "revision": "cea580e1c1262b7a7f3c678106c6a41e"
   },
   {
     "url": "scripts/utils/util.js",

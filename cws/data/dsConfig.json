@@ -595,40 +595,40 @@
 				"id": "countryType",
 				"defaultName": "Country Type",
 				"controlType": "SHORT_TEXT",
-				"display": "none",
+				"display": "hiddenVal",
 				"defaultValue": "MZ"
 			},
 			{
 				"id": "cbdCase",
 				"defaultName": "cbdCase",
 				"controlType": "SHORT_TEXT",
-				"display": "none",
+				"display": "hiddenVal",
 				"defaultValue": "Y"
 			},
 			{
 				"id": "clientId",
 				"defaultName": "client Id",
 				"controlType": "SHORT_TEXT",
-				"display": "none"
+				"display": "hiddenVal"
 			},
 			{
 				"id": "voucherId",
 				"defaultName": "Voucher Id",
 				"controlType": "SHORT_TEXT",
-				"display": "none"
+				"display": "hiddenVal"
 			},
 			{
 				"id": "cbdEnrollOuId",
 				"defaultName": "cbdEnrollOuId",
 				"controlType": "SHORT_TEXT",
-				"display": "none",
+				"display": "hiddenVal",
 				"uid": "cbdEnrollOuId"
 			},
 			{
 				"id": "walkInClientCase",
 				"defaultName": "walkInClientCase",
 				"controlType": "SHORT_TEXT",
-				"display": "none"
+				"display": "hiddenVal"
 			},
 			{
 				"id": "voucherCode",

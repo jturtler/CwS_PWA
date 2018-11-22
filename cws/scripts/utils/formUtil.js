@@ -89,10 +89,22 @@ FormUtil.generateInputJson = function( formDivSecTag )
 
 	inputTags.each( function()
 	{
-		var inputTag = $(this);			
-		var nameVal = inputTag.attr( 'name' );
-		
-		inputsJson[ nameVal ] = inputTag.val();
+		var inputTag = $(this);	
+		var attrDisplay = inputTag.attr( 'display' );
+		var getVal = false;
+
+		if ( attrDisplay === 'hiddenVal' ) getVal = true;
+		else if ( inputTag.is( ':visible' ) ) getVal = true;
+
+		if ( getVal )
+		{
+			var val = inputTag.val();
+
+			if ( val === null || val === undefined ) val = '';
+
+			var nameVal = inputTag.attr( 'name' );
+			inputsJson[ nameVal ] = val;
+		}
 	});		
 
 	return inputsJson;

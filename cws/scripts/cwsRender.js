@@ -5,7 +5,7 @@ function cwsRender()
 	var me = this;
 
 	// Fixed variables
-	me.dsConfigLoc = 'data/dsConfig.json?v22';	// 
+	me.dsConfigLoc = 'data/dsConfig.json';	// 
 
 	// Tags
 	me.renderBlockTag = $( '#renderBlock' );
@@ -35,7 +35,7 @@ function cwsRender()
 	//me.blockObj;
 	me.LoginObj;
 
-	me._localConfigUse = true;
+	me._localConfigUse = false;
 
 	// =============================================
 	// === TEMPLATE METHODS ========================
