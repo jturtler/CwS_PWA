@@ -99,17 +99,8 @@ function cwsRender()
 	{
 		menuTag.click( function() {
 					
-			var clicked_areaId = $( this ).attr( 'areaId' );
-	
-			var clicked_area = Util.getFromList( me.areaList, clicked_areaId, "id" );
-	
-			// if menu is clicked,
-			// reload the block refresh?
-			if ( clicked_area.startBlockName )
-			{
-				var startBlockObj = new Block( me, me.configJson.definitionBlocks[ clicked_area.startBlockName ], clicked_area.startBlockName, me.renderBlockTag );
-				startBlockObj.renderBlock();  // should been done/rendered automatically?  			
-			}
+			var clicked_areaId = $( this ).attr( 'areaId' );			
+			me.renderArea( clicked_areaId );
 	
 			// hide the menu
 			//$( '#menu_e:visible' ).click();
@@ -126,6 +117,23 @@ function cwsRender()
 	// =============================================
 	// === OTHER INTERNAL/EXTERNAL METHODS =========
 	
+	me.renderArea = function( areaId )
+	{
+		// should close current tag/content?
+		
+		me.areaList = ConfigUtil.getAllAreaList( me.configJson );
+	
+		var selectedArea = Util.getFromList( me.areaList, areaId, "id" );
+
+		// if menu is clicked,
+		// reload the block refresh?
+		if ( selectedArea.startBlockName )
+		{
+			var startBlockObj = new Block( me, me.configJson.definitionBlocks[ selectedArea.startBlockName ], selectedArea.startBlockName, me.renderBlockTag );
+			startBlockObj.renderBlock();  // should been done/rendered automatically?  			
+		}
+	
+	}
 
 	// --------------------------------------
 	// -- START POINT (FROM LOGIN) METHODS

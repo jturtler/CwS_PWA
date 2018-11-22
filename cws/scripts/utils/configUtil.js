@@ -25,3 +25,10 @@ ConfigUtil.getAreaListByStatus = function( bOnline, configJson )
 {
     return ( bOnline ) ? configJson.areas.online : configJson.areas.offline;
 };
+
+ConfigUtil.getAllAreaList = function( configJson )
+{
+    var combinedAreaList = [];
+
+    return combinedAreaList.concat( configJson.areas.online, configJson.areas.offline );
+};

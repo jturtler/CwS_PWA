@@ -144,6 +144,16 @@ function Action( cwsRenderObj, blockObj )
 					newBlockObj.renderBlock();
 				}
 			}
+			else if ( clickActionJson.actionType === "openArea" )
+			{
+				console.log( 'openArea: ' );
+				console.log( clickActionJson.areaId );
+				
+				if ( clickActionJson.areaId )
+				{					
+					me.cwsRenderObj.renderArea( clickActionJson.areaId );
+				}
+			}
 			else if ( clickActionJson.actionType === "filledData" )
 			{
 				var dataFromDivTag =  me.renderBlockTag.find("[blockid='" + clickActionJson.fromBlockId + "']" );

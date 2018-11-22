@@ -1,6 +1,6 @@
 {
 	"0.Info": "James Local",
-	"version": "0.10",
+	"version": "0.11a",
 	"countryCode": "MZ",
 	"configType": "dataCapture",
 	
@@ -323,12 +323,9 @@
 						"success": [
 							"closeCurrentBlock",
 							{
-								"actionType": "openBlock",
-								"blockId": "blockRedeemList",
-								"passData": {
-									"voucherData": "$${resultJson}"
-								}
-							}
+								"actionType": "openArea",
+								"areaId": "listOnline"
+							}	
 						],
 						"fail": [
 							{
@@ -339,9 +336,9 @@
 						"offline": [
 							"closeCurrentBlock",
 							{
-								"actionType": "openBlock",
-								"blockId": "blockRedeemList"
-							}
+								"actionType": "openArea",
+								"areaId": "listOnline"
+							}							
 						]
 					}
 				}

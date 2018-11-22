@@ -166,9 +166,7 @@ function Login( cwsRenderObj )
 
 
 	me.loginSuccessProcess = function( loginData ) 
-	{		
-		alert( 'testing' );
-		
+	{				
 		me.closeForm();
 
 		// Set Logged in orgUnit info
