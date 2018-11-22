@@ -1195,18 +1195,17 @@ $.fn.outerHTML = function(){
     })(this[0]));
 };
 
-
-Util.encryptPin = function (seed,loops) 
+Util.encrypt = function (seed,loops) 
 {
-	let retPin = seed;
+	let ret = seed;
 	for ( i = 0; i < loops; i++ )
 	{
-		retPin = btoa(retPin);
+		ret = btoa(ret);
 	}
-	return retPin;
+	return ret;
 }
 
-Util.decryptPin = function (garbage,loops) 
+Util.decrypt = function (garbage,loops) 
 {
 	let seed = garbage;
 	for ( i = 0; i < loops; i++ )

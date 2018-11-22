@@ -12,6 +12,8 @@ FormUtil.dcdConfig;
 
 FormUtil.blockType_MainTab = 'mainTab';
 FormUtil.blockType_MainTabContent = 'mainTabContent';
+FormUtil._serverUrl = location.protocol + '//' + location.host;
+// 'https://apps.psi-mis.org';  <-- white listing try
 
 // ==== Methods ======================
 
@@ -176,7 +178,7 @@ FormUtil.submitRedeem = function( url, payloadJson, actionJson, loadingTag, retu
 FormUtil.submitLogin = function( userName, password, loadingTag, returnFunc )
 {
 	var url = FormUtil.getWsUrl( '/api/loginCheck' );
-	
+
 	// FormUtil.orgUnitData <-- Reset before?
 	var payloadJson = { 'submitLogin': true, 'submitLogin_usr': userName, 'submitLogin_pwd': password, 'dcConfigGet': 'Y' };
 

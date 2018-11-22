@@ -179,7 +179,7 @@ function cwsRender()
 			ConfigUtil.getDsConfigJson( me.dsConfigLoc, function( configDataFile ) {
 
 				console.log( 'local config' );
-				//console.log( configDataFile );
+				console.log( configDataFile );
 	
 				me.configJson = configDataFile;
 
@@ -209,6 +209,7 @@ function cwsRender()
 			var newMenuData = { id: "logOut", name: "Log out" };
 			me.areaList.push ( newMenuData );
 			var startMenuTag = me.populateMenuList( me.areaList );
+
 			if ( startMenuTag ) startMenuTag.click();
 		}
 	} 

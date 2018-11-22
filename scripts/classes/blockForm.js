@@ -44,6 +44,9 @@ function BlockForm( cwsRenderObj, blockObj )
 			}
 
 			me.populateFormData( passedData, formDivSecTag );
+
+			// NOTE: TRAN VALIDATION
+			me.blockObj.validationObj.setUp_Events( formDivSecTag );
 		}
 	}
 	
@@ -81,19 +84,19 @@ function BlockForm( cwsRenderObj, blockObj )
 	}
 	
 	// New UI Used Method
-	me.renderInput_TabContent= function( inputJson, contentWrapperTag, idList, passedData )
+	me.renderInput_TabContent= function( inputJson, formDivSecTag, idList, passedData )
 	{
-		console.log( 'adding renderInput_TabContent' );
+		//console.log( 'adding renderInput_TabContent' );
 
-		var divInputTag = $( '<div class="tb-content-d"></div>' );
+		var divInputTag = $( '<div class="tb-content-d inputDiv"></div>' );
 
-		var spanTitleTag = $( '<label class="from-string"></label>' );
+		var spanTitleTag = $( '<label class="from-string titleDiv"></label>' );
 		spanTitleTag.text( inputJson.defaultName );
 		divInputTag.append( spanTitleTag );
 
-		me.renderInputTag_TabContent( inputJson, divInputTag, contentWrapperTag, idList, passedData );
+		me.renderInputTag_TabContent( inputJson, divInputTag, formDivSecTag, idList, passedData );
 
-		contentWrapperTag.append( divInputTag );
+		formDivSecTag.append( divInputTag );
 	}
 
 
@@ -141,45 +144,18 @@ function BlockForm( cwsRenderObj, blockObj )
 				}
 				entryDivTag.append( entryTag );	
 			}
-			
-			// Set Event
-			entryTag.change( function() {
-				me.performEvalActions( $(this).val(), inputData, formDivSecTag, idList );
-			});
-
 
 			// Finally Set/Attach to the parent tag
 			divInputTag.append( entryDivTag );
 
 
-			// Set Tag Visibility
-			if ( inputData.display === "none" )
-			{
-				divInputTag.hide();
-			}
-			
-			if ( passedData !== undefined 
-				&& passedData.hideCase !== undefined 
-				&& inputData.hideCase !== undefined
-				&& inputData.hideCase.indexOf( passedData.hideCase ) >= 0 )
-			{
-				//divInputTag.find("input,select").remove();
-				divInputTag.hide();
-			}
-
-			if ( passedData !== undefined 
-				&& passedData.showCase !== undefined 
-				&& inputData.showCase !== undefined
-				&& inputData.showCase.indexOf( passedData.showCase ) >= 0 )
-			{
-				divInputTag.show();
-			}
-
+			// Setup events and visibility and rules
+			me.setEventsAndRules( inputData, entryTag, divInputTag, formDivSecTag, idList, passedData );
 		}
 	}
 
 
-	me.renderInputTag_TabContent = function( inputData, divInputTag, contentWrapperTag, idList, passedData )
+	me.renderInputTag_TabContent = function( inputData, divInputTag, formDivSecTag, idList, passedData )
 	{
 		if ( inputData !== undefined )
 		{
@@ -223,43 +199,71 @@ function BlockForm( cwsRenderObj, blockObj )
 				}
 			}
 			*/
-			
-			//var entryDivTag = $( '<div class="entryDiv"></div>' ).append( entryTag );
 
 
-			// Set Tag Visibility
-			if ( inputData.display === "none" )
-			{
-				divInputTag.hide();
-			}
-			
-			if ( passedData !== undefined 
-				&& passedData.hideCase !== undefined 
-				&& inputData.hideCase !== undefined
-				&& inputData.hideCase.indexOf( passedData.hideCase ) >= 0 )
-			{
-				//divInputTag.find("input,select").remove();
-				divInputTag.hide();
-			}
-
-			if ( passedData !== undefined 
-				&& passedData.showCase !== undefined 
-				&& inputData.showCase !== undefined
-				&& inputData.showCase.indexOf( passedData.showCase ) >= 0 )
-			{
-				divInputTag.show();
-			}
-
-			/*
-			// Set Event
-			entryTag.change( function() {
-				me.performEvalActions( $(this).val(), inputData, formDivSecTag, idList );
-			});
-			*/
-
-			// Finally Set/Attach to the parent tag
-			//divInputTag.append( entryTag );
+			// Setup events and visibility and rules
+			me.setEventsAndRules( inputData, entryTag, divInputTag, formDivSecTag, idList, passedData );
 		}
+	}
+
+	
+	me.setEventsAndRules = function( inputData, entryTag, divInputTag, formDivSecTag, idList, passedData)
+	{
+		// Set Event
+		entryTag.change( function() {
+			me.performEvalActions( $(this).val(), inputData, formDivSecTag, idList );
+		});
+
+		
+		// NOTE: TRAN VALIDATION
+		// Add rules for IMPUT fields
+		me.addRuleForField( divInputTag, inputData );
+
+
+		// Set Tag Visibility
+		if ( inputData.display === "none" )
+		{
+			divInputTag.hide();
+		}
+		
+		if ( passedData !== undefined 
+			&& passedData.hideCase !== undefined 
+			&& inputData.hideCase !== undefined
+			&& inputData.hideCase.indexOf( passedData.hideCase ) >= 0 )
+		{
+			//divInputTag.find("input,select").remove();
+			divInputTag.hide();
+		}
+
+		if ( passedData !== undefined 
+			&& passedData.showCase !== undefined 
+			&& inputData.showCase !== undefined
+			&& inputData.showCase.indexOf( passedData.showCase ) >= 0 )
+		{
+			divInputTag.show();
+		}		
+	}
+
+
+	me.addRuleForField = function( divInputTag, inputData )
+	{
+		if( inputData.rules !== undefined )
+		{
+			for( var i in inputData.rules )
+			{
+				var rule = inputData.rules[i];
+
+				var entryTag = divInputTag.find( "select,input" );
+				entryTag.attr( rule.name, rule.value );
+
+				if( rule.name === "mandatory" && rule.value === "true" )
+				{
+					var titleTag = divInputTag.find( ".titleDiv" );
+					titleTag.append("<span style='color:red;'> * </span>")
+				}
+			}
+		}
+
 	}
 
 	// ----------------------------------------------------
@@ -291,8 +295,8 @@ function BlockForm( cwsRenderObj, blockObj )
 			{
 				if ( evalAction.conditionInverse !== undefined )
 				{
-					if ( evalAction.conditionInverse.indexOf( "shows" ) >= 0 ) me.performCondiShowHide( evalAction.shows, formDivSecTag, true );
-					if ( evalAction.conditionInverse.indexOf( "hides" ) >= 0 ) me.performCondiShowHide( evalAction.hides, formDivSecTag, false );
+					if ( evalAction.conditionInverse.indexOf( "shows" ) >= 0 ) me.performCondiShowHide( evalAction.shows, formDivSecTag, false );
+					if ( evalAction.conditionInverse.indexOf( "hides" ) >= 0 ) me.performCondiShowHide( evalAction.hides, formDivSecTag, true );
 					if ( evalAction.conditionInverse.indexOf( "actions" ) >= 0 ) me.performCondiAction( evalAction.actions, formDivSecTag, true );
 				}
 			}			

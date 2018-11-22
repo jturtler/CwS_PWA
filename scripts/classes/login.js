@@ -79,7 +79,6 @@ function Login( cwsRenderObj )
 
 			me.processLogin( loginUserNameVal, loginUserPinVal, loginServer, $( this ) );
 		});
-
 	}
 
 
@@ -176,10 +175,12 @@ function Login( cwsRenderObj )
 		{
 			var loadingTag = FormUtil.generateLoadingTag( btnTag );
 
+
 			FormUtil.submitLogin( userName, password, loadingTag, function( success, loginData ) 
 			{
 				if ( success )
-				{
+				{							
+					//console.log( 'online data use: ' + JSON.stringify( loginData ) );
 
 					me.loginSuccessProcess( loginData );
 
@@ -187,11 +188,13 @@ function Login( cwsRenderObj )
 					var newSaveObj = Object.assign( {} , loginData);
 					var dtmNow = ( new Date() ).toISOString();
 
-					newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: Util.encryptPin(password,4) };
+					newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: Util.encrypt(password,4) };
 					newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor, config_version: loginData.dcdConfig.version, countrycode: loginData.dcdConfig.countryCode, dhis_server: loginData.orgUnitData.dhisServer, login_server: FormUtil.login_server };
 					/* END: create 'session' information block  */
 
-					DataManager.saveData( userName, newSaveObj );						
+					//DataManager.saveData( userName, loginData );	
+					DataManager.saveData( userName, newSaveObj );	
+
 				}
 				else
 				{
@@ -204,6 +207,8 @@ function Login( cwsRenderObj )
 
 	me.loginSuccessProcess = function( loginData ) 
 	{		
+		alert( 'testing' );
+		
 		me.closeForm();
 
 		// Set Logged in orgUnit info

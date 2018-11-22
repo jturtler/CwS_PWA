@@ -1,6 +1,6 @@
 {
 	"0.Info": "James Local",
-	"version": "0.08",
+	"version": "0.10",
 	"countryCode": "MZ",
 	"configType": "dataCapture",
 	
@@ -69,7 +69,17 @@
 					"id": "voucherCode",
 					"defaultName": "Voucher Code",
 					"controlType": "INT",
-					"uid": "UIasdf1ioS"
+					"uid": "UIasdf1ioS",
+					"rules":[
+						{
+							"name": "pattern",
+							"value": "\\d*"
+						},
+						{
+							"name": "number",
+							"value": "true"
+						}
+					]			
 				}
 			],
 			"buttons": [
@@ -272,7 +282,7 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
-								"hideCase": "foundOne",
+								"hideCase": "foundOneWithVoucher",
 								"actionParameters": {
 									"voucherData": "$${resultJson}",
 									"otherPassInData": {
@@ -360,7 +370,7 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
-								"hideCase": "foundOne",
+								"hideCase": "foundOneWithVoucher",
 								"actionParameters": {
 									"voucherData": "$${resultJson}"
 								}
@@ -381,7 +391,7 @@
 			"defaultLabel": "Search",
 			"buttonType": "textButton",
 			"onClick": [
-				{
+					{
 					"actionType": "sendToWS",
 					"url": "/api/dc/searchByPhoneNumber",
 					"payloadHeader": [
@@ -403,7 +413,7 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
-								"hideCase": "foundOne"
+								"hideCase": "foundOneWithVoucher"
 							}
 						],
 						"notFound": [],
@@ -448,9 +458,8 @@
 							{
 								"actionType": "openBlock",
 								"blockId": "blockRedeemFormInputs",
-								"actionParameters": {
-									"voucherData": "$${resultJson}"
-								}
+								"showCase": "foundOneWithVoucher",
+								"hideCase": "foundOneWithVoucher"
 							}
 						],
 						"notFound": [
@@ -502,28 +511,86 @@
 			{
 				"defaultName": "First name",
 				"controlType": "SHORT_TEXT",
-				"id": "walkIn_firstName"
+				"id": "walkIn_firstName",
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "minLength",
+						"value": "2"
+					}
+				]
 			},
 			{
 				"defaultName": "Last name",
 				"controlType": "SHORT_TEXT",
-				"id": "walkIn_lastName"
+				"id": "walkIn_lastName",
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "minLength",
+						"value": "2"
+					}
+				]
 			},
 			{
 				"defaultName": "Province of Birth",
 				"controlType": "DROPDOWN_LIST",
 				"id": "walkIn_birthDistrict",
-				"options": "birthProvinceOption"
+				"options": "birthProvinceOption",
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					}
+				]				
 			},
 			{
 				"defaultName": "Order of Birth",
 				"controlType": "SHORT_TEXT",
-				"id": "walkIn_birthOrder"
+				"id": "walkIn_birthOrder",
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "type",
+						"value": "number"
+					},
+					{
+						"name": "isNumber",
+						"value": "true"
+					},
+					{
+						"name": "pattern",
+						"value": "\\d*"
+					}
+				]
 			},
 			{
 				"defaultName": "Age",
 				"controlType": "INT",
-				"id": "walkIn_age"
+				"id": "walkIn_age",
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "type",
+						"value": "number"
+					},
+					{
+						"name": "pattern",
+						"value": "\\d*"
+					}
+				]
 			}
 		],
 		"form_RedeemFormInputs": [
@@ -581,12 +648,17 @@
 				"controlType": "SHORT_TEXT",
 				"id": "walkIn_firstName",
 				"display": "none",
-				"showCase": [
-					"WalkInUserShow"
-				],
-				"hideCase": [
-					"WalkInUserFoundOneWithoutVoucher",
-					"foundOne"
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOneWithVoucher" ],
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "minLength",
+						"value": "2"
+					}
 				]
 			},
 			{
@@ -594,49 +666,81 @@
 				"controlType": "SHORT_TEXT",
 				"display": "none",
 				"id": "walkIn_lastName",
-				"showCase": [
-					"WalkInUserShow"
-				],
-				"hideCase": [
-					"WalkInUserFoundOneWithoutVoucher",
-					"foundOne"
-				]
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOneWithVoucher" ],
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "minLength",
+						"value": "2"
+					}
+				]								
 			},
 			{
 				"defaultName": "Province of Birth",
 				"controlType": "DROPDOWN_LIST",
 				"id": "walkIn_birthDistrict",
-				"showCase": [
-					"WalkInUserShow"
-				],
-				"hideCase": [
-					"WalkInUserFoundOneWithoutVoucher",
-					"foundOne"
-				],
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOneWithVoucher" ],
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "minLength",
+						"value": "2"
+					}
+				],								
 				"options": "birthProvinceOption"
 			},
 			{
 				"defaultName": "Order of Birth",
 				"controlType": "SHORT_TEXT",
 				"id": "walkIn_birthOrder",
-				"showCase": [
-					"WalkInUserShow"
-				],
-				"hideCase": [
-					"WalkInUserFoundOneWithoutVoucher",
-					"foundOne"
-				]
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOneWithVoucher" ],
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "type",
+						"value": "number"
+					},
+					{
+						"name": "isNumber",
+						"value": "true"
+					},
+					{
+						"name": "pattern",
+						"value": "\\d*"
+					}
+				]								
 			},
 			{
 				"defaultName": "Age",
 				"controlType": "INT",
 				"id": "walkIn_age",
-				"showCase": [
-					"WalkInUserShow"
-				],
-				"hideCase": [
-					"WalkInUserFoundOneWithoutVoucher",
-					"foundOne"
+				"showCase": [ "WalkInUserShow" ],
+				"hideCase": [ "WalkInUserFoundOneWithoutVoucher", "foundOneWithVoucher" ],
+				"rules":[
+					{
+						"name": "mandatory",
+						"value": "true"
+					},
+					{
+						"name": "isNumber",
+						"value": "true"
+					},
+					{
+						"name": "minLength",
+						"value": "2"
+					}
 				]
 			},
 			{
@@ -655,7 +759,17 @@
 				"defaultName": "Service",
 				"controlType": "DROPDOWN_LIST",
 				"uid": "VVsw6EFkmiX",
-				"options": "serviceOption"
+				"options": "serviceOption",
+				"evalActions": [
+					{ "condition": "'$$(service)' === 'PIL'",
+						"shows": [ "householdDelivery" ],
+						"hides": [ "cycles", "promoter" ]
+					},
+					{ "condition": "!('$$(service)' === 'PIL')",
+						"hides": [ "householdDelivery", "cycles", "promoter" ]
+					}
+				]
+				
 			},
 			{
 				"id": "typeOfMethodUser",
@@ -671,39 +785,11 @@
 				"uid": "wxAMVtMTUtp",
 				"options": "HHDeliveryOption",
 				"evalActions": [
-					{
-						"condition": "'$$(typeOfMethodUser)' === 'SWITCH'",
-						"shows": [
-							"cycles",
-							"promoter",
-							"$promoterRel"
-						],
-						"hides": [],
-						"actions": [
-							{
-								"id": "cycles",
-								"value": "1"
-							}
-						],
-						"conditionInverse": [
-							"shows"
-						]
-					},
-					{
-						"condition": "!('$$(typeOfMethodUser)' === 'SWITCH')",
-						"hides": [
-							"cycles",
-							"promoter",
-							"$promoterRel"
-						],
-						"actions": [
-							{
-								"id": "cycles",
-								"value": ""
-							}
-						]
+					{ "condition": "'$$(householdDelivery)' === 'NO' || '$$(householdDelivery)' === ''",
+						"hides": [ "cycles", "promoter" ],
+						"conditionInverse": [ "hides" ]
 					}
-				]
+				]				
 			},
 			{
 				"id": "cycles",
@@ -724,13 +810,25 @@
 				"defaultName": "Ownership of Phone",
 				"controlType": "DROPDOWN_LIST",
 				"uid": "P01PEz2ikrY",
-				"options": "phoneOwnershipOption"
+				"options": "phoneOwnershipOption",
+				"evalActions": [
+					{ "condition": "'$$(ownershipOfPhone)' === 'NO'",
+					  "hides": [ "phoneNumber", "furtherInformationConsent", "furtherInformationConsent2" ],
+					  "conditionInverse": [ "hides" ]
+					}
+				]				
 			},
 			{
 				"id": "phoneNumber",
 				"controlType": "SHORT_TEXT",
 				"defaultName": "Phone number",
-				"uid": "uwjJhJ6kjN6"
+				"uid": "uwjJhJ6kjN6",
+				"rules":[
+					{
+						"name": "phoneNumber",
+						"value": "true"
+					}
+				]				
 			},
 			{
 				"id": "furtherInformationConsent",
@@ -995,5 +1093,15 @@
 				"defaultName": "Antinatal Care"
 			}
 		]
+	},
+	"definitionMessages":{
+		"mandatory": "This field is required",
+		"min": "Please enter at least $$length charactors",
+		"max": "Please enter at most $$length characters",
+		"exactlength": "Please enter exactly $$length characters",
+		"isNumber": "Please enter number only",
+		"phone9Len": "Number should be 9 digits long (w/o country code)",
+		"phoneStartWith": "Number should start with '+2588' or '002588'"
 	}
+	
 }
