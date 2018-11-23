@@ -43,6 +43,18 @@ self.__precacheManifest = [
     "revision": "6b0eabab029120fce0c23836d299b309"
   },
   {
+    "url": "data/dsConfig.json",
+    "revision": "40553c88ce22892b32951e5402bbc52a"
+  },
+  {
+    "url": "data/old/dcNew1_back.json",
+    "revision": "5c0fcfdd5b37d828d064b1e7e4d05258"
+  },
+  {
+    "url": "data/old/dsConfig_back.json",
+    "revision": "1bb4e47340731de96aef985922b5bb0c"
+  },
+  {
     "url": "images/blank.gif",
     "revision": "325472601571f31e1bf00674c368d335"
   },
@@ -179,6 +191,10 @@ self.__precacheManifest = [
     "revision": "56d9b808639a50927115cab90dd8e246"
   },
   {
+    "url": "img/net-sync.svg",
+    "revision": "ca8591a7226c1592fedda68b4d1efa1f"
+  },
+  {
     "url": "img/net.svg",
     "revision": "2144acb467584dffbf59e6798923bd2b"
   },
@@ -220,7 +236,11 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "d29b555d8a00aa69b1f3c3cd9132ccf3"
+    "revision": "cf65cabc14326af176724457d23150c2"
+  },
+  {
+    "url": "manifest.json",
+    "revision": "e3cd29820d6d7b03fed7bdebc92d8cf1"
   },
   {
     "url": "scripts/app.js",
@@ -228,7 +248,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/action.js",
-    "revision": "6b86553482ac9693e3cf5209628061e7"
+    "revision": "e31443a639a8f6a47410e65b94398f19"
   },
   {
     "url": "scripts/classes/block.js",
@@ -240,7 +260,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/blockForm.js",
-    "revision": "06fde46820613c9624a8718626fee47d"
+    "revision": "f2ee4e5fe3baf1d7621c102867647e66"
   },
   {
     "url": "scripts/classes/blockList.js",
@@ -256,7 +276,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/login.js",
-    "revision": "2c98f56e9fe14deb5c4c17b2890b12e8"
+    "revision": "64382408a22b426209513bd02a93f345"
   },
   {
     "url": "scripts/classes/validation.js",
@@ -264,15 +284,15 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/cwsRender.js",
-    "revision": "28ab02f8b6b3edee24d21317aafd9b6b"
+    "revision": "ba05245e7a8340e6fc49b5d6da89b339"
   },
   {
     "url": "scripts/libraries/jquery-3.3.1.js",
-    "revision": "6a07da9fae934baf3f749e876bbfdd96"
+    "revision": "b0e8755b0ab71a0a4aea47c3b589b47e"
   },
   {
     "url": "scripts/libraries/jquery-3.3.1.min.js",
-    "revision": "a09e13ee94d51c524b7e2a728c7d4039"
+    "revision": "378087a64e1394fc51f300bb9c11878c"
   },
   {
     "url": "scripts/libraries/jquery-dateformat.min.js",
@@ -280,15 +300,15 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/libraries/jquery-ui.js",
-    "revision": "ab5284de5e3d221e53647fd348e5644b"
+    "revision": "e0e5b130995dffab378d011fcd4f06d6"
   },
   {
     "url": "scripts/libraries/jquery.blockUI.js",
-    "revision": "5c98c0cbfacee6dab0783112cb0e233d"
+    "revision": "1473907211f50cb96aa2f2402af49d69"
   },
   {
     "url": "scripts/utils/configUtil.js",
-    "revision": "f69e8c365748c5d1d1fb410a00e6d7fd"
+    "revision": "e2d834262f9f244db60a445f75e580f6"
   },
   {
     "url": "scripts/utils/connManager.js",
@@ -296,15 +316,15 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/utils/dataManager.js",
-    "revision": "c34da316284c61a58bd26d0972bf4a82"
+    "revision": "e821dc1c87a358493602212223a28bb2"
   },
   {
     "url": "scripts/utils/formUtil.js",
-    "revision": "d682b88361a2bcde827775c063ea21da"
+    "revision": "ab22afe2c38d655d96114256bed4cc2c"
   },
   {
     "url": "scripts/utils/util.js",
-    "revision": "e4b8d4ff76a42341b0040411bdc43bc5"
+    "revision": "a8c7f141c1f64918abb29749ce210f80"
   },
   {
     "url": "scripts/z. Old Files/cwsRender_v0.js",
@@ -312,7 +332,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/z. Old Files/materialize.js",
-    "revision": "e97da5c8b60e6673b98b286c2acf437d"
+    "revision": "38de72592b09b35b61ac49ebf1eba54b"
   },
   {
     "url": "scripts/z. Old Files/testSection.js",
@@ -348,23 +368,23 @@ self.__precacheManifest = [
   },
   {
     "url": "styles/jquery-ui.css",
-    "revision": "6fd5a6e8197041971d02cf62d06f4b14"
+    "revision": "85291df7b046cd32eb4fb33ddc85bb99"
   },
   {
     "url": "styles/jquery-ui.min.css",
-    "revision": "0b5729a931d113be34b6fac13bcf5b29"
+    "revision": "215077014154308be415e1181a14646f"
   },
   {
     "url": "styles/materialize.css",
-    "revision": "76c24fc9d852e3b4bef9b9b57b1d5928"
+    "revision": "2aa6b76a5db6082e35600e78b64e7951"
   },
   {
     "url": "styles/style.css",
-    "revision": "611533ab94004153b7a1a1807ff4c1ee"
+    "revision": "64740b34a45b4364dfb8df9730dc46b5"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerRoute(/\.(html|css|js|gif|jpg|png|svg)/, workbox.strategies.cacheFirst(), 'GET');
+workbox.routing.registerRoute(/\.(html|css|js|gif|jpg|png|svg|json)/, workbox.strategies.cacheFirst(), 'GET');
 workbox.routing.registerRoute(/^https:\/\/use\.fontawesome\.com.*/, workbox.strategies.staleWhileRevalidate({ "cacheName":"fontawesome", plugins: [] }), 'GET');

@@ -5,7 +5,7 @@ function cwsRender()
 	var me = this;
 
 	// Fixed variables
-	me.dsConfigLoc = 'data/dsConfig.json?v22';	// 
+	me.dsConfigLoc = 'data/dsConfig.json';	// 
 
 	// Tags
 	me.renderBlockTag = $( '#renderBlock' );
@@ -37,7 +37,7 @@ function cwsRender()
 	//me.blockObj;
 	me.LoginObj;
 
-	me._localConfigUse = true;
+	me._localConfigUse = false;
 
 	// =============================================
 	// === TEMPLATE METHODS ========================
@@ -100,15 +100,23 @@ function cwsRender()
 
 			if ( localStorage.length )
 			{
-				var aboutObj = JSON.parse(localStorage.getItem(localStorage.key(localStorage.length-1))).about;
-				me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<table>' );
 
-				$.each(aboutObj, function(k, v) {
-					me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<tr><td align=right><strong> '+k+'</strong>: </td><td align=left> ' + v + ' </td></tr>' );
-				})
+				var lastSession = JSON.parse(localStorage.getItem('session'));
 
-				me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '</table>' );
-				me.aboutFormDivTag.show( 'fast' ).delay(5000).hide( 'fast' );
+				if (lastSession)
+				{
+
+					var aboutObj = JSON.parse(localStorage.getItem(lastSession.user)).about;
+					me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<table>' );
+
+					$.each(aboutObj, function(k, v) {
+						me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<tr><td align=right><strong> '+k+'</strong>: </td><td align=left> ' + v + ' </td></tr>' );
+					})
+
+					me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '</table>' );
+					me.aboutFormDivTag.show( 'fast' ).delay(5000).hide( 'fast' );
+
+				}
 
 			}
 
@@ -136,13 +144,71 @@ function cwsRender()
 			// reload the block refresh?
 			if ( clicked_area.startBlockName )
 			{
+				/* START > Greg added: 2018/11/23 */
+				var lastSession = JSON.parse(localStorage.getItem('session'));
+
+				if (lastSession)
+				{
+					var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+					if (loginData)
+					{
+						var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+						// for ONLINE > update dcd config for last menu action (default to this page on refresh)
+						for ( var i = 0; i < loginData.dcdConfig.areas.online.length; i++ )
+						{
+							if ( clicked_area.id == loginData.dcdConfig.areas.online[i].id )
+							{
+								loginData.dcdConfig.areas.online[i].startArea = true;
+							}
+							else 
+							{
+								loginData.dcdConfig.areas.online[i].startArea = false;
+							}
+						}
+
+						// for OFFLINE > update dcd config for last menu action (default to this page on refresh)
+						for ( var i = 0; i < loginData.dcdConfig.areas.offline.length; i++ )
+						{
+							if ( clicked_area.id == loginData.dcdConfig.areas.offline[i].id )
+							{
+								loginData.dcdConfig.areas.offline[i].startArea = true;
+							}
+							else 
+							{
+								loginData.dcdConfig.areas.offline[i].startArea = false;
+							}
+						}
+
+						//UPDATE lastStorage session for current user (based on last menu selection)
+						localStorage[ lastSession.user ] = JSON.stringify( loginData )
+
+					}
+				}
+				/* END > Greg added: 2018/11/23 */
+
 				var startBlockObj = new Block( me, me.configJson.definitionBlocks[ clicked_area.startBlockName ], clicked_area.startBlockName, me.renderBlockTag );
-				startBlockObj.renderBlock();  // should been done/rendered automatically?  			
+				startBlockObj.renderBlock();  // should been done/rendered automatically?
 			}
 			else
 			{
+				/* START > Greg added: 2018/11/23 */
 				if (clicked_areaId === 'logOut')
 				{
+					var lastSession = JSON.parse(localStorage.getItem('session'));
+
+					if (lastSession)
+					{
+						var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+						if ( loginData.mySession && loginData.mySession.stayLoggedIn ) 
+						{
+							loginData.mySession.stayLoggedIn = false;
+							localStorage[ lastSession.user ] = JSON.stringify( loginData )
+						}
+					}
+
 
 					if ( me.menuDivTag.is( ":visible" ) && me.menuTopRightIconTag.is( ":visible" ) )
 					{
@@ -152,6 +218,7 @@ function cwsRender()
 					me.LoginObj.openForm();
 
 				}
+				/* END > Greg added: 2018/11/23 */
 			}
 	
 			// hide the menu
@@ -169,6 +236,28 @@ function cwsRender()
 	// =============================================
 	// === OTHER INTERNAL/EXTERNAL METHODS =========
 	
+	me.renderArea = function( areaId )
+	{
+		// should close current tag/content?
+		if (areaId === 'logOut')
+		{
+			me.LoginObj.openForm();
+		}
+    else
+    {  
+  		me.areaList = ConfigUtil.getAllAreaList( me.configJson );
+  	
+  		var selectedArea = Util.getFromList( me.areaList, areaId, "id" );
+  
+  		// if menu is clicked,
+  		// reload the block refresh?
+  		if ( selectedArea.startBlockName )
+  		{
+  			var startBlockObj = new Block( me, me.configJson.definitionBlocks[ selectedArea.startBlockName ], selectedArea.startBlockName, me.renderBlockTag );
+  			startBlockObj.renderBlock();  // should been done/rendered automatically?  			
+  		}
+	  }
+	}
 
 	// --------------------------------------
 	// -- START POINT (FROM LOGIN) METHODS
@@ -188,8 +277,8 @@ function cwsRender()
 		}
 		else
 		{
-			console.log( 'internet config' );
-			console.log( configJson );
+			console.log( 'network config' );
+			//console.log( configJson );
 
 			me.configJson = configJson;
 
@@ -203,11 +292,15 @@ function cwsRender()
 
 		if ( me.areaList )
 		{
-			// 
-			/*var newMenuData = { id: "about", name: "About" };
-			me.areaList.push ( newMenuData );*/
-			var newMenuData = { id: "logOut", name: "Log out" };
-			me.areaList.push ( newMenuData );
+			if (JSON.stringify(me.areaList).indexOf('logOut') < 0 )
+			{
+				// 
+				/*var newMenuData = { id: "about", name: "About" };
+				me.areaList.push ( newMenuData );*/
+				var newMenuData = { id: "logOut", name: "Log out" };
+				me.areaList.push ( newMenuData );
+			}
+
 			var startMenuTag = me.populateMenuList( me.areaList );
 
 			if ( startMenuTag ) startMenuTag.click();

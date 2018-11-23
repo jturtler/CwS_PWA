@@ -221,11 +221,17 @@ function BlockForm( cwsRenderObj, blockObj )
 
 
 		// Set Tag Visibility
-		if ( inputData.display === "none" )
+		if ( inputData.display === "hiddenVal" )
+		{
+			divInputTag.hide();
+			entryTag.attr( 'display', 'hiddenVal' );
+		}
+		else if ( inputData.display === "none" )
 		{
 			divInputTag.hide();
 		}
 		
+
 		if ( passedData !== undefined 
 			&& passedData.hideCase !== undefined 
 			&& inputData.hideCase !== undefined

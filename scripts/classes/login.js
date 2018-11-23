@@ -49,7 +49,7 @@ function Login( cwsRenderObj )
 	{
 		me.setLoginBtnClick();
 
-		me.setSkipLoginBtnClick();
+		//me.setSkipLoginBtnClick();
 
 		me.setloginBtnClearClick();
 
@@ -82,7 +82,7 @@ function Login( cwsRenderObj )
 	}
 
 
-	me.setSkipLoginBtnClick = function()
+	/*me.setSkipLoginBtnClick = function()
 	{
 		$( '#skipLoginDiv' ).click( function() {
 	
@@ -100,7 +100,7 @@ function Login( cwsRenderObj )
 			});	
 
 		} );	
-	}
+	}*/
 
 	me.setloginBtnClearClick = function()
 	{
@@ -135,11 +135,37 @@ function Login( cwsRenderObj )
 
 	me.openForm = function()
 	{
-		//me.loginFormDivTag.dialog( "open" );	
-		me.pageDivTag.hide();		
-		me.loginFormDivTag.show( 'fast' );
-		me.menuTopDivTag.hide();
-		me.spanOuNameTag.text( '[Login]' ).attr( 'title', '' );
+		var SkipShow = false;
+
+		if ( localStorage.length )
+		{
+			var lastSession = JSON.parse(localStorage.getItem('session'));
+			
+			if ( lastSession )
+			{
+				var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+				if ( loginData.mySession && loginData.mySession.stayLoggedIn ) 
+				{
+					SkipShow = true;
+				}
+			}
+
+		}
+
+		if (SkipShow == false)
+		{
+			//me.loginFormDivTag.dialog( "open" );	
+			me.pageDivTag.hide();		
+			me.loginFormDivTag.show( 'fast' );
+			me.menuTopDivTag.hide();
+			me.spanOuNameTag.text( '[Login]' ).attr( 'title', '' );
+		}
+		else
+		{
+			me.loginSuccessProcess( loginData );
+		}
+
 	}
 
 	me.closeForm = function()
@@ -153,9 +179,10 @@ function Login( cwsRenderObj )
 	me.processLogin = function( userName, password, server, btnTag )
 	{
 		var parentTag = btnTag.parent();
-		parentTag.find( 'div.loadingImg' ).remove();
+		var bStayLoggedIn = ( btnTag.parent().find( 'input.stayLoggedIn' ). prop("checked") == true );
+		var dtmNow = ( new Date() ).toISOString();
 
-		//console.log( 'userName: ' + userName + ', password: ' + password );
+		parentTag.find( 'div.loadingImg' ).remove();
 
 		FormUtil.login_server = server;
 
@@ -175,20 +202,17 @@ function Login( cwsRenderObj )
 		{
 			var loadingTag = FormUtil.generateLoadingTag( btnTag );
 
-
 			FormUtil.submitLogin( userName, password, loadingTag, function( success, loginData ) 
 			{
 				if ( success )
 				{							
-					//console.log( 'online data use: ' + JSON.stringify( loginData ) );
 
 					me.loginSuccessProcess( loginData );
 
 					/* START: create 'session' information block  */
 					var newSaveObj = Object.assign( {} , loginData);
-					var dtmNow = ( new Date() ).toISOString();
 
-					newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: Util.encrypt(password,4) };
+					newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: Util.encrypt(password,4), stayLoggedIn: bStayLoggedIn };
 					newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor, config_version: loginData.dcdConfig.version, countrycode: loginData.dcdConfig.countryCode, dhis_server: loginData.orgUnitData.dhisServer, login_server: FormUtil.login_server };
 					/* END: create 'session' information block  */
 
@@ -202,13 +226,18 @@ function Login( cwsRenderObj )
 				}
 			} );
 		}
+
+		/* START: Added by Greg: 2018/11/23 */
+		var lastSession = { user: userName, lastUpdated: dtmNow }; //, networkOnline: ConnManager.getAppConnMode_Offline()
+		DataManager.saveData( 'session', lastSession );	
+		/* END: Added by Greg: 2018/11/23 */
+
 	}
 
 
 	me.loginSuccessProcess = function( loginData ) 
 	{		
-		alert( 'testing' );
-		
+
 		me.closeForm();
 
 		// Set Logged in orgUnit info

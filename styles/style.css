@@ -9,12 +9,6 @@
 /* START: added by Greg (checkbox on login: remember me) */
 /* CHECKBOX AND RADIO*/
 
-.container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
-
 .checkmark {
   position: absolute;
   top: 0;
@@ -27,10 +21,6 @@
 
 .check {
   border-radius: 4px;
-}
-
-.radio {
-  border-radius: 50%;
 }
 
 .container:hover input~.checkmark {

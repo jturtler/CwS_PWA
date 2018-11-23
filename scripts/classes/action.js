@@ -98,7 +98,7 @@ function Action( cwsRenderObj, blockObj )
 				if( clickActionJson.closeLevel !== undefined )
 				{
 					var closeLevel = Util.getNum( clickActionJson.closeLevel );
-				
+
 					var divBlockTotal = me.renderBlockTag.find( 'div.block:visible' ).length;
 
 					var currBlock = blockDivTag;
@@ -142,6 +142,16 @@ function Action( cwsRenderObj, blockObj )
 					var newBlockObj = new Block( me.cwsRenderObj, blockJson, clickActionJson.blockId, me.blockObj.parentTag, passedData, { 'notClear': true } );	
 					//var newBlockObj = new Block( me.cwsRenderObj, blockJson, clickActionJson.blockId, me.renderBlockTag, passedData, { 'notClear': true } );	
 					newBlockObj.renderBlock();
+				}
+			}
+			else if ( clickActionJson.actionType === "openArea" )
+			{
+				console.log( 'openArea: ' );
+				console.log( clickActionJson.areaId );
+				
+				if ( clickActionJson.areaId )
+				{					
+					me.cwsRenderObj.renderArea( clickActionJson.areaId );
 				}
 			}
 			else if ( clickActionJson.actionType === "filledData" )
