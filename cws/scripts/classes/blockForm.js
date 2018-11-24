@@ -94,12 +94,12 @@ function BlockForm( cwsRenderObj, blockObj )
 		spanTitleTag.text( inputJson.defaultName );
 		divInputTag.append( spanTitleTag );
 
-		me.renderInputTag_TabContent( inputJson, divInputTag, formDivSecTag, idList, passedData );
+		me.renderInputTag( inputJson, divInputTag, formDivSecTag, idList, passedData );
 
 		formDivSecTag.append( divInputTag );
 	}
 
-
+	/*
 	me.renderInputTag = function( inputData, divInputTag, formDivSecTag, idList, passedData )
 	{
 		if ( inputData !== undefined )
@@ -153,9 +153,9 @@ function BlockForm( cwsRenderObj, blockObj )
 			me.setEventsAndRules( inputData, entryTag, divInputTag, formDivSecTag, idList, passedData );
 		}
 	}
+	*/
 
-
-	me.renderInputTag_TabContent = function( inputData, divInputTag, formDivSecTag, idList, passedData )
+	me.renderInputTag = function( inputData, divInputTag, formDivSecTag, idList, passedData )
 	{
 		if ( inputData !== undefined )
 		{
@@ -188,18 +188,21 @@ function BlockForm( cwsRenderObj, blockObj )
 				divSelectTag.append( entryTag );
 				divInputTag.append( divSelectTag );
 			}
-			/*
-			else if( inputData.controlType === "DIV_CONTENT" )
+			else if ( inputData.controlType === "CHECKBOX" )
 			{
-				entryTag = $( '<div name="' + inputData.id + '" uid="' + inputData.uid + '" ></div>' );
+				entryTag = $( '<input name="' + inputData.id + '" uid="' + inputData.uid + '" class="form-type-text" type="checkbox" />' );
 				if( inputData.defaultValue !== undefined )
 				{
 					// Set default data
-					entryTag.html( inputData.defaultValue );	
+					entryTag.val( inputData.defaultValue );	
 				}
+				divInputTag.append( entryTag );
 			}
-			*/
-
+			else if ( inputData.controlType === "LABEL" )
+			{
+				divInputTag.css( 'background-color', 'darkgray' );
+				divInputTag.find( 'label.titleDiv' ).css( 'color', 'white' );
+			}
 
 			// Setup events and visibility and rules
 			me.setEventsAndRules( inputData, entryTag, divInputTag, formDivSecTag, idList, passedData );
@@ -209,10 +212,13 @@ function BlockForm( cwsRenderObj, blockObj )
 	
 	me.setEventsAndRules = function( inputData, entryTag, divInputTag, formDivSecTag, idList, passedData)
 	{
-		// Set Event
-		entryTag.change( function() {
-			me.performEvalActions( $(this).val(), inputData, formDivSecTag, idList );
-		});
+		if ( entryTag )
+		{
+			// Set Event
+			entryTag.change( function() {
+				me.performEvalActions( $(this).val(), inputData, formDivSecTag, idList );
+			});
+		}
 
 		
 		// NOTE: TRAN VALIDATION

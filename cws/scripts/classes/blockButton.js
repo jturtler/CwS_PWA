@@ -184,21 +184,24 @@ function BlockButton( cwsRenderObj, blockObj )
 
 	me.setUpBtnClick = function( btnTag, btnJson, passedData )
 	{
-		if ( btnJson.onClick !== undefined )
-		{			
-			btnTag.click( function() {
-
-				me.blockObj.actionObj.handleClickActions( btnTag, btnJson.onClick );
-
-				console.log( 'button clicked' );
-			});
-		}
-		else if( btnJson.onClickItem !== undefined )
+		if ( btnJson && btnTag )
 		{
-			btnTag.click( function() {
-				var idx = btnTag.closest("itemBlock").attr("idx");
-				me.blockObj.actionObj.handleItemClickActions( btnTag, btnJson.onClickItem, idx, passedData );
-			});
+			if ( btnJson.onClick !== undefined )
+			{			
+				btnTag.click( function() {
+	
+					me.blockObj.actionObj.handleClickActions( btnTag, btnJson.onClick );
+	
+					console.log( 'button clicked' );
+				});
+			}
+			else if( btnJson.onClickItem !== undefined )
+			{
+				btnTag.click( function() {
+					var idx = btnTag.closest("itemBlock").attr("idx");
+					me.blockObj.actionObj.handleItemClickActions( btnTag, btnJson.onClickItem, idx, passedData );
+				});
+			}	
 		}
 	}
 

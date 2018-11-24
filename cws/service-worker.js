@@ -236,7 +236,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "cf65cabc14326af176724457d23150c2"
+    "revision": "a952f8a299f3831544db23cae937febb"
   },
   {
     "url": "manifest.json",
@@ -256,11 +256,11 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/blockButton.js",
-    "revision": "1788140edfb2bbd550b726b2619cd2af"
+    "revision": "3b9b3790e9cbd7de4cc89b15610a23ee"
   },
   {
     "url": "scripts/classes/blockForm.js",
-    "revision": "f2ee4e5fe3baf1d7621c102867647e66"
+    "revision": "f8b3dce236526a8045c393fda937c95c"
   },
   {
     "url": "scripts/classes/blockList.js",
@@ -380,7 +380,7 @@ self.__precacheManifest = [
   },
   {
     "url": "styles/style.css",
-    "revision": "64740b34a45b4364dfb8df9730dc46b5"
+    "revision": "0ef754c17082d59d9dcdb52c3bd6621c"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
