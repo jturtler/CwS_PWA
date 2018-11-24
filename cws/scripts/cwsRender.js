@@ -18,8 +18,6 @@ function cwsRender()
 	me.floatListMenuSubIconsTag = $( '.floatListMenuSubIcons' );
 
 	me.loggedInDivTag = $( '#loggedInDiv' );
-	me.headerLogoTag = $( '.headerLogo' );
-	me.aboutFormDivTag = $( '#aboutFormDiv' );
 
 
 	// global variables
@@ -86,35 +84,8 @@ function cwsRender()
 
 		// loggedIn Name Link Click Event - opens Login Form
 		me.loggedInDivTag.click( function() {
-			// hide menuDiv if visible (when logging out)
-			if ( me.menuDivTag.is( ":visible" ) && me.menuTopRightIconTag.is( ":visible" ) )
-			{
-				me.menuTopRightIconTag.click();
-			}
 			me.LoginObj.openForm();
 		});
-
-		me.headerLogoTag.click(function() {
-
-			me.aboutFormDivTag.find( 'div.aboutListDiv' ).empty();
-
-			if ( localStorage.length )
-			{
-				var aboutObj = JSON.parse(localStorage.getItem(localStorage.key(localStorage.length-1))).about;
-				me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<table>' );
-
-				$.each(aboutObj, function(k, v) {
-					me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<tr><td align=right><strong> '+k+'</strong>: </td><td align=left> ' + v + ' </td></tr>' );
-				})
-
-				me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '</table>' );
-				me.aboutFormDivTag.show( 'fast' ).delay(5000).hide( 'fast' );
-
-			}
-
-		});
-
-		
 	}
 
 	// -------------------------
@@ -149,24 +120,19 @@ function cwsRender()
 	me.renderArea = function( areaId )
 	{
 		// should close current tag/content?
-		if (areaId === 'logOut')
+		
+		me.areaList = ConfigUtil.getAllAreaList( me.configJson );
+	
+		var selectedArea = Util.getFromList( me.areaList, areaId, "id" );
+
+		// if menu is clicked,
+		// reload the block refresh?
+		if ( selectedArea.startBlockName )
 		{
-			me.LoginObj.openForm();
+			var startBlockObj = new Block( me, me.configJson.definitionBlocks[ selectedArea.startBlockName ], selectedArea.startBlockName, me.renderBlockTag );
+			startBlockObj.renderBlock();  // should been done/rendered automatically?  			
 		}
-    else
-    {  
-  		me.areaList = ConfigUtil.getAllAreaList( me.configJson );
-  	
-  		var selectedArea = Util.getFromList( me.areaList, areaId, "id" );
-  
-  		// if menu is clicked,
-  		// reload the block refresh?
-  		if ( selectedArea.startBlockName )
-  		{
-  			var startBlockObj = new Block( me, me.configJson.definitionBlocks[ selectedArea.startBlockName ], selectedArea.startBlockName, me.renderBlockTag );
-  			startBlockObj.renderBlock();  // should been done/rendered automatically?  			
-  		}
-	  }
+	
 	}
 
 	// --------------------------------------
@@ -202,12 +168,6 @@ function cwsRender()
 
 		if ( me.areaList )
 		{
-			// 
-			/*var newMenuData = { id: "about", name: "About" };
-			me.areaList.push ( newMenuData );*/
-			var newMenuData = { id: "logOut", name: "Log out" };
-			me.areaList.push ( newMenuData );
-
 			var startMenuTag = me.populateMenuList( me.areaList );
 
 			if ( startMenuTag ) startMenuTag.click();

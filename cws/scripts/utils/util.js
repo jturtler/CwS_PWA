@@ -1138,11 +1138,12 @@ Util.parseInt = function( input )
 	}
 };
 
-
+/*
 Util.getServerUrl = function()
 {
 	return location.protocol + '//' + location.host;
 };
+*/
 
 Util.getIndexes = function( inputStr, keyStr )
 {
@@ -1194,23 +1195,3 @@ $.fn.outerHTML = function(){
           return contents;
     })(this[0]));
 };
-
-Util.encrypt = function (seed,loops) 
-{
-	let ret = seed;
-	for ( i = 0; i < loops; i++ )
-	{
-		ret = btoa(ret);
-	}
-	return ret;
-}
-
-Util.decrypt = function (garbage,loops) 
-{
-	let seed = garbage;
-	for ( i = 0; i < loops; i++ )
-	{
-		seed = atob(seed);
-	}
-	return seed;
-}
