@@ -6,6 +6,7 @@ function FormUtil() {}
 FormUtil.staticWSName = 'eRefWSDev3';			// Need to be dynamically retrieved
 FormUtil.login_UserName = '';
 FormUtil.login_Password = '';
+FormUtil.login_server = '';
 FormUtil.orgUnitData;
 FormUtil.dcdConfig;
 
@@ -39,8 +40,15 @@ FormUtil.getObjFromDefinition = function( def, definitions )
 
 FormUtil.getServerUrl = function()
 {
-	return FormUtil._serverUrl; 
-	//location.protocol + '//' + location.host;
+	if (FormUtil.login_server)
+	{
+		return FormUtil.login_server; 
+	} 
+	else
+	{
+		return location.protocol + '//' + location.host;
+	}
+	
 };
 
 FormUtil.generateUrl = function( inputsJson, actionJson )
