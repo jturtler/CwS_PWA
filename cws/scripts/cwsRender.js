@@ -153,20 +153,20 @@ function cwsRender()
 		{
 			me.LoginObj.openForm();
 		}
-    else
-    {  
-  		me.areaList = ConfigUtil.getAllAreaList( me.configJson );
-  	
-  		var selectedArea = Util.getFromList( me.areaList, areaId, "id" );
-  
-  		// if menu is clicked,
-  		// reload the block refresh?
-  		if ( selectedArea.startBlockName )
-  		{
-  			var startBlockObj = new Block( me, me.configJson.definitionBlocks[ selectedArea.startBlockName ], selectedArea.startBlockName, me.renderBlockTag );
-  			startBlockObj.renderBlock();  // should been done/rendered automatically?  			
-  		}
-	  }
+		else
+		{  
+			me.areaList = ConfigUtil.getAllAreaList( me.configJson );
+		
+			var selectedArea = Util.getFromList( me.areaList, areaId, "id" );
+	
+			// if menu is clicked,
+			// reload the block refresh?
+			if ( selectedArea.startBlockName )
+			{
+				var startBlockObj = new Block( me, me.configJson.definitionBlocks[ selectedArea.startBlockName ], selectedArea.startBlockName, me.renderBlockTag );
+				startBlockObj.renderBlock();  // should been done/rendered automatically?  			
+			}
+		}
 	}
 
 	// --------------------------------------

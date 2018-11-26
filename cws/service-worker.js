@@ -236,7 +236,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "a952f8a299f3831544db23cae937febb"
+    "revision": "1837629705cf938dcb1eff55f79991b9"
   },
   {
     "url": "manifest.json",
@@ -284,7 +284,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/cwsRender.js",
-    "revision": "ba05245e7a8340e6fc49b5d6da89b339"
+    "revision": "ff2c08df65a40ec134346746dadaafec"
   },
   {
     "url": "scripts/libraries/jquery-3.3.1.js",
