@@ -236,7 +236,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "1837629705cf938dcb1eff55f79991b9"
+    "revision": "4d34e6f01f888fe44cc3e52e1af11f83"
   },
   {
     "url": "manifest.json",
@@ -248,7 +248,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/action.js",
-    "revision": "e31443a639a8f6a47410e65b94398f19"
+    "revision": "f5cd6d3cd72ffe6afaac21797041473b"
   },
   {
     "url": "scripts/classes/block.js",
@@ -276,7 +276,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/login.js",
-    "revision": "64382408a22b426209513bd02a93f345"
+    "revision": "05a4df0665f785d3209ce6fcf266f59c"
   },
   {
     "url": "scripts/classes/validation.js",
@@ -284,7 +284,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/cwsRender.js",
-    "revision": "ff2c08df65a40ec134346746dadaafec"
+    "revision": "30934f86ee846316c5d1a7c246f2426b"
   },
   {
     "url": "scripts/libraries/jquery-3.3.1.js",
@@ -320,11 +320,11 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/utils/formUtil.js",
-    "revision": "ab22afe2c38d655d96114256bed4cc2c"
+    "revision": "5b4b4bb53c23b0ae582ac5f5d945a578"
   },
   {
     "url": "scripts/utils/util.js",
-    "revision": "a8c7f141c1f64918abb29749ce210f80"
+    "revision": "c8c076944837121e70b1a8124a580864"
   },
   {
     "url": "scripts/z. Old Files/cwsRender_v0.js",

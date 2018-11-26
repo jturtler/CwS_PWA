@@ -98,7 +98,7 @@ function Action( cwsRenderObj, blockObj )
 				if( clickActionJson.closeLevel !== undefined )
 				{
 					var closeLevel = Util.getNum( clickActionJson.closeLevel );
-				
+
 					var divBlockTotal = me.renderBlockTag.find( 'div.block:visible' ).length;
 
 					var currBlock = blockDivTag;

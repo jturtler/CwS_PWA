@@ -362,6 +362,8 @@ FormUtil.setUpTabAnchorUI = function( tag )
 		
 		$(this).addClass('active');
 
+		console.log( this );
+		
 
 		var activeTab = tag.find( ".tab_content > li[tabId='" + tab_select + "']");
 
@@ -385,6 +387,42 @@ FormUtil.setUpTabAnchorUI = function( tag )
 
 		//console.log( 'tabExpand: ' + tabId );
 
+		/* START > Greg added: 2018/11/23 */
+		var lastSession = JSON.parse(localStorage.getItem('session'));
+
+		if (lastSession)
+		{
+			var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+			if (loginData)
+			{
+
+				if ( ConnManager.getAppConnMode_Online() )
+				{
+					// for ONLINE > update dcd config for last menu action (default to this page on refresh)
+					for ( var i = 0; i < loginData.dcdConfig.areas.online.length; i++ )
+					{
+						if ( loginData.dcdConfig.areas.online[i].startArea )
+						{
+							loginData.dcdConfig.areas.online[i].defaultTab = tabId;
+						}
+					}
+				}
+				else
+				{
+					// for OFFLINE > update dcd config for last menu action (default to this page on refresh)
+					for ( var i = 0; i < loginData.dcdConfig.areas.offline.length; i++ )
+					{
+						if ( loginData.dcdConfig.areas.offline[i].startArea )
+						{
+							loginData.dcdConfig.areas.offline[i].defaultTab = tabId;
+						}
+					}
+				}
+				localStorage[ lastSession.user ] = JSON.stringify( loginData )
+			}
+		}
+		/* END > Added by Greg: 2018/11/24 */
 		
 		tag.find('.active').removeClass('active');
 		matchingTabsTag.addClass("active");

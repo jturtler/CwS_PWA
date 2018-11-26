@@ -51,8 +51,39 @@ function cwsRender()
 	
 	me.render = function()
 	{
-		// Open Log Form 
-		me.LoginObj.render();
+		// START > Greg added: 2018/11/23
+		var initializeStartBlock = false;
+
+		if ( localStorage.length )
+		{
+			var lastSession = JSON.parse(localStorage.getItem('session'));
+			
+			if ( lastSession )
+			{
+				var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+				if ( loginData && loginData.mySession && loginData.mySession.stayLoggedIn ) 
+				{
+					initializeStartBlock = true;
+				}
+			}
+
+		}
+
+		if ( initializeStartBlock )
+		{
+			me.LoginObj.loginFormDivTag.hide();
+			me.LoginObj._userName = lastSession.user;
+			me.LoginObj.loginSuccessProcess( loginData );
+		}
+		else
+		{
+			me.LoginObj.loginFormDivTag.show();
+			// Open Log Form
+			me.LoginObj.render();
+		}
+		// END > Greg added: 2018/11/23
+
 	}
 
 	// ------------------
@@ -98,17 +129,26 @@ function cwsRender()
 
 			me.aboutFormDivTag.find( 'div.aboutListDiv' ).empty();
 
+		  // Greg added: 2018/11/23 -- 'localStorage length check, lastSession, etc..
 			if ( localStorage.length )
 			{
-				var aboutObj = JSON.parse(localStorage.getItem(localStorage.key(localStorage.length-1))).about;
-				me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<table>' );
 
-				$.each(aboutObj, function(k, v) {
-					me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<tr><td align=right><strong> '+k+'</strong>: </td><td align=left> ' + v + ' </td></tr>' );
-				})
+				var lastSession = JSON.parse(localStorage.getItem('session'));
 
-				me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '</table>' );
-				me.aboutFormDivTag.show( 'fast' ).delay(5000).hide( 'fast' );
+				if (lastSession)
+				{
+
+					var aboutObj = JSON.parse(localStorage.getItem(lastSession.user)).about;
+					me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<table>' );
+
+					$.each(aboutObj, function(k, v) {
+						me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '<tr><td align=right><strong> '+k+'</strong>: </td><td align=left> ' + v + ' </td></tr>' );
+					})
+
+					me.aboutFormDivTag.find( 'div.aboutListDiv' ).append( '</table>' );
+					me.aboutFormDivTag.show( 'fast' ).delay(5000).hide( 'fast' );
+
+				}
 
 			}
 
@@ -128,8 +168,95 @@ function cwsRender()
 	{
 		menuTag.click( function() {
 					
-			var clicked_areaId = $( this ).attr( 'areaId' );			
-			me.renderArea( clicked_areaId );
+			var clicked_areaId = $( this ).attr( 'areaId' );
+	
+			var clicked_area = Util.getFromList( me.areaList, clicked_areaId, "id" );
+	
+			// if menu is clicked,
+			// reload the block refresh?
+			if ( clicked_area.startBlockName )
+			{
+				/* START > Greg added: 2018/11/23 */
+				var lastSession = JSON.parse(localStorage.getItem('session'));
+
+				if (lastSession)
+				{
+					var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+					if (loginData)
+					{
+						var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+						if ( ConnManager.getAppConnMode_Online() )
+						{
+							// for ONLINE > update dcd config for last menu action (default to this page on refresh)
+							for ( var i = 0; i < loginData.dcdConfig.areas.online.length; i++ )
+							{
+								if ( clicked_area.id == loginData.dcdConfig.areas.online[i].id )
+								{
+									loginData.dcdConfig.areas.online[i].startArea = true;
+								}
+								else 
+								{
+									loginData.dcdConfig.areas.online[i].startArea = false;
+								}
+							}
+						}
+						else
+						{
+							// for OFFLINE > update dcd config for last menu action (default to this page on refresh)
+							for ( var i = 0; i < loginData.dcdConfig.areas.offline.length; i++ )
+							{
+								if ( clicked_area.id == loginData.dcdConfig.areas.offline[i].id )
+								{
+									loginData.dcdConfig.areas.offline[i].startArea = true;
+								}
+								else 
+								{
+									loginData.dcdConfig.areas.offline[i].startArea = false;
+								}
+							}
+						}
+
+						//UPDATE lastStorage session for current user (based on last menu selection)
+						localStorage[ lastSession.user ] = JSON.stringify( loginData )
+
+					}
+				}
+				/* END > Greg added: 2018/11/23 */
+
+				var startBlockObj = new Block( me, me.configJson.definitionBlocks[ clicked_area.startBlockName ], clicked_area.startBlockName, me.renderBlockTag );
+				startBlockObj.renderBlock();  // should been done/rendered automatically?
+			}
+			else
+			{
+				/* START > Greg added: 2018/11/23 */
+				if (clicked_areaId === 'logOut')
+				{
+					var lastSession = JSON.parse(localStorage.getItem('session'));
+
+					if (lastSession)
+					{
+						var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+						if ( loginData.mySession && loginData.mySession.stayLoggedIn ) 
+						{
+							loginData.mySession.stayLoggedIn = false;
+							localStorage[ lastSession.user ] = JSON.stringify( loginData )
+						}
+					}
+
+
+					if ( me.menuDivTag.is( ":visible" ) && me.menuTopRightIconTag.is( ":visible" ) )
+					{
+						me.menuTopRightIconTag.click();
+					}
+
+					me.LoginObj.openForm();
+
+				}
+				/* END > Greg added: 2018/11/23 */
+			}
 	
 			// hide the menu
 			//$( '#menu_e:visible' ).click();
@@ -153,20 +280,20 @@ function cwsRender()
 		{
 			me.LoginObj.openForm();
 		}
-		else
-		{  
-			me.areaList = ConfigUtil.getAllAreaList( me.configJson );
-		
-			var selectedArea = Util.getFromList( me.areaList, areaId, "id" );
-	
-			// if menu is clicked,
-			// reload the block refresh?
-			if ( selectedArea.startBlockName )
-			{
-				var startBlockObj = new Block( me, me.configJson.definitionBlocks[ selectedArea.startBlockName ], selectedArea.startBlockName, me.renderBlockTag );
-				startBlockObj.renderBlock();  // should been done/rendered automatically?  			
-			}
-		}
+    else
+    {  
+  		me.areaList = ConfigUtil.getAllAreaList( me.configJson );
+  	
+  		var selectedArea = Util.getFromList( me.areaList, areaId, "id" );
+  
+  		// if menu is clicked,
+  		// reload the block refresh?
+  		if ( selectedArea.startBlockName )
+  		{
+  			var startBlockObj = new Block( me, me.configJson.definitionBlocks[ selectedArea.startBlockName ], selectedArea.startBlockName, me.renderBlockTag );
+  			startBlockObj.renderBlock();  // should been done/rendered automatically?  			
+  		}
+	  }
 	}
 
 	// --------------------------------------
@@ -187,8 +314,8 @@ function cwsRender()
 		}
 		else
 		{
-			console.log( 'internet config' );
-			console.log( configJson );
+			console.log( 'network config' );
+			//console.log( configJson );
 
 			me.configJson = configJson;
 
@@ -202,11 +329,15 @@ function cwsRender()
 
 		if ( me.areaList )
 		{
-			// 
-			/*var newMenuData = { id: "about", name: "About" };
-			me.areaList.push ( newMenuData );*/
-			var newMenuData = { id: "logOut", name: "Log out" };
-			me.areaList.push ( newMenuData );
+		  // Greg added: 2018/11/23 -- 'logOut' check
+			if (JSON.stringify(me.areaList).indexOf('logOut') < 0 )
+			{
+				// 
+				/*var newMenuData = { id: "about", name: "About" };
+				me.areaList.push ( newMenuData );*/
+				var newMenuData = { id: "logOut", name: "Log out" };
+				me.areaList.push ( newMenuData );
+			}
 
 			var startMenuTag = me.populateMenuList( me.areaList );
 
