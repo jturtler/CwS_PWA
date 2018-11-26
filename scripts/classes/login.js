@@ -13,6 +13,10 @@ function Login( cwsRenderObj )
 	me.loggedInDivTag = $( '#loggedInDiv' );
 	me.spanOuNameTag = $( '#spanOuName' );
 
+	me._userName = '';
+	me._pHash = '';
+	me._staySignedIn = true;
+
 	// =============================================
 	// === TEMPLATE METHODS ========================
 
@@ -135,36 +139,11 @@ function Login( cwsRenderObj )
 
 	me.openForm = function()
 	{
-		var SkipShow = false;
-
-		if ( localStorage.length )
-		{
-			var lastSession = JSON.parse(localStorage.getItem('session'));
-			
-			if ( lastSession )
-			{
-				var loginData = JSON.parse(localStorage.getItem(lastSession.user));
-
-				if ( loginData.mySession && loginData.mySession.stayLoggedIn ) 
-				{
-					SkipShow = true;
-				}
-			}
-
-		}
-
-		if (SkipShow == false)
-		{
-			//me.loginFormDivTag.dialog( "open" );	
-			me.pageDivTag.hide();		
-			me.loginFormDivTag.show( 'fast' );
-			me.menuTopDivTag.hide();
-			me.spanOuNameTag.text( '[Login]' ).attr( 'title', '' );
-		}
-		else
-		{
-			me.loginSuccessProcess( loginData );
-		}
+		//me.loginFormDivTag.dialog( "open" );	
+		me.pageDivTag.hide();		
+		me.loginFormDivTag.show( 'fast' );
+		me.menuTopDivTag.hide();
+		me.spanOuNameTag.text( '[Login]' ).attr( 'title', '' );
 
 	}
 
@@ -179,8 +158,9 @@ function Login( cwsRenderObj )
 	me.processLogin = function( userName, password, server, btnTag )
 	{
 		var parentTag = btnTag.parent();
-		var bStayLoggedIn = ( btnTag.parent().find( 'input.stayLoggedIn' ). prop("checked") == true );
 		var dtmNow = ( new Date() ).toISOString();
+		me._staySignedIn = ( btnTag.parent().find( 'input.stayLoggedIn' ). prop("checked") == true );
+		me._userName = userName;
 
 		parentTag.find( 'div.loadingImg' ).remove();
 
@@ -193,8 +173,7 @@ function Login( cwsRenderObj )
 
 			if ( loginData ) 
 			{
-				//console.log( 'offline data use: ' + JSON.stringify( loginData ) );
-				// if data exists, 					
+				if ( loginData.mySession.pin ) me._pHash = loginData.mySession.pin;
 				me.loginSuccessProcess( loginData );
 			}
 		}
@@ -205,20 +184,9 @@ function Login( cwsRenderObj )
 			FormUtil.submitLogin( userName, password, loadingTag, function( success, loginData ) 
 			{
 				if ( success )
-				{							
-
+				{
+					me._pHash = Util.encrypt(password,4);
 					me.loginSuccessProcess( loginData );
-
-					/* START: create 'session' information block  */
-					var newSaveObj = Object.assign( {} , loginData);
-
-					newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: Util.encrypt(password,4), stayLoggedIn: bStayLoggedIn };
-					newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor, config_version: loginData.dcdConfig.version, countrycode: loginData.dcdConfig.countryCode, dhis_server: loginData.orgUnitData.dhisServer, login_server: FormUtil.login_server };
-					/* END: create 'session' information block  */
-
-					//DataManager.saveData( userName, loginData );	
-					DataManager.saveData( userName, newSaveObj );	
-
 				}
 				else
 				{
@@ -253,6 +221,26 @@ function Login( cwsRenderObj )
 			// call CWS start with this config data..
 			me.cwsRenderObj.startWithConfigLoad( loginData.dcdConfig );
 		}
+
+		/* START: create/edit 'session' information block  */
+		/* START > added by Greg: 2018/11/23  */
+		var dtmNow = ( new Date() ).toISOString();
+
+		if ( loginData.mySession ) 
+		{
+			loginData.mySession.lastUpdated = dtmNow;
+			DataManager.saveData( me._userName, loginData );	
+	}
+		else
+		{
+			var newSaveObj = Object.assign( {} , loginData);
+			newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: me._pHash, stayLoggedIn: me._staySignedIn };
+			newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor, config_version: loginData.dcdConfig.version, countrycode: loginData.dcdConfig.countryCode, dhis_server: loginData.orgUnitData.dhisServer, login_server: FormUtil.login_server };
+			DataManager.saveData( me._userName, newSaveObj );	
+		}
+		/* END > added by Greg: 2018/11/23  */
+		/* END: create/edit 'session' information block  */
+
 	}
 
 	// --------------------------------------

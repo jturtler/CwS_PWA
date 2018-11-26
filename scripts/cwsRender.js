@@ -26,7 +26,7 @@ function cwsRender()
 	me.configJson;
 	me.areaList = [];
 
-	
+
 	me.storageName_RedeemList = "redeemList";
 	me._globalMsg = "";
 	me._globalJsonData = undefined;
@@ -48,11 +48,42 @@ function cwsRender()
 
 		me.setEvents_OnInit();
 	}
-	
+
 	me.render = function()
 	{
-		// Open Log Form 
-		me.LoginObj.render();
+		/* START > Greg added: 2018/11/23 */
+		var initializeStartBlock = false;
+
+		if ( localStorage.length )
+		{
+			var lastSession = JSON.parse(localStorage.getItem('session'));
+			
+			if ( lastSession )
+			{
+				var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+				if ( loginData.mySession && loginData.mySession.stayLoggedIn ) 
+				{
+					initializeStartBlock = true;
+				}
+			}
+
+		}
+
+		if ( initializeStartBlock )
+		{
+			me.LoginObj.loginFormDivTag.hide();
+			me.LoginObj._userName = lastSession.user;
+			me.LoginObj.loginSuccessProcess( loginData );
+		}
+		else
+		{
+			me.LoginObj.loginFormDivTag.show();
+			// Open Log Form
+			me.LoginObj.render();
+		}
+		/* END > Greg added: 2018/11/23 */
+
 	}
 
 	// ------------------
@@ -155,29 +186,34 @@ function cwsRender()
 					{
 						var loginData = JSON.parse(localStorage.getItem(lastSession.user));
 
-						// for ONLINE > update dcd config for last menu action (default to this page on refresh)
-						for ( var i = 0; i < loginData.dcdConfig.areas.online.length; i++ )
+						if ( ConnManager.getAppConnMode_Online() )
 						{
-							if ( clicked_area.id == loginData.dcdConfig.areas.online[i].id )
+							// for ONLINE > update dcd config for last menu action (default to this page on refresh)
+							for ( var i = 0; i < loginData.dcdConfig.areas.online.length; i++ )
 							{
-								loginData.dcdConfig.areas.online[i].startArea = true;
-							}
-							else 
-							{
-								loginData.dcdConfig.areas.online[i].startArea = false;
+								if ( clicked_area.id == loginData.dcdConfig.areas.online[i].id )
+								{
+									loginData.dcdConfig.areas.online[i].startArea = true;
+								}
+								else 
+								{
+									loginData.dcdConfig.areas.online[i].startArea = false;
+								}
 							}
 						}
-
-						// for OFFLINE > update dcd config for last menu action (default to this page on refresh)
-						for ( var i = 0; i < loginData.dcdConfig.areas.offline.length; i++ )
+						else
 						{
-							if ( clicked_area.id == loginData.dcdConfig.areas.offline[i].id )
+							// for OFFLINE > update dcd config for last menu action (default to this page on refresh)
+							for ( var i = 0; i < loginData.dcdConfig.areas.offline.length; i++ )
 							{
-								loginData.dcdConfig.areas.offline[i].startArea = true;
-							}
-							else 
-							{
-								loginData.dcdConfig.areas.offline[i].startArea = false;
+								if ( clicked_area.id == loginData.dcdConfig.areas.offline[i].id )
+								{
+									loginData.dcdConfig.areas.offline[i].startArea = true;
+								}
+								else 
+								{
+									loginData.dcdConfig.areas.offline[i].startArea = false;
+								}
 							}
 						}
 
