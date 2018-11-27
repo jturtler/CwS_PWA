@@ -159,7 +159,7 @@ function Login( cwsRenderObj )
 	{
 		var parentTag = btnTag.parent();
 
-    // Greg added: 2018/11/23
+    	// Greg added: 2018/11/23
 		var dtmNow = ( new Date() ).toISOString();
 		me._staySignedIn = ( btnTag.parent().find( 'input.stayLoggedIn' ). prop("checked") == true );
 		me._userName = userName;

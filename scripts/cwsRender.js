@@ -52,7 +52,7 @@ function cwsRender()
 	me.render = function()
 	{
 		/* START > Greg added: 2018/11/23 */
-		var initializeStartBlock = false;
+		var initializeStartBlock = true;
 
 		if ( localStorage.length )
 		{
@@ -64,24 +64,24 @@ function cwsRender()
 
 				if ( loginData && loginData.mySession && loginData.mySession.stayLoggedIn ) 
 				{
-					initializeStartBlock = true;
+					initializeStartBlock = false;
 				}
 			}
 
 		}
 
-		if ( initializeStartBlock )
+		if ( !initializeStartBlock )
 		{
 			me.LoginObj.loginFormDivTag.hide();
 			me.LoginObj._userName = lastSession.user;
 			FormUtil.login_UserName = lastSession.user;
+			FormUtil.login_Password = Util.decrypt ( loginData.mySession.pin, 4);
 			me.LoginObj.loginSuccessProcess( loginData );
 		}
 		else
 		{
 			me.LoginObj.loginFormDivTag.show();
-			// Open Log Form
-			me.LoginObj.render();
+			me.LoginObj.render(); // Open Log Form
 		}
 		/* END > Greg added: 2018/11/23 */
 

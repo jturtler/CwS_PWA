@@ -256,7 +256,7 @@ function BlockList( cwsRenderObj, blockObj )
                         console.log( 'Redeem submittion isSucccess: ' + success );
 
                         mySyncIcon.stop();
-    
+
                         if ( success )
                         {
                             itemData.status = me.status_redeem_submit;
@@ -268,7 +268,7 @@ function BlockList( cwsRenderObj, blockObj )
                             itemData.status = me.status_redeem_failed;
                             myTag.html( 'Error redeeming' );
                         }
-    
+
                         setTimeout( function() {
                             myTag.html( itemData.title );
                         }, 2000 );
@@ -277,7 +277,9 @@ function BlockList( cwsRenderObj, blockObj )
 
                         me.populateData_RedeemItemTag( itemData, itemLiTag );
                     } );
+
                 }
+
             });
         }
 
