@@ -62,7 +62,7 @@ function cwsRender()
 			{
 				var loginData = JSON.parse(localStorage.getItem(lastSession.user));
 
-				if ( loginData.mySession && loginData.mySession.stayLoggedIn ) 
+				if ( loginData && loginData.mySession && loginData.mySession.stayLoggedIn ) 
 				{
 					initializeStartBlock = true;
 				}
@@ -74,6 +74,7 @@ function cwsRender()
 		{
 			me.LoginObj.loginFormDivTag.hide();
 			me.LoginObj._userName = lastSession.user;
+			FormUtil.login_UserName = lastSession.user;
 			me.LoginObj.loginSuccessProcess( loginData );
 		}
 		else
@@ -129,6 +130,7 @@ function cwsRender()
 
 			me.aboutFormDivTag.find( 'div.aboutListDiv' ).empty();
 
+		  // Greg added: 2018/11/23 -- 'localStorage length check, lastSession, etc..
 			if ( localStorage.length )
 			{
 
@@ -166,9 +168,9 @@ function cwsRender()
 	me.setupMenuTagClick = function( menuTag )
 	{
 		menuTag.click( function() {
-					
+
 			var clicked_areaId = $( this ).attr( 'areaId' );
-	
+
 			var clicked_area = Util.getFromList( me.areaList, clicked_areaId, "id" );
 	
 			// if menu is clicked,
@@ -328,6 +330,7 @@ function cwsRender()
 
 		if ( me.areaList )
 		{
+		  // Greg added: 2018/11/23 -- 'logOut' check
 			if (JSON.stringify(me.areaList).indexOf('logOut') < 0 )
 			{
 				// 
