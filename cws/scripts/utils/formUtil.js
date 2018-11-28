@@ -4,6 +4,7 @@
 function FormUtil() {}
 
 FormUtil.staticWSName = 'eRefWSDev3';			// Need to be dynamically retrieved
+FormUtil.appUrlName = 'cws';			// App name - Part of the url
 FormUtil.login_UserName = '';
 FormUtil.login_Password = '';
 FormUtil.login_server = '';
@@ -434,4 +435,11 @@ FormUtil.setUpTabAnchorUI = function( tag )
 		$(this).find( ".expandable-arrow" ).attr('src','./img/arrow_up.svg');
 
 	});
+}
+
+FormUtil.getAppInfo = function( returnFunc )
+{	
+	var url = FormUtil.getWsUrl( '/api/getPWAInfo' );
+
+	RESTUtil.retrieveJson( url, returnFunc );
 }
