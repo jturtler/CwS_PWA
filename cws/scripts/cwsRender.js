@@ -26,7 +26,7 @@ function cwsRender()
 	me.configJson;
 	me.areaList = [];
 
-	
+
 	me.storageName_RedeemList = "redeemList";
 	me._globalMsg = "";
 	me._globalJsonData = undefined;
@@ -48,11 +48,11 @@ function cwsRender()
 
 		me.setEvents_OnInit();
 	}
-	
+
 	me.render = function()
 	{
-		// START > Greg added: 2018/11/23
-		var initializeStartBlock = false;
+		/* START > Greg added: 2018/11/23 */
+		var initializeStartBlock = true;
 
 		if ( localStorage.length )
 		{
@@ -64,29 +64,26 @@ function cwsRender()
 
 				if ( loginData && loginData.mySession && loginData.mySession.stayLoggedIn ) 
 				{
-					initializeStartBlock = true;
+					initializeStartBlock = false;
 				}
 			}
 
 		}
 
-		if ( initializeStartBlock )
+		if ( !initializeStartBlock )
 		{
-			// 1. Login based on the saved info
 			me.LoginObj.loginFormDivTag.hide();
 			me.LoginObj._userName = lastSession.user;
+			FormUtil.login_UserName = lastSession.user;
+			FormUtil.login_Password = Util.decrypt ( loginData.mySession.pin, 4);
 			me.LoginObj.loginSuccessProcess( loginData );
-
-			// 2. Render to the last session place?
-
 		}
 		else
 		{
 			me.LoginObj.loginFormDivTag.show();
-			// Open Log Form
-			me.LoginObj.render();
+			me.LoginObj.render(); // Open Log Form
 		}
-		// END > Greg added: 2018/11/23
+		/* END > Greg added: 2018/11/23 */
 
 	}
 
@@ -133,7 +130,7 @@ function cwsRender()
 
 			me.aboutFormDivTag.find( 'div.aboutListDiv' ).empty();
 
-		  	// Greg added: 2018/11/23 -- 'localStorage length check, lastSession, etc..
+		  // Greg added: 2018/11/23 -- 'localStorage length check, lastSession, etc..
 			if ( localStorage.length )
 			{
 
@@ -171,14 +168,11 @@ function cwsRender()
 	me.setupMenuTagClick = function( menuTag )
 	{
 		menuTag.click( function() {
-					
+
 			var clicked_areaId = $( this ).attr( 'areaId' );
-	
+
 			var clicked_area = Util.getFromList( me.areaList, clicked_areaId, "id" );
 	
-
-			// TODO: CREATE METHOD & MOVE --> Render Area -> Default Start Block Render Method name use 
-
 			// if menu is clicked,
 			// reload the block refresh?
 			if ( clicked_area.startBlockName )
@@ -309,8 +303,6 @@ function cwsRender()
 	{
 		if ( me._localConfigUse )
 		{
-			// Almost obsolete case
-
 			ConfigUtil.getDsConfigJson( me.dsConfigLoc, function( configDataFile ) {
 
 				console.log( 'local config' );
@@ -338,7 +330,7 @@ function cwsRender()
 
 		if ( me.areaList )
 		{
-		  	// Greg added: 2018/11/23 -- 'logOut' check
+		  // Greg added: 2018/11/23 -- 'logOut' check
 			if (JSON.stringify(me.areaList).indexOf('logOut') < 0 )
 			{
 				// 

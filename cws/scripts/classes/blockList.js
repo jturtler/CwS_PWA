@@ -58,6 +58,7 @@ function BlockList( cwsRenderObj, blockObj )
    
     me.renderRedeemList = function( redeemList, blockTag )
     {   
+
         // Remove any previous render.
         blockTag.find( 'div.listDiv' ).remove();
 
@@ -66,29 +67,41 @@ function BlockList( cwsRenderObj, blockObj )
 
         var listContentUlTag = blockTag.find( '.tab__content_act' );
 
-        console.log( redeemList );
-        me.redeemList = redeemList;
-
-        
-        // By the list data, populate/render the data/tags
-        if ( redeemList === undefined || redeemList.length == 0 )
+        /* START > Added by Greg: 2018/11/26 */
+        if ( redeemList )
         {
-            var divTag = $( '<div class="emptyListDiv" style="min-height: 40px; margin: 10px;"></div>' );
-        
-            var spanTag = $( '<span style="color: #888; font-weight: bold;">List is empty.</span>' );
 
-            divTag.append( spanTag );
+            // Filter me.redeemList for the current (logged in) user's redeemList
+            me.redeemList = redeemList.filter(a=>a.owner==FormUtil.login_UserName); 
 
-            blockTag.append( divTag );
+            if ( me.redeemList === undefined || me.redeemList.length == 0 )
+            {
+                var liTag = $( '<li class="emptyListLi"></li>' );
+                var spanTag = $( '<a class="expandable" style="min-height: 60px; padding: 10px; color: #888; font-weight: 800;">List is empty.</a>' );
+                liTag.append( spanTag );
+                listContentUlTag.append( liTag );
+            }
+            else
+            {
+                var arrNewFirst = me.redeemList.reverse();
+                for( var i = 0; i < arrNewFirst.length; i++ )
+                {
+                    me.renderRedeemListItemTag( arrNewFirst[i], listContentUlTag );
+                }
+            }
+
         }
         else
         {
-            var arrNewFirst = redeemList.reverse();
-            for( var i = 0; i < arrNewFirst.length; i++ )
-            {
-                me.renderRedeemListItemTag( arrNewFirst[i], listContentUlTag );                 
-            }	
-        }  
+            /* START > Edited by Greg: 2018/11/26 */
+            var liTag = $( '<li class="emptyListLi"></li>' );
+            var spanTag = $( '<a class="expandable" style="min-height: 60px; padding: 10px; color: #888; font-weight: 800;">List is empty.</a>' );
+            liTag.append( spanTag );
+            listContentUlTag.append( liTag );
+            /* END > Edited by Greg: 2018/11/26 */
+        }
+        /* END > Added by Greg: 2018/11/26 */
+
     }
 
 
@@ -96,24 +109,20 @@ function BlockList( cwsRenderObj, blockObj )
     // <-- Do same for all class HTML and data population?  <-- For HTML create vs 'data populate'/'update'
 
     me.renderRedeemListItemTag = function( itemData, listContentUlTag )
-    {    
+    {   
+
         var itemAttrStr = 'itemId="' + itemData.id + '"';
 
         var liContentTag = $( '<li ' + itemAttrStr + '></li>' );
 
         // Anchor for clickable header info
         var anchorTag = $( '<a class="expandable" ' + itemAttrStr + '></a>' );
-        
+
         var dateTimeStr = $.format.date( itemData.created, "dd MMM yyyy - hh:MM a");
 
         var dateTimeTag = $( '<div class="icon-row"><img src="img/act.svg">' + dateTimeStr + '</div>' );
         var expandArrowTag = $( '<div class="icon-arrow"><img class="expandable-arrow" src="img/arrow_down.svg"></div>' );
-
-        var statusSecDivTag = $( '<div class="icons-status"><small class="statusName" style="color: #7dd11f;">open</small><small class="statusIcon"><img src="img/open.svg"></small><small><img src="img/sync-n.svg"></small></div>' );
-
-        // me.setStatusOnTag( statusSecDivTag, itemData ); 
-
-
+        var statusSecDivTag = $( '<div class="icons-status"><small class="statusName" style="color: #7dd11f;">{status}</small><small class="statusIcon"><img src="img/open.svg"></small><small  class="syncIcon"><img src="img/sync.svg"></small><small  class="errorIcon"><img src="img/alert.svg"></small></div>' );
         var voucherTag = $( '<div class="act-r"><small><b>ZW12 cc</b> - eVoucher</small></div>' );
 
         anchorTag.append( dateTimeTag, expandArrowTag, statusSecDivTag, voucherTag );
@@ -128,17 +137,15 @@ function BlockList( cwsRenderObj, blockObj )
         // Click Events
         me.setContentDivClick( contentDivTag );
 
-
         // Append to 'li'
         liContentTag.append( anchorTag, contentDivTag );
 
         // Append the liTag to ulTag
         listContentUlTag.append( liContentTag );
 
-
-
         // Populate the Item Content
         me.populateData_RedeemItemTag( itemData, liContentTag );
+
 
     }
 
@@ -149,10 +156,10 @@ function BlockList( cwsRenderObj, blockObj )
 
         me.setStatusOnTag( statusSecDivTag, itemData ); 
 
-        var itemActionButtonsDivTag = itemLiTag.find( 'div.act-l div.listItemDetailActionButtons');
+        //var itemActionButtonsDivTag = itemLiTag.find( 'div.act-l div.listItemDetailActionButtons');
 
         // Click Events
-        me.submitButtonListUpdate( itemActionButtonsDivTag, itemLiTag, itemData );
+        me.submitButtonListUpdate( statusSecDivTag, itemLiTag, itemData );
 
     }
 
@@ -166,22 +173,32 @@ function BlockList( cwsRenderObj, blockObj )
 
         var smallStatusNameTag = statusSecDivTag.find( 'small.statusName' );
         var imgStatusIconTag = statusSecDivTag.find( 'small.statusIcon img' );
+        var imgSyncIconTag = statusSecDivTag.find( 'small.syncIcon img' );
+        var imgErrIconTag = statusSecDivTag.find( 'small.errorIcon img' );
 
         if ( itemData.status === me.status_redeem_submit )
         {
-            smallStatusNameTag.text( 'submitted' ).css( 'color', '#e48825' );
+            smallStatusNameTag.text( 'submitted' ).css( 'color', '#e48825' ); // Redeemed?
             imgStatusIconTag.attr( 'src', 'img/lock.svg' );
+            imgSyncIconTag.attr ( 'src', 'img/sync.svg' );
+            imgErrIconTag.css ( 'visibility', 'hidden' );
         }
         else if ( itemData.status === me.status_redeem_failed )
         {
-            smallStatusNameTag.text( 'failed' ).css( 'color', '#e48825' );
+            smallStatusNameTag.text( 'invalid' ).css( 'color', '#e48825' ); //Invalid?
             imgStatusIconTag.attr( 'src', 'img/lock.svg' );
+            imgSyncIconTag.attr ( 'src', 'img/sync-n.svg' );
+            imgErrIconTag.css ( 'visibility', 'visible' );
         }
         else
         {
-            smallStatusNameTag.text( 'open' ).css( 'color', '#7dd11f' );
+            smallStatusNameTag.text( 'open' ).css( 'color', '#787878' ); //Unmatched?
             imgStatusIconTag.attr( 'src', 'img/open.svg' );
-        }            
+            imgSyncIconTag.attr ( 'src', 'img/sync-n.svg' );
+            imgErrIconTag.css ( 'visibility', 'hidden' );
+
+        }
+
     }
 
 
@@ -199,61 +216,73 @@ function BlockList( cwsRenderObj, blockObj )
     }
 
 
-    me.submitButtonListUpdate = function( itemActionButtonsDivTag, itemLiTag, itemData )
+    me.submitButtonListUpdate = function( statusSecDivTag, itemLiTag, itemData )
     {        
         // remove previous ones
-        itemActionButtonsDivTag.find( 'button.actionBtn' ).remove();
+        //itemActionButtonsDivTag.find( 'button.actionBtn' ).remove();
 
-        if ( itemData.status == !me.status_redeem_submit )
+        if ( itemData.status != me.status_redeem_submit ) // changed by Greg (2018/11/27) from '== !' to '!=' > was failing to test correctly
         {
+            var imgSyncIconTag = statusSecDivTag.find( 'small.syncIcon img' );
 
-            // TODO: var syncBtnTag = // $( '.syncBtn' );
-            var btnRedeemSubmitTag = $( '<button class="actionBtn btnSubmitRedeem">submit</button>' );
+            imgSyncIconTag.click( function(e) {
 
-            itemActionButtonsDivTag.append( btnRedeemSubmitTag );
+                var mySyncIcon = $( this );
 
+                mySyncIcon.rotate({ count:999, forceJS: true, startDeg: true });
 
-            btnRedeemSubmitTag.click( function(e) {
+                //$(this).parent().parent().parent().siblings().html( 'Connecting...' );
+                var myTag = mySyncIcon.parent().parent().parent().siblings();
+                var redeemID = myTag.attr( 'itemid' );
+                var loadingTag = $( '<div class="loadingImg" style="display: inline-block; margin-left: 8px;">Connecting... </div>' );
+
+                myTag.html( '' );
+                myTag.append( loadingTag );
+
                 e.stopPropagation();                
-    
-                console.log( ' === itemData: ' );
-                console.log( itemData );
-    
+
                 // if offline, alert it!!
                 if ( ConnManager.isOffline() )
                 {
                     alert( 'Currently in offline.  Need to be in online for this.' );
+                    myTag.html( itemData.title );
+                    $(this).stop();
                 }
                 else
                 {
-                    var loadingTag = $( '<div class="loadingImg" style="display: inline-block; margin-left: 8px;"><img src="images/loading.gif"></div>' );
-                    divButtonsTag.append( loadingTag );
+
                     FormUtil.submitRedeem( itemData.data.url, itemData.data.payloadJson, itemData.data.actionJson, loadingTag, function( success, returnJson )
                     {
                         console.log( 'Redeem submittion isSucccess: ' + success );
-    
+
+                        mySyncIcon.stop();
+
                         if ( success )
                         {
                             itemData.status = me.status_redeem_submit;
                             itemData.returnJson = returnJson;
-                            
-                            // TODO: NEED TO REFERSH THE ITEM INFO/STATUS
-                            //me.toggleDetail( itemData, listItemTag );
+                            myTag.html( 'Success' );
                         }
                         else 
                         {
                             itemData.status = me.status_redeem_failed;
-                        }    
-                        
+                            myTag.html( 'Error redeeming' );
+                        }
+
+                        setTimeout( function() {
+                            myTag.html( itemData.title );
+                        }, 2000 );
+
                         DataManager.updateItemFromData( me.storageName_RedeemList, itemData.id, itemData );
-    
+
                         me.populateData_RedeemItemTag( itemData, itemLiTag );
                     } );
+
                 }
+
             });
         }
 
-        //if ( itemData.status != me.status_redeem_submit ) itemActionButtonsDivTag.append( btnRedeemSubmitTag );
     }
 
     // -----------------------------
@@ -435,10 +464,12 @@ function BlockList( cwsRenderObj, blockObj )
         var tempJsonData = {};
         tempJsonData.title = "Voucher: " + submitJson.payloadJson.voucherCode + " - " + dateTimeStr;
         tempJsonData.created = dateTimeStr;
+        tempJsonData.owner = FormUtil.login_UserName; // Added by Greg: 2018/11/26 > identify record owner
         tempJsonData.id = Util.generateRandomId();
         tempJsonData.status = status;
+        tempJsonData.network = ConnManager.getAppConnMode_Online(); // Added by Greg: 2018/11/26 > record network status at time of creation
         tempJsonData.data = submitJson;
-    
+
         DataManager.insertDataItem( me.storageName_RedeemList, tempJsonData );	
     }
     

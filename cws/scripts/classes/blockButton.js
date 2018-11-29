@@ -72,16 +72,25 @@ function BlockButton( cwsRenderObj, blockObj )
 				// Setup the tab click for opening tab content area
 				FormUtil.setUpTabAnchorUI( btnHolderTag );	
 
-				// Click on 1st one.
+				// Click on 1st/Last-Recorded tab.
 				setTimeout( function() 
 				{
-					// TODO: MIGHT HAVE TO BE REPLACED WITH 'A'
-					btnHolderTag.find( 'li:first-child' ).click();//.addClass( 'active' );
-					console.log( 'time out  1st tab button clicked' );
+					/* START > Edited by Greg: 2018/11/26 */
+					var lastTab = FormUtil.getUserLastSelectedTab();
+
+					if ( lastTab )
+					{
+						btnHolderTag.find( 'li' )[ lastTab-1 ].click();
+					}
+					else
+					{
+						btnHolderTag.find( 'li:first-child' ).click();
+					}
+					/* END > Edited by Greg: 2018/11/26 */
 
 				}, 100 );
 
-				console.log( 'click 1st tab button' );
+				//console.log( 'click 1st tab button' );
 			}
 
 		}

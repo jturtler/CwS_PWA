@@ -161,7 +161,7 @@ function Login( cwsRenderObj )
 	{
 		var parentTag = btnTag.parent();
 
-    // Greg added: 2018/11/23
+    	// Greg added: 2018/11/23
 		var dtmNow = ( new Date() ).toISOString();
 		me._staySignedIn = ( btnTag.parent().find( 'input.stayLoggedIn' ). prop("checked") == true );
 		me._userName = userName;
@@ -173,13 +173,24 @@ function Login( cwsRenderObj )
 		// ONLINE vs OFFLINE HANDLING HERE!!!!
 		if ( ConnManager.getAppConnMode_Offline() )
 		{
-			var loginData = DataManager.getData( userName );
-
-			if ( loginData ) 
+			/* START > Added by Greg: 2018/11/26 */
+			// validate encrypted pwd against already stored+encrypted pwd
+			if ( password == Util.decrypt( FormUtil.getUserSessionAttr( userName,'pin' ), 4) )
 			{
-				if ( loginData.mySession.pin ) me._pHash = loginData.mySession.pin;
-				me.loginSuccessProcess( loginData );
+				var loginData = DataManager.getData( userName );
+
+				if ( loginData ) 
+				{
+					if ( loginData.mySession.pin ) me._pHash = loginData.mySession.pin;
+					FormUtil.setLogin( userName, password ); /* Added by Greg: 2018/11/27 */
+					me.loginSuccessProcess( loginData );
+				}
 			}
+			else
+			{
+				alert( 'Login Failed' );
+			}
+			/* END > Added by Greg: 2018/11/26 */
 		}
 		else
 		{
@@ -226,24 +237,28 @@ function Login( cwsRenderObj )
 			me.cwsRenderObj.startWithConfigLoad( loginData.dcdConfig );
 		}
 
-		/* START: create/edit 'session' information block  */
+		/* create/edit 'session' information block  */
 		/* START > added by Greg: 2018/11/23  */
 		var dtmNow = ( new Date() ).toISOString();
 
+		// if session data exists, update the lastUpdated date else create new session data
 		if ( loginData.mySession ) 
 		{
 			loginData.mySession.lastUpdated = dtmNow;
+			loginData.mySession.stayLoggedIn = me._staySignedIn;
+
 			DataManager.saveData( me._userName, loginData );	
-		}
+	}
 		else
 		{
 			var newSaveObj = Object.assign( {} , loginData);
+
 			newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: me._pHash, stayLoggedIn: me._staySignedIn };
 			newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor, config_version: loginData.dcdConfig.version, countrycode: loginData.dcdConfig.countryCode, dhis_server: loginData.orgUnitData.dhisServer, login_server: FormUtil.login_server };
+
 			DataManager.saveData( me._userName, newSaveObj );	
 		}
 		/* END > added by Greg: 2018/11/23  */
-		/* END: create/edit 'session' information block  */
 
 	}
 

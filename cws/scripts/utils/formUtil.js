@@ -268,15 +268,16 @@ FormUtil.getFetchWSJson = function( payloadJson )
 
 FormUtil.wsSubmitGeneral = function( url, payloadJson, loadingTag, returnFunc )
 {	
+	/* Greg (2018/11/27): Do we even need this check to be present? */
 	// headers info change? or pass as body??
-	if ( !FormUtil.checkLoginSubmitCase( payloadJson ) && !FormUtil.checkLogin() )
+	/*if ( !FormUtil.checkLoginSubmitCase( payloadJson ) && !FormUtil.checkLogin() )
 	{
 		if ( loadingTag ) loadingTag.remove();
 
 		alert( 'Not Loggged In!' );
 		returnFunc( false );
 	}
-	else
+	else*/
 	{
 		// Send the POST reqesut
 		fetch( url, FormUtil.getFetchWSJson( payloadJson ) )
@@ -296,16 +297,16 @@ FormUtil.wsSubmitGeneral = function( url, payloadJson, loadingTag, returnFunc )
 				}
 				else
 				{
-					alert( 'Response Failed' );
+					//alert( 'Response Failed' );
 					if ( loadingTag ) loadingTag.remove();
-					if ( returnFunc ) returnFunc( false );
+					if ( returnFunc ) returnFunc( false, response );
 				}
 			}
 			else
 			{
 				alert( 'Response Not available' );
 				if ( loadingTag ) loadingTag.remove();
-				if ( returnFunc ) returnFunc( false );
+				if ( returnFunc ) returnFunc( false, response );
 			}
 		});
 	}
@@ -355,16 +356,10 @@ FormUtil.setUpTabAnchorUI = function( tag )
 	tag.find(".tabs > li").on("click", function() 
 	{
 		var tab_select = $(this).attr('tabId'); 
-		
-		//console.log( 'tabSelect: ' + tab_select );
-		//console.log( 'tabSelectw: ' + $(this).attr('tabid') );
 
 		tag.find('.active').removeClass('active');  // both 'tabs' and 'tab_Content'
 		
 		$(this).addClass('active');
-
-		console.log( this );
-		
 
 		var activeTab = tag.find( ".tab_content > li[tabId='" + tab_select + "']");
 
@@ -386,43 +381,8 @@ FormUtil.setUpTabAnchorUI = function( tag )
 		var tabId = liTag_Selected.attr( 'tabId' );
 		var matchingTabsTag = tag.find( ".tabs > li[tabId='" + tabId + "']");
 
-		//console.log( 'tabExpand: ' + tabId );
-
 		/* START > Greg added: 2018/11/23 */
-		var lastSession = JSON.parse(localStorage.getItem('session'));
-
-		if (lastSession)
-		{
-			var loginData = JSON.parse(localStorage.getItem(lastSession.user));
-
-			if (loginData)
-			{
-
-				if ( ConnManager.getAppConnMode_Online() )
-				{
-					// for ONLINE > update dcd config for last menu action (default to this page on refresh)
-					for ( var i = 0; i < loginData.dcdConfig.areas.online.length; i++ )
-					{
-						if ( loginData.dcdConfig.areas.online[i].startArea )
-						{
-							loginData.dcdConfig.areas.online[i].defaultTab = tabId;
-						}
-					}
-				}
-				else
-				{
-					// for OFFLINE > update dcd config for last menu action (default to this page on refresh)
-					for ( var i = 0; i < loginData.dcdConfig.areas.offline.length; i++ )
-					{
-						if ( loginData.dcdConfig.areas.offline[i].startArea )
-						{
-							loginData.dcdConfig.areas.offline[i].defaultTab = tabId;
-						}
-					}
-				}
-				localStorage[ lastSession.user ] = JSON.stringify( loginData )
-			}
-		}
+		FormUtil.setUserLastSelectedTab(tabId)
 		/* END > Added by Greg: 2018/11/24 */
 		
 		tag.find('.active').removeClass('active');
@@ -436,6 +396,107 @@ FormUtil.setUpTabAnchorUI = function( tag )
 
 	});
 }
+
+FormUtil.setUserLastSelectedTab = function(tabId) {
+
+	var lastSession = JSON.parse(localStorage.getItem('session'));
+
+	if (lastSession)
+	{
+		var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+		if (loginData)
+		{
+
+			if ( ConnManager.getAppConnMode_Online() )
+			{
+				// for ONLINE > update dcd config for last menu action (default to this page on refresh)
+				for ( var i = 0; i < loginData.dcdConfig.areas.online.length; i++ )
+				{
+					if ( loginData.dcdConfig.areas.online[i].startArea )
+					{
+						loginData.dcdConfig.areas.online[i].defaultTab = tabId;
+					}
+				}
+			}
+			else
+			{
+				// for OFFLINE > update dcd config for last menu action (default to this page on refresh)
+				for ( var i = 0; i < loginData.dcdConfig.areas.offline.length; i++ )
+				{
+					if ( loginData.dcdConfig.areas.offline[i].startArea )
+					{
+						loginData.dcdConfig.areas.offline[i].defaultTab = tabId;
+					}
+				}
+			}
+			localStorage[ lastSession.user ] = JSON.stringify( loginData )
+		}
+	}
+
+}
+
+FormUtil.getUserLastSelectedTab = function() {
+
+	var lastSession = JSON.parse(localStorage.getItem('session'));
+	var tabId;
+
+	if (lastSession)
+	{
+		var loginData = JSON.parse(localStorage.getItem(lastSession.user));
+
+		if (loginData)
+		{
+
+			if ( ConnManager.getAppConnMode_Online() )
+			{
+				// for ONLINE > update dcd config for last menu action (default to this page on refresh)
+				for ( var i = 0; i < loginData.dcdConfig.areas.online.length; i++ )
+				{
+					if ( loginData.dcdConfig.areas.online[i].startArea )
+					{
+						tabId = loginData.dcdConfig.areas.online[i].defaultTab;
+					}
+				}
+			}
+			else
+			{
+				// for OFFLINE > update dcd config for last menu action (default to this page on refresh)
+				for ( var i = 0; i < loginData.dcdConfig.areas.offline.length; i++ )
+				{
+					if ( loginData.dcdConfig.areas.offline[i].startArea )
+					{
+						tabId = loginData.dcdConfig.areas.offline[i].defaultTab;
+					}
+				}
+			}
+			return tabId;
+		}
+	}
+
+}
+/* START > Added by Greg: 2018/11/26 */
+FormUtil.getUserSessionAttr = function( usr, attr ) {
+
+	var lastSessionAll = JSON.parse(localStorage.getItem(usr))
+
+	if ( lastSessionAll && lastSessionAll.mySession )
+	{
+		return lastSessionAll.mySession[ attr ];
+	}
+
+}
+FormUtil.getRedeemPayload = function( id ) {
+
+	var redPay = JSON.parse(sessionStorage.getItem( id ))
+
+	if ( redPay )
+	{
+		return redPay;
+	}
+
+}
+/* END > Added by Greg: 2018/11/26 */
 
 FormUtil.getAppInfo = function( returnFunc )
 {	

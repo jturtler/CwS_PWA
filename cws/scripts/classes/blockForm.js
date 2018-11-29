@@ -176,25 +176,49 @@ function BlockForm( cwsRenderObj, blockObj )
 			{
 				var optionList = FormUtil.getObjFromDefinition( inputData.options, me.cwsRenderObj.configJson.definitionOptions );
 
-				entryTag = $( '<select class="selector" name="' + inputData.id + '" uid="' + inputData.uid + '" ></select>' );
-				Util.populateSelect_newOption( entryTag, optionList, { "name": "defaultName", "val": "value" } );
-
-				if( inputData.defaultValue !== undefined )
+				// START > Changes by Greg (2018/11/27)
+				if ( inputData.options == 'boolOption' )
 				{
-					// Set default data
-					entryTag.val( inputData.defaultValue );	
+					entryTag = $( '<input name="' + inputData.id + '" uid="' + inputData.uid + '" class="form-type-checkbox" type="checkbox" />' );
+					if( inputData.defaultValue !== undefined )
+					{
+						// Set default data
+						if ( inputData.defaultValue === 'true' )
+						{
+							entryTag.prop('checked', true); // Added by Greg (2018/11/27): this might need to come after control gets appended..?
+						}
+
+					}
+					divInputTag.append( entryTag );
 				}
-				var divSelectTag = $( '<div class="select"></div>' );
-				divSelectTag.append( entryTag );
-				divInputTag.append( divSelectTag );
+				else
+				{
+
+					entryTag = $( '<select class="selector" name="' + inputData.id + '" uid="' + inputData.uid + '" ></select>' );
+					Util.populateSelect_newOption( entryTag, optionList, { "name": "defaultName", "val": "value" } );
+
+					if( inputData.defaultValue !== undefined )
+					{
+						// Set default data
+						entryTag.val( inputData.defaultValue );	
+					}
+					var divSelectTag = $( '<div class="select"></div>' );
+					divSelectTag.append( entryTag );
+					divInputTag.append( divSelectTag );
+				}
+				// END > Changes by Greg (2018/11/27)
 			}
 			else if ( inputData.controlType === "CHECKBOX" )
 			{
 				entryTag = $( '<input name="' + inputData.id + '" uid="' + inputData.uid + '" class="form-type-text" type="checkbox" />' );
 				if( inputData.defaultValue !== undefined )
 				{
-					// Set default data
-					entryTag.val( inputData.defaultValue );	
+					// START > Added by Greg (2018/11/27)
+					if ( inputData.defaultValue === 'true' ) // Set default data
+					{
+						entryTag.prop('checked', true); 
+					}
+					// END > Added by Greg (2018/11/27)
 				}
 				divInputTag.append( entryTag );
 			}
