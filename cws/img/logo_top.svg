@@ -17,7 +17,15 @@
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
    sodipodi:docname="logo_top_transfers.svg">
   <defs
-     id="defs8906" />
+     id="defs8906">
+	 <linearGradient id="myLinearGradient1"
+				x1="0%" y1="0%"
+				x2="0%" y2="100%"
+				spreadMethod="pad">
+      <stop offset="1%"   stop-color="#fff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -70,7 +78,7 @@
            id="path5739"
            d="M 12.74258915,301.454145 H 8.634516963 a 1.729714605,1.729714605 0 0 1 -1.729714605,-1.7297146 v -8.648573 h 8.648573022 a 1.729714605,1.729714605 0 0 1 1.72971461,1.7297146 v 4.1080722 a 4.540500838,4.540500838 0 0 1 -4.54050084,4.5405008 z"
            class="cls-1"
-           style="fill:#efefef;stroke-width:0.2645833194"
+           style="fill:url(#myLinearGradient1);stroke-width:0.2645833194"
            inkscape:connector-curvature="0" />
         <circle
            transform="rotate(-44.75)"

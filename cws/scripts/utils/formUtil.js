@@ -3,7 +3,7 @@
 
 function FormUtil() {}
 
-FormUtil.staticWSName = 'eRefWSStage'; //'eRefWSDev3';			// Need to be dynamically retrieved
+FormUtil.staticWSName = 'eRefWSDev3'; //'eRefWSStage';			// Need to be dynamically retrieved
 FormUtil.login_UserName = '';
 FormUtil.login_Password = '';
 FormUtil.login_server = '';
