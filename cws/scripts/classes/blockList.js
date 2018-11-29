@@ -178,7 +178,7 @@ function BlockList( cwsRenderObj, blockObj )
 
         if ( itemData.status === me.status_redeem_submit )
         {
-            smallStatusNameTag.text( 'submitted' ).css( 'color', '#e48825' ); // Redeemed?
+            smallStatusNameTag.text( 'submitted' ).css( 'color', '#7dd11f' ); // Redeemed?
             imgStatusIconTag.attr( 'src', 'img/lock.svg' );
             imgSyncIconTag.attr ( 'src', 'img/sync.svg' );
             imgErrIconTag.css ( 'visibility', 'hidden' );
@@ -186,7 +186,7 @@ function BlockList( cwsRenderObj, blockObj )
         else if ( itemData.status === me.status_redeem_failed )
         {
             smallStatusNameTag.text( 'invalid' ).css( 'color', '#e48825' ); //Invalid?
-            imgStatusIconTag.attr( 'src', 'img/lock.svg' );
+            imgStatusIconTag.attr( 'src', 'img/open.svg' );
             imgSyncIconTag.attr ( 'src', 'img/sync-n.svg' );
             imgErrIconTag.css ( 'visibility', 'visible' );
         }
@@ -198,6 +198,12 @@ function BlockList( cwsRenderObj, blockObj )
             imgErrIconTag.css ( 'visibility', 'hidden' );
 
         }
+
+        // START > Added by Greg (2018/11/28)
+        imgStatusIconTag.unbind();
+        imgSyncIconTag.unbind();
+        imgErrIconTag.unbind();
+        // END > Added by Greg (2018/11/28)
 
     }
 
