@@ -36,23 +36,11 @@ self.__precacheManifest = [
   },
   {
     "url": "css/responsive.css",
-    "revision": "eabe518cf8b307319f15f210ce3800be"
+    "revision": "a9b7ddf3c855edce638d3fed1be65853"
   },
   {
     "url": "css/style.css",
-    "revision": "6b0eabab029120fce0c23836d299b309"
-  },
-  {
-    "url": "data/dsConfig.json",
-    "revision": "40553c88ce22892b32951e5402bbc52a"
-  },
-  {
-    "url": "data/old/dcNew1_back.json",
-    "revision": "5c0fcfdd5b37d828d064b1e7e4d05258"
-  },
-  {
-    "url": "data/old/dsConfig_back.json",
-    "revision": "1bb4e47340731de96aef985922b5bb0c"
+    "revision": "0f6d20c2b88b1a3b0de4978f788c1b19"
   },
   {
     "url": "images/blank.gif",
@@ -65,6 +53,10 @@ self.__precacheManifest = [
   {
     "url": "images/captureByVoucher.jpg",
     "revision": "4e6c2f569dabd33ff4c8720113b19587"
+  },
+  {
+    "url": "images/hide.png",
+    "revision": "6d8ab80b89fd5aec6cb0380854ee293d"
   },
   {
     "url": "images/icons/icon-128x128.png",
@@ -236,19 +228,19 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "cf65cabc14326af176724457d23150c2"
+    "revision": "deabd626cb9ff26b0c763157151ad9d8"
   },
   {
     "url": "manifest.json",
-    "revision": "e3cd29820d6d7b03fed7bdebc92d8cf1"
+    "revision": "05b4e421ab4a0d49ef25e76b35064600"
   },
   {
     "url": "scripts/app.js",
-    "revision": "51f13812d6482113a2765a0f31f1d7dd"
+    "revision": "a1b93536ad295c04757aa9d87c906147"
   },
   {
     "url": "scripts/classes/action.js",
-    "revision": "e31443a639a8f6a47410e65b94398f19"
+    "revision": "080a0a782cd314332fe190cac40ed9b3"
   },
   {
     "url": "scripts/classes/block.js",
@@ -256,15 +248,15 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/blockButton.js",
-    "revision": "1788140edfb2bbd550b726b2619cd2af"
+    "revision": "acad96eda1e3702dcf73834b96451b36"
   },
   {
     "url": "scripts/classes/blockForm.js",
-    "revision": "f2ee4e5fe3baf1d7621c102867647e66"
+    "revision": "978333bb7a0ff890b3f6aede2e2d204e"
   },
   {
     "url": "scripts/classes/blockList.js",
-    "revision": "1967caf5d79b64f01d26976e3bb42fa9"
+    "revision": "9a65fd209a434c3c40094d7e5609735f"
   },
   {
     "url": "scripts/classes/blockMsg.js",
@@ -276,7 +268,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/classes/login.js",
-    "revision": "64382408a22b426209513bd02a93f345"
+    "revision": "da511d2254900c692353a2337da469cc"
   },
   {
     "url": "scripts/classes/validation.js",
@@ -284,7 +276,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/cwsRender.js",
-    "revision": "ba05245e7a8340e6fc49b5d6da89b339"
+    "revision": "0e54bf9a900cbfddc1cf5a0906d58211"
   },
   {
     "url": "scripts/libraries/jquery-3.3.1.js",
@@ -308,7 +300,7 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/utils/configUtil.js",
-    "revision": "e2d834262f9f244db60a445f75e580f6"
+    "revision": "b3d3f0be838558b42c01e3cc789572a7"
   },
   {
     "url": "scripts/utils/connManager.js",
@@ -320,11 +312,19 @@ self.__precacheManifest = [
   },
   {
     "url": "scripts/utils/formUtil.js",
-    "revision": "ab22afe2c38d655d96114256bed4cc2c"
+    "revision": "09ee4201a676ce752ff4c3c600b5e3b6"
+  },
+  {
+    "url": "scripts/utils/msgManager.js",
+    "revision": "a6eeee85f33b3614fffe907d252dfb88"
+  },
+  {
+    "url": "scripts/utils/restUtil.js",
+    "revision": "3718932a0f18d021ba3264ac3d769dd4"
   },
   {
     "url": "scripts/utils/util.js",
-    "revision": "a8c7f141c1f64918abb29749ce210f80"
+    "revision": "e25fdcfbd4675e834d258573659a993d"
   },
   {
     "url": "scripts/z. Old Files/cwsRender_v0.js",
@@ -337,10 +337,6 @@ self.__precacheManifest = [
   {
     "url": "scripts/z. Old Files/testSection.js",
     "revision": "0e632d23fbb96b56bf389700041637dc"
-  },
-  {
-    "url": "service-worker_back.js",
-    "revision": "de80056a12a74c2a49b1de762e295cb9"
   },
   {
     "url": "styles/images/ui-icons_444444_256x240.png",
@@ -380,11 +376,11 @@ self.__precacheManifest = [
   },
   {
     "url": "styles/style.css",
-    "revision": "64740b34a45b4364dfb8df9730dc46b5"
+    "revision": "68cd3cc40ef6d100fa5e9e4e7cb9c363"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerRoute(/\.(html|css|js|gif|jpg|png|svg|json)/, workbox.strategies.cacheFirst(), 'GET');
+workbox.routing.registerRoute(/\.(html|css|js|gif|jpg|png|svg|json)/, workbox.strategies.cacheFirst({ "cacheName":"v1.0.0.1", plugins: [] }), 'GET');
 workbox.routing.registerRoute(/^https:\/\/use\.fontawesome\.com.*/, workbox.strategies.staleWhileRevalidate({ "cacheName":"fontawesome", plugins: [] }), 'GET');

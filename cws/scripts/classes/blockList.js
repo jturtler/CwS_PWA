@@ -178,35 +178,26 @@ function BlockList( cwsRenderObj, blockObj )
 
         if ( itemData.status === me.status_redeem_submit )
         {
-            smallStatusNameTag.text( 'network' ).css( 'color', '#7dd11f' ); // Redeemed?
+            smallStatusNameTag.text( 'submitted' ).css( 'color', '#e48825' ); // Redeemed?
             imgStatusIconTag.attr( 'src', 'img/lock.svg' );
             imgSyncIconTag.attr ( 'src', 'img/sync.svg' );
-            imgSyncIconTag.css ( 'visibility', 'hidden' );
             imgErrIconTag.css ( 'visibility', 'hidden' );
         }
         else if ( itemData.status === me.status_redeem_failed )
         {
             smallStatusNameTag.text( 'invalid' ).css( 'color', '#e48825' ); //Invalid?
-            imgStatusIconTag.attr( 'src', 'img/open.svg' );
+            imgStatusIconTag.attr( 'src', 'img/lock.svg' );
             imgSyncIconTag.attr ( 'src', 'img/sync-n.svg' );
-            imgSyncIconTag.css ( 'visibility', 'visible' );
             imgErrIconTag.css ( 'visibility', 'visible' );
         }
         else
         {
-            smallStatusNameTag.text( 'offline' ).css( 'color', '#e48825' ); //Unmatched?
+            smallStatusNameTag.text( 'open' ).css( 'color', '#787878' ); //Unmatched?
             imgStatusIconTag.attr( 'src', 'img/open.svg' );
             imgSyncIconTag.attr ( 'src', 'img/sync-n.svg' );
-            imgSyncIconTag.css ( 'visibility', 'visible' );
             imgErrIconTag.css ( 'visibility', 'hidden' );
 
         }
-
-        // START > Added by Greg (2018/11/28)
-        imgStatusIconTag.unbind();
-        imgSyncIconTag.unbind();
-        imgErrIconTag.unbind();
-        // END > Added by Greg (2018/11/28)
 
     }
 

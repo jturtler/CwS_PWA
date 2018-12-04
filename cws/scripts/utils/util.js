@@ -176,6 +176,10 @@ Util.reverseArray = function( arr )
 
 // ----------------------------------
 // Check Variable Related
+Util.getProperValue = function( val )
+{
+	Util.getNotEmpty( val );
+}
 
 Util.getNotEmpty = function( input ) {
 
@@ -571,7 +575,7 @@ Util.populateSelect_newOption = function( selectObj, json_Data, inputOption )
 	selectObj.empty();
 
 	selectObj.append( '<option selected disabled="disabled">Choose an option</option>' );
-
+	
 	var valuePropStr = "id";
 	var namePropStr = "name";
 

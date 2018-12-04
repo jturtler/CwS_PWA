@@ -13,6 +13,8 @@ function Login( cwsRenderObj )
 	me.loggedInDivTag = $( '#loggedInDiv' );
 	me.spanOuNameTag = $( '#spanOuName' );
 
+		  
+  // Greg added: 2018/11/23 -- below 3 lines
 	me._userName = '';
 	me._pHash = '';
 	me._staySignedIn = true;
@@ -246,13 +248,13 @@ function Login( cwsRenderObj )
 			loginData.mySession.stayLoggedIn = me._staySignedIn;
 
 			DataManager.saveData( me._userName, loginData );	
-	}
+		}
 		else
 		{
 			var newSaveObj = Object.assign( {} , loginData);
 
 			newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: me._pHash, stayLoggedIn: me._staySignedIn };
-			newSaveObj.about = { platform: navigator.platform, vendor: navigator.vendor, config_version: loginData.dcdConfig.version, countrycode: loginData.dcdConfig.countryCode, dhis_server: loginData.orgUnitData.dhisServer, login_server: FormUtil.login_server };
+			//newSaveObj.about = {  };
 
 			DataManager.saveData( me._userName, newSaveObj );	
 		}

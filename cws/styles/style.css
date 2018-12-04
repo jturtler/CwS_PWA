@@ -8,6 +8,12 @@
 
 /* START: added by Greg (checkbox on login: remember me) */
 /* CHECKBOX AND RADIO*/
+/*
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
 
 .checkmark {
   position: absolute;
@@ -21,6 +27,10 @@
 
 .check {
   border-radius: 4px;
+}
+
+.radio {
+  border-radius: 50%;
 }
 
 .container:hover input~.checkmark {
@@ -53,7 +63,7 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
   }
-
+*/
 /* END: added by Greg (checkbox on login: remember me) */
 
 
@@ -73,6 +83,11 @@ input {
   padding: 2px;
 }
 
+/* Would this help on Android */
+select option {
+  background-color: #FFF;
+}
+
 /* =========================== */
 /* App Custom Style */
 
@@ -83,7 +98,7 @@ input {
 .blockStyle {
   /*margin: 5px;
   padding: 3px;*/
-  background-color: #f4f4f4;
+  /*background-color: #f4f4f4;*/
   /* border: 1px solid silver; */
   text-align: left;
 }
@@ -91,7 +106,7 @@ input {
 .itemBlock{
   margin: 5px;
   padding: 3px;
-  background-color: #f4f4f4;
+  /*background-color: #f4f4f4;*/
   border: 1px solid silver;
   text-align: left;
 } 
@@ -230,3 +245,54 @@ a.brand-logo {
 }
 
 /* =========================== */
+
+#divMsgAreaWrap
+{
+  position: fixed; 
+  top: 56px; 
+  left: 0; 
+  width: 100%; 
+  z-index: 1; 
+  text-align: center; 
+  padding: 5px;
+  cursor: default;
+}
+        
+#divMsgArea
+{
+  display: inline-block;
+  padding: 3px 8px;
+  background-color: #ffef8d;
+  border: 1px solid #bbb;
+  opacity: 0.85;
+  border-radius: 3px;
+  z-index: 1;
+  position: relative;
+}
+
+#spanMsgAreaClose
+{
+  cursor:pointer;
+  margin-left:5px;
+}
+
+#spanMsgAreaText
+{
+  color: #444;
+  font-size: 0.8em;
+}
+
+/* =========================== */
+
+#aboutFormDiv
+{
+  position: fixed; 
+  z-index:2; 
+  top: 56px; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  background-color: white;
+  overflow-y:scroll;
+  overflow-x:hidden;
+}

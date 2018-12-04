@@ -3,7 +3,8 @@
 
 function FormUtil() {}
 
-FormUtil.staticWSName = 'eRefWSDev3'; //'eRefWSStage';			// Need to be dynamically retrieved
+FormUtil.staticWSName = 'eRefWSDev3';			// Need to be dynamically retrieved
+FormUtil.appUrlName = 'cws';			// App name - Part of the url
 FormUtil.login_UserName = '';
 FormUtil.login_Password = '';
 FormUtil.login_server = '';
@@ -158,31 +159,9 @@ FormUtil.submitRedeem = function( url, payloadJson, actionJson, loadingTag, retu
 
 	FormUtil.wsSubmitGeneral( url, payloadJson, loadingTag, function( success, returnJson )
 	{
-		if ( success )
-		{			
-			if ( actionJson.alertResult === "true" )
-			{
-				if ( returnJson.resultData )
-				{
-					if( returnJson.resultData.status === "success")
-					{
-						alert( "Success!" );
-					}
-					else if ( returnJson.resultData.status === "fail")
-					{
-						alert( "Failed!" );
-					}	
-				}
-			}			
-			
-			if ( returnFunc ) returnFunc( true, returnJson );
-			if ( asyncCall ) asyncCall( returnJson );
-		}
-		else
-		{
-			if ( returnFunc ) returnFunc( false );
-			if ( syncCall ) syncCall();
-		}
+		if ( returnFunc ) returnFunc( success, returnJson );
+		if ( asyncCall ) asyncCall( returnJson );
+		if ( syncCall ) syncCall();
 	});
 }
 
@@ -275,40 +254,15 @@ FormUtil.wsSubmitGeneral = function( url, payloadJson, loadingTag, returnFunc )
 
 		alert( 'Not Loggged In!' );
 		returnFunc( false );
-	}
-	else*/
+	*/
+	
+	// Send the POST reqesut	
+	RESTUtil.performREST( url, FormUtil.getFetchWSJson( payloadJson ), function( success, returnJson ) 
 	{
-		// Send the POST reqesut
-		fetch( url, FormUtil.getFetchWSJson( payloadJson ) )
-		.then( function( response ) 
-		{
-			if ( response ) 
-			{
-				if ( response.ok )
-				{
-					response.json().then(
-						function( returnJson ) 
-						{
-							if ( loadingTag ) loadingTag.remove();
-							if ( returnFunc ) returnFunc( true, returnJson );
-						}
-					);
-				}
-				else
-				{
-					//alert( 'Response Failed' );
-					if ( loadingTag ) loadingTag.remove();
-					if ( returnFunc ) returnFunc( false, response );
-				}
-			}
-			else
-			{
-				alert( 'Response Not available' );
-				if ( loadingTag ) loadingTag.remove();
-				if ( returnFunc ) returnFunc( false, response );
-			}
-		});
-	}
+		if ( loadingTag ) loadingTag.remove();
+
+		if ( returnFunc ) returnFunc( success, returnJson );
+	});
 }
 
 
@@ -316,24 +270,25 @@ FormUtil.setClickSwitchEvent = function( mainIconTag, subListIconsTag, openClose
 {
 	mainIconTag.on('click', function( event )
 	{
+		//console.log( 'mainIconTag Clicked' );
 		event.preventDefault();
 
 		var thisTag = $(this);
 		var className_Open = openCloseClass[0];
 		var className_Close = openCloseClass[1];
 
-		if ( thisTag.hasClass( className_Close ) )
-		{
-			thisTag.removeClass( className_Close );
-			thisTag.addClass( className_Open );
-			subListIconsTag.show();
-		} 
-		else 
+		if ( thisTag.hasClass( className_Open ) )
 		{
 			thisTag.removeClass( className_Open );
 			thisTag.addClass( className_Close );
 			subListIconsTag.hide();
 		}
+		else 
+		{
+			thisTag.removeClass( className_Close );
+			thisTag.addClass( className_Open );
+			subListIconsTag.show();
+		} 
 	});	
 }
 
@@ -496,3 +451,97 @@ FormUtil.getRedeemPayload = function( id ) {
 
 }
 /* END > Added by Greg: 2018/11/26 */
+
+FormUtil.getAppInfo = function( returnFunc )
+{	
+	var url = FormUtil.getWsUrl( '/api/getPWAInfo' );
+
+	RESTUtil.retrieveJson( url, returnFunc );
+}
+
+
+// ======================================
+
+FormUtil.checkTag_CheckBox = function( tag )
+{
+	var isType = false;
+
+	if ( tag )
+	{
+		if ( tag.attr( 'type' ) === 'checkbox' ) isType = true;
+	}
+	
+	return isType;
+}
+
+FormUtil.setTagVal = function( tag, val, returnFunc )
+{
+	if( val !== undefined ) // && val !== '' )
+	{
+		if ( FormUtil.checkTag_CheckBox( tag ) )
+		{
+			tag.prop( 'checked', ( val === 'true' || val === true ) ); 
+		}
+		else
+		{
+			tag.val( val );
+		}
+
+		if ( returnFunc ) returnFunc();
+	}
+}
+
+
+FormUtil.getTagVal = function( tag )
+{
+	var val;
+
+	if( tag )
+	{
+		if ( FormUtil.checkTag_CheckBox( tag ) )
+		{			
+			val = tag.is( ":checked" ) ? "true" : "" ;
+		}
+		else
+		{
+			val = tag.val();
+		}
+	}
+
+	return val;
+}
+
+/* START > Added by Greg: 2018/12/04 */
+FormUtil.getAboutInfo = function()
+{
+	var loginData = JSON.parse( localStorage.getItem( JSON.parse( localStorage.getItem('session') ).user ) );
+	var retObj = {};
+	var aboutApp = [];
+	var aboutBrowser = [];
+
+	aboutApp.push ( { name: 'app_version', value: $( '#spanVersion' ).html() } );
+	aboutApp.push ( { name: 'app_UrlName', value: FormUtil.appUrlName } );
+	aboutApp.push ( { name: 'config_version', value: loginData.dcdConfig.version } );
+	aboutApp.push ( { name: 'country_code', value: loginData.dcdConfig.countryCode } );
+	aboutApp.push ( { name: 'dhis_server', value: loginData.orgUnitData.dhisServer } );
+	aboutApp.push ( { name: 'login_UserName', value: FormUtil.login_UserName } );
+	aboutApp.push ( { name: 'login_server', value: FormUtil.login_server } );
+	aboutApp.push ( { name: 'staticWSName', value: FormUtil.staticWSName } );
+
+	retObj.application = ( aboutApp );
+
+	for ( keyObj in navigator )
+	{
+		if ( !( typeof navigator[keyObj]  === 'object' ) && !( typeof navigator[keyObj]  === 'function' ) && !( navigator[keyObj] == '' ) )
+		{
+			aboutBrowser.push ( { name: keyObj, value: navigator[keyObj] } );
+		}
+
+		retObj.browser = ( aboutBrowser );
+
+	}
+
+
+	return retObj;
+}
+/* END > Added by Greg: 2018/12/04 */

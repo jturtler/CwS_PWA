@@ -44,6 +44,7 @@ function DataList( cwsRenderObj, blockObj )
 
     me.dataList_Display = function( blockTag )
     {
+        console.log ( me.jsonListData );
         me.renderDataList( me.jsonListData.displayData, blockTag );	
     }
     
@@ -65,26 +66,33 @@ function DataList( cwsRenderObj, blockObj )
             for( var i = 0; i < jsonList.length; i++ )
             {
                  var divItemTag = $( '<div class="inputDiv itemBlock" idx="' + i + '"></div>' );
-                 blockTag.append( divItemTag );
-                 me.renderItemTag( jsonList[i], divItemTag );
+                 //var divLITag = $( '<li itemid="' + i + '"/>' );
 
+                 var divATag = $( '<a class="" idx="' + i + '" itemid="' + i + '"/>' );
                  var itemData = me.convertData( me.jsonListData, i );
-console.log( ' ---- START : ' +  me.blockJson.displayResult ) ;
-                 me.renderButtons( itemData, divItemTag );
-console.log( ' END : ' +  me.blockJson.displayResult ) ;
+
+                 //blockTag.append( divLITag );                 
+                 blockTag.append( divItemTag );
+                 divItemTag.append( divATag );
+console.log( jsonList[i] );
+                 me.renderIconTag( jsonList[i], divATag );
+                 me.renderItemTag( jsonList[i], divATag );
+                 me.renderButtons( itemData, divATag );
+
             }	
         }
     }
 
     me.renderItemTag = function ( itemData, divItemTag )
     {
-        console.log( me.blockJson.displayResult );
+        //console.log( me.blockJson.displayResult );
         for( var i = 0; i< me.blockJson.displayResult.length; i++ )
         {
             for( var j = 0; j < itemData.length; j++ )
             {
                 if( itemData[j].id === me.blockJson.displayResult[i] )
                 {
+                   
                     me.renderDataValueTag( itemData[j], divItemTag );
                 }
             }  
@@ -96,10 +104,17 @@ console.log( ' END : ' +  me.blockJson.displayResult ) ;
         me.blockObj.blockButtonObj.renderBlockButtons( me.blockJson.itemButtons, blockTag, itemData );
     }
 
+    me.renderIconTag = function( valueData, parentItemTag )
+    {
+        // Set Icons..
+        var iconListTag = $( '<div class="icons-status" style="padding:2px;width:100%;"> <small class="voucherIcon"><img src="img/voucher.svg"></small> <small class="statusIcon"><img src="img/open.svg"></small> <strong> ' + ((valueData.length) ? 'VOUCHER ID: '+valueData[0].value : '') +' </strong> </div>' );
+        parentItemTag.append( iconListTag );
+    }
+
     me.renderDataValueTag = function( valueData, divItemTag )
     {    
         // Set Text..
-        var spanDivTag = $( '<div> ' + valueData.displayName + " : <b>" + valueData.value + '</b></div>' );
+        var spanDivTag = $( '<div style="padding:2px;"> ' + valueData.displayName + " : <b>" + valueData.value + '</b></div>' );
         divItemTag.append( spanDivTag );
     }
 
