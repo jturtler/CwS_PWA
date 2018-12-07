@@ -122,6 +122,11 @@
 
         $('input.redeemURL').val ( location.origin + '/eRefWSDev3/api/dc/redeem')
 
+        if ( localStorage.getItem ('session') )
+        {
+            $('input.user').val ( JSON.parse(localStorage.getItem ('session')).user )
+        }
+
         http://localhost:8080/eRefWSDev3/api/dc/redeem
     
     function generate()

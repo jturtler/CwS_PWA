@@ -116,15 +116,15 @@ function cwsRender()
 		// menu click handler
 		me.setTopRightMenuClick();
 
-		// loggedIn Name Link Click Event - opens Login Form
-		me.loggedInDivTag.click( function() {
+		// loggedIn Name Link Click Event - opens Login Form > DISABLED by Greg 2018/12/26 (as per Bruno's request)
+		/*me.loggedInDivTag.click( function() {
 			// hide menuDiv if visible (when logging out)
 			if ( me.menuDivTag.is( ":visible" ) && me.menuTopRightIconTag.is( ":visible" ) )
 			{
 				me.menuTopRightIconTag.click();
 			}
 			me.LoginObj.openForm();
-		});
+		});*/
 		
 	}
 
@@ -252,7 +252,7 @@ function cwsRender()
 								o.sort (function(a, b) { return (a['name'] > b['name']) ? 1 : ((a['name'] < b['name']) ? -1 : 0); } );
 
 								var bgAlt = '#FFF';
-								myTable.append( '<tr><td colspan=2 style="padding:8px;text-align:left;background-Color:' + bgAlt + ';font-weight:600">&nbsp;'+k.toString().toUpperCase()+'&nbsp;</td></tr>' );
+								myTable.append( '<tr><td colspan=2 style="padding:8px 8px 8px 0;text-align:left;background-Color:' + bgAlt + ';font-weight:600">&nbsp;'+k.toString().toUpperCase()+'&nbsp;</td></tr>' );
 								bgAlt = ( ( bgAlt == '#FFF' ) ? '#F5F5F5' : '#FFF' );
 
 								$.each(o, function(l, v) {

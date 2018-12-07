@@ -56,7 +56,7 @@
         <div>
           <div style="display: inline-block;"><img src='img/net.svg' class="tab-image"></div>
           <div id="loggedInDiv" style="display: inline-block; cursor: pointer;">
-            <span id="spanOuName" style="font-style: italic; color: darkseagreen;">[LogIn]</span>
+            <span id="spanOuName" style="font-style: italic; color: darkseagreen;"></span>
           </div>      
         </div>
       </div>
@@ -83,7 +83,7 @@
               <div id="divAppModeConnStatus" style="cursor:pointer;"><span id="appModeConnStatus" connStat="" style="font-size: 11px;"></span></div>
             </td>
             <td>
-              <div id="divNetworkStatus"><img id="imgNetworkStatus" src='images/blank.gif' style="width: 10px; height: 10px; vertical-align: bottom; margin-bottom: 2px;"/></div>
+              <div id="divNetworkStatus"><img id="imgNetworkStatus" src='images/blank.gif' style="width: 10px; height: 10px; vertical-align: bottom; margin-bottom: 2px;border-radius:8px"/></div>
             </td>
             <td>
               <div id="menuTopDiv">
@@ -109,11 +109,12 @@
         
     <div id="divMsgAreaWrap">
       <div id="divMsgArea" style="display:none;">
-        <span id="spanMsgAreaText"></span>
+        <span id="spanMsgAreaText">greg was here</span>
         <span id="spanMsgAreaClose">
           <img src="images/hide.png" title="Close" id="btnMsgAreaClose">
         </span>
-      </div>        
+        <div id="divMsgProgress" style="display:none;position: relative;left:-8px;top:2px;height:10px;"></div>
+      </div>
     </div>
 
     <!-- LOGIN FORM DIV -->

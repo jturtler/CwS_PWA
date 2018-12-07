@@ -63,6 +63,7 @@ function DataList( cwsRenderObj, blockObj )
         }
         else
         {
+            console.log( jsonList );
             for( var i = 0; i < jsonList.length; i++ )
             {
                  var divItemTag = $( '<div class="inputDiv itemBlock" idx="' + i + '"></div>' );
@@ -74,7 +75,7 @@ function DataList( cwsRenderObj, blockObj )
                  //blockTag.append( divLITag );                 
                  blockTag.append( divItemTag );
                  divItemTag.append( divATag );
-console.log( jsonList[i] );
+
                  me.renderIconTag( jsonList[i], divATag );
                  me.renderItemTag( jsonList[i], divATag );
                  me.renderButtons( itemData, divATag );
@@ -106,8 +107,21 @@ console.log( jsonList[i] );
 
     me.renderIconTag = function( valueData, parentItemTag )
     {
+        var lastData = localStorage.getItem( 'lastPayload' ); //added by Greg (2018/12/05) > incorrect here > async calls so this value is never loaded in time
+
+        var labelText;
+
+        if ( lastData )
+        {
+            labelText = lastData.data.phoneNumber;
+        }
+        else if ( valueData.length )
+        {
+            labelText = valueData[0].value;
+        }
+
         // Set Icons..
-        var iconListTag = $( '<div class="icons-status" style="padding:2px;width:100%;"> <small class="voucherIcon"><img src="img/voucher.svg"></small> <small class="statusIcon"><img src="img/open.svg"></small> <strong> ' + ((valueData.length) ? 'VOUCHER ID: '+valueData[0].value : '') +' </strong> </div>' );
+        var iconListTag = $( '<div class="icons-status" style="padding:2px;width:100%;"> <small class="voucherIcon"><img src="img/voucher.svg"></small> <small class="statusIcon"><img src="img/open.svg"></small> <strong> ' + labelText +' </strong> </div>' );
         parentItemTag.append( iconListTag );
     }
 

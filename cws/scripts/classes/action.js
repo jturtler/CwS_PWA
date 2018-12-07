@@ -285,6 +285,7 @@ function Action( cwsRenderObj, blockObj )
 							{
 								passData.push( returnJson );
 								me.recurrsiveActions( blockDivTag, formDivSecTag, btnTag, actions, actionIndex, passData, clickedItemData, returnFunc );	
+								localStorage.setItem( 'lastPayload', '{"data": ' + JSON.stringify( inputsJson ) + ' } ' ); // added by Greg (2018/12/05)
 							}
 							else
 							{

@@ -5,7 +5,7 @@ function Login( cwsRenderObj )
     var me = this;
 
     me.cwsRenderObj = cwsRenderObj;
-	
+
 	me.loginFormDivTag = $( "#loginFormDiv" );
 	me.pageDivTag = $( "#pageDiv" );	// Get it from cwsRender object?
 	me.menuTopDivTag = $( '#menuTopDiv' );
@@ -13,7 +13,7 @@ function Login( cwsRenderObj )
 	me.loggedInDivTag = $( '#loggedInDiv' );
 	me.spanOuNameTag = $( '#spanOuName' );
 
-		  
+
   // Greg added: 2018/11/23 -- below 3 lines
 	me._userName = '';
 	me._pHash = '';
@@ -28,7 +28,7 @@ function Login( cwsRenderObj )
 
 		me.setEvents_OnInit();
 	}
-	
+
 	me.render = function()
 	{
 		me.openForm();
@@ -260,7 +260,43 @@ function Login( cwsRenderObj )
 		}
 		/* END > added by Greg: 2018/11/23  */
 
+
+		/* START > Greg added: 2018/12/06 */
+		$( '.floatListMenuSubIcons' ).empty();
+		//me.floatListMenuSubIconsTag.empty();
+
+		if ( loginData && loginData.dcdConfig && loginData.dcdConfig.favActionList )
+		{
+			for ( var f = 0; f < loginData.dcdConfig.favActionList.length; f++ )
+			{
+				favIcon = loginData.dcdConfig.favActionList[f];
+
+				me.createFavIconButton( favIcon, f );		
+			}
+		}
+		/* END > Greg added: 2018/12/06 */
+
 	}
+
+	/* START > Greg added: 2018/12/06 */
+	me.createFavIconButton = function( favIcon, f )
+	{
+
+		$.get( location.pathname +'img/'+ favIcon.img, function(data) {
+			//var unqID = Util.generateRandomId();
+			var divTag = $( '<div id="'+f+'" class="iconClicker pointer" />');
+			var svg = ( $(data)[0].documentElement );
+
+			$(svg).find("tspan").html(favIcon.name) 
+			$(divTag).on("click", function() {  alert ('thank you for clicking here' + favIcon.name)  } );
+
+			divTag.append( svg );
+
+			$( '.floatListMenuSubIcons' ).append( divTag );
+		});
+
+	}
+	/* END > Greg added: 2018/12/06 */
 
 	// --------------------------------------
 	
