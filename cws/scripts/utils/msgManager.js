@@ -110,7 +110,7 @@ MsgManager.updateProgressbar = function(  )
 
     if ( MsgManager.countDownNumerator === MsgManager.countDownDenominator )
     {
-        //MsgManager.msgAreaClear( );
+        MsgManager.msgAreaClear( );
     }
     else
     {

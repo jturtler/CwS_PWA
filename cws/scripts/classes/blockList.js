@@ -8,6 +8,7 @@ function BlockList( cwsRenderObj, blockObj )
     me.blockObj = blockObj;        
 
     me.redeemList;
+    me.options;
 
     me.storageName_RedeemList = "redeemList";
     me.status_redeem_submit = "submit";
@@ -28,7 +29,7 @@ function BlockList( cwsRenderObj, blockObj )
 
 	// -----------------------------------
 
-    me.renderList = function( list, newBlockTag, passedData )
+    me.renderList = function( list, newBlockTag, passedData, options )
 	{
 		if ( list !== undefined )
 		{
@@ -36,23 +37,36 @@ function BlockList( cwsRenderObj, blockObj )
 			{
 				if ( list === 'redeemList' )
 				{
+                    if ( options )
+                    {
+                        me.options = options;
+                    }
+
                     me.redeemList_Display( newBlockTag );
                     
                     // Add Event from 'FormUtil'
                     //  - To Enable click
                     FormUtil.setUpTabAnchorUI( newBlockTag.find( 'ul.tab__content_act') );
-                                
-                    me.setFloatingListMenuIconEvents( newBlockTag.find( '.floatListMenuIcon' ), newBlockTag.find( '.floatListMenuSubIcons' ) );
+
+                    if ( FormUtil.dcdConfig && FormUtil.dcdConfig.favActionList  )
+                    {
+                        me.setFloatingListMenuIconEvents( newBlockTag.find( '.floatListMenuIcon' ), newBlockTag.find( '.floatListMenuSubIcons' ) );
+                    }
+                    else
+                    {
+                        newBlockTag.find( '.floatListMenuIcon' ).hide();
+                    }
+
 				}
 			}
 		}
     }
-    
-    
+
+
     me.redeemList_Display = function( blockTag )
     {
         var jsonStorageData = DataManager.getOrCreateData( me.storageName_RedeemList );
-        
+
         me.renderRedeemList( jsonStorageData.list, blockTag );	
     }
    
@@ -71,9 +85,41 @@ function BlockList( cwsRenderObj, blockObj )
         if ( redeemList )
         {
 
-            MsgManager.msgAreaShow( 'loading ' + (redeemList.length) );
+            me.redeemList = redeemList.filter(a=>a.owner==FormUtil.login_UserName);
 
-            me.redeemList = redeemList.filter(a=>a.owner==FormUtil.login_UserName); 
+            if ( me.options && me.options.filter )
+            {
+                for( var o=0; o<me.options.filter.length; o++ )
+                {
+                    var filterObj = me.options.filter[o];
+                    var keys = Object.keys(filterObj);
+                    var keyValue = filterObj[keys[0]];
+
+                    me.redeemList = redeemList.filter(a=>a[keys[0]]==keyValue);
+                }
+            }
+            
+            // Added by Greg (2018/12/13) > order by most recent dateCreated first
+            (me.redeemList).sort(function (a, b) {
+                // a and b will be two instances of your object from your list 
+                // possible return values
+                var a1st = -1; // negative value means left item should appear first
+                var b1st =  1; // positive value means right item should appear first
+                var equal = 0; // zero means objects are equal
+            
+                // compare your object's property values and determine their order
+                if (b.created > a.created) {
+                    return b1st;
+                }
+                else if (a.created > b.created) {
+                    return a1st;
+                }
+                else {
+                    return equal;
+                }
+            });
+
+            MsgManager.msgAreaShow( 'loading ' + (me.redeemList.length) );
 
             //setTimeout( function() {
 
@@ -94,6 +140,7 @@ function BlockList( cwsRenderObj, blockObj )
                         me.renderRedeemListItemTag( arrNewFirst[i], listContentUlTag );
                     }
                 }
+
                 setTimeout( function() {
                     MsgManager.msgAreaClear();
                 }, 500 );
@@ -128,15 +175,15 @@ function BlockList( cwsRenderObj, blockObj )
         // Anchor for clickable header info
         var anchorTag = $( '<a class="expandable" ' + itemAttrStr + '></a>' );
 
-        var dateTimeStr = $.format.date( itemData.created, "dd MMM yyyy - hh:MM a");
+        var dateTimeStr = $.format.date( itemData.created, " yy-MM-dd HH:mm ");
 
         var dateTimeTag = $( '<div class="icon-row"><img src="img/act.svg">' + dateTimeStr + '</div>' );
         var expandArrowTag = $( '<div class="icon-arrow"><img class="expandable-arrow" src="img/arrow_down.svg"></div>' );
-        var statusSecDivTag = $( '<div class="icons-status"><small class="statusName" style="color: #7dd11f;">{status}</small><small class="statusIcon"><img src="img/open.svg"></small><small  class="syncIcon"><img src="img/sync.svg"></small><small  class="errorIcon"><img src="img/alert.svg"></small></div>' );
-        var voucherTag = $( '<div class="act-r"><small><b>ZW12 cc</b> - eVoucher</small></div>' );
+        //var statusSecDivTag = $( '<div class="icons-status"><small class="statusName" style="color: #7dd11f;">{status}</small><small class="statusIcon"><img src="img/open.svg"></small><small  class="syncIcon"><img src="img/sync.svg"></small><small  class="errorIcon"><img src="img/alert.svg"></small></div>' );
+        var statusSecDivTag = $( '<div class="icons-status"><small  class="syncIcon"><img src="img/sync.svg"></small><small  class="errorIcon"><img src="img/alert.svg"></small></div>' );
+        var voucherTag = $( '<div class="act-r"><small><b>'+itemData.data.payloadJson.voucherCode+'</b> - eVoucher</small></div>' ); //FormUtil.dcdConfig.countryCode : country code not necessary to 99.9% of health workers
 
         anchorTag.append( dateTimeTag, expandArrowTag, statusSecDivTag, voucherTag );
-
 
         // Content that gets collapsed/expanded 
         var contentDivTag = $( '<div class="act-l" ' + itemAttrStr + ' style="position: relative; background-color: beige;"></div>' );
@@ -181,29 +228,29 @@ function BlockList( cwsRenderObj, blockObj )
                 <small class="statusIcon"><img src="img/open.svg"></small>
         */
 
-        var smallStatusNameTag = statusSecDivTag.find( 'small.statusName' );
-        var imgStatusIconTag = statusSecDivTag.find( 'small.statusIcon img' );
+        //var smallStatusNameTag = statusSecDivTag.find( 'small.statusName' );
+        //var imgStatusIconTag = statusSecDivTag.find( 'small.statusIcon img' );
         var imgSyncIconTag = statusSecDivTag.find( 'small.syncIcon img' );
         var imgErrIconTag = statusSecDivTag.find( 'small.errorIcon img' );
 
         if ( itemData.status === me.status_redeem_submit )
         {
-            smallStatusNameTag.text( 'submitted' ).css( 'color', '#e48825' ); // Redeemed?
-            imgStatusIconTag.attr( 'src', 'img/lock.svg' );
+            //smallStatusNameTag.text( 'submitted' ).css( 'color', '#e48825' ); // Redeemed?
+            //imgStatusIconTag.attr( 'src', 'img/lock.svg' );
             imgSyncIconTag.attr ( 'src', 'img/sync.svg' );
             imgErrIconTag.css ( 'visibility', 'hidden' );
         }
         else if ( itemData.status === me.status_redeem_failed )
         {
-            smallStatusNameTag.text( 'invalid' ).css( 'color', '#e48825' ); //Invalid?
-            imgStatusIconTag.attr( 'src', 'img/lock.svg' );
+            //smallStatusNameTag.text( 'invalid' ).css( 'color', '#e48825' ); //Invalid?
+            //imgStatusIconTag.attr( 'src', 'img/lock.svg' );
             imgSyncIconTag.attr ( 'src', 'img/sync-n.svg' );
             imgErrIconTag.css ( 'visibility', 'visible' );
         }
         else
         {
-            smallStatusNameTag.text( 'open' ).css( 'color', '#787878' ); //Unmatched?
-            imgStatusIconTag.attr( 'src', 'img/open.svg' );
+            //smallStatusNameTag.text( 'open' ).css( 'color', '#787878' ); //Unmatched?
+            //imgStatusIconTag.attr( 'src', 'img/open.svg' );
             imgSyncIconTag.attr ( 'src', 'img/sync-n.svg' );
             imgErrIconTag.css ( 'visibility', 'hidden' );
 
@@ -238,8 +285,11 @@ function BlockList( cwsRenderObj, blockObj )
             imgSyncIconTag.click( function(e) {
 
                 var mySyncIcon = $( this );
+                var dtmRedeemAttempt = (new Date() ).toISOString();
 
                 mySyncIcon.rotate({ count:999, forceJS: true, startDeg: true });
+
+                itemData.lastAttempt = dtmRedeemAttempt;
 
                 //$(this).parent().parent().parent().siblings().html( 'Connecting...' );
                 var myTag = mySyncIcon.parent().parent().parent().siblings();
@@ -267,8 +317,11 @@ function BlockList( cwsRenderObj, blockObj )
 
                         mySyncIcon.stop();
 
+                        var dtmRedeemDate = (new Date() ).toISOString();
+
                         if ( success )
                         {
+                            itemData.redeemDate = dtmRedeemDate;
                             itemData.status = me.status_redeem_submit;
                             itemData.returnJson = returnJson;
                             myTag.html( 'Success' );
@@ -510,7 +563,7 @@ function BlockList( cwsRenderObj, blockObj )
 
     me.setFloatingListMenuIconEvents = function( iconTag, SubIconListTag )
 	{
-		FormUtil.setClickSwitchEvent( iconTag, SubIconListTag, [ 'on', 'off' ] );		
+		FormUtil.setClickSwitchEvent( iconTag, SubIconListTag, [ 'on', 'off' ], me.cwsRenderObj );		
 	}
 
 	// =============================================

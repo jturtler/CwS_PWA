@@ -61,11 +61,15 @@
   function appInfoOperation( returnFunc ) 
   {
 
-    // Only online mode, check the version diff.
-    if ( ConnManager.getAppConnMode_Online() )
+    // Only online mode and by app.psi-mis.org, check the version diff.
+    if ( ConnManager.getAppConnMode_Online() && FormUtil.isAppsPsiServer() )
     {
-      // TODO: Need to do 'loading..' or display message about retrieving version
-      FormUtil.getAppInfo( function( success, jsonData ) {
+      
+      FormMsgManager.appBlock( "Loading App Data..." );
+
+      FormUtil.getAppInfo( function( success, jsonData ) 
+      {
+        FormMsgManager.appUnblock();
 
         if ( jsonData )
         {
@@ -88,14 +92,18 @@
 
   };
 
-  function appVersionCheckAndReload( version ) {
 
+  function appVersionCheckAndReload( version ) 
+  {
     var latestVersionStr = ( version ) ? version : '';
 
     // compare the version..  true if online version (retrieved one) is higher..
     if ( _ver < latestVersionStr )
     {
       if ( confirm( 'Version Outdated. ' + _ver + ' --> ' + latestVersionStr + '  Do you want to update App?' ) ) {
+
+        FormMsgManager.appBlock( "Regetting version and restarting the app..." );
+
         $( '.reget' ).click();
       } else {
         console.log( 'Using old version.  This app version: ' + _ver + ', latestVersion: ' + latestVersionStr );
@@ -131,9 +139,12 @@
 
   function connStatTagUpdate( bOnline ) {
 
-    var imgSrc = ( bOnline ) ? 'images/online.jpg': 'images/offline.jpg';
+    var imgSrc = ( bOnline ) ? 'images/online.svg': 'images/offline.svg';
+    var imgBg = ( bOnline ) ? '#33FF00': '#C0C0C0';
 
     $( '#imgNetworkStatus' ).attr( 'src', imgSrc );
+    $( '#divNetworkStatus' ).css( 'background-color', imgBg );
+    $( '#divNetworkStatus' ).css( 'display', 'block' );
 
     //console.log( '=== Network Online: ' + bOnline );
   };
@@ -145,6 +156,7 @@
       .register('./service-worker.js')
       .then(function( registration ) 
       { 
+        _cwsRenderObj.setRegistrationObject( registration ); //added by Greg (2018/12/13)
         _registrationObj = registration;
         console.log('Service Worker Registered'); 
       });

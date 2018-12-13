@@ -57,6 +57,7 @@ function BlockButton( cwsRenderObj, blockObj )
 			else
 			{
 				// Normal Block case..
+				console.log( 'Normal Block case..' );
 			}
 
 
@@ -147,7 +148,18 @@ function BlockButton( cwsRenderObj, blockObj )
 
 		if ( btnJson !== undefined )
 		{
-			if ( btnJson.buttonType === 'imageButton' )
+			if ( btnJson.buttonType === 'radioButton' )
+			{
+				/*if ( me.blockObj.blockType === FormUtil.blockType_MainTabContent )
+				{
+					btnTag = $( '<div class="tb-content-buttom ">' + btnJson.defaultLabel + '</div>' );
+				}
+				else*/
+				{
+					btnTag = $( '<div style="padding:14px;" class=""><input type="radio" class="stayLoggedIn" style="width: 1.4em; height: 1.4em;"><span style="vertical-align: top; margin-left: 5px; ">'+btnJson.defaultLabel+'</span></div>' );
+				}
+			}
+			else if ( btnJson.buttonType === 'imageButton' )
 			{
 				// NEW - added 'tabs' style..
 				if ( me.blockObj.blockType === FormUtil.blockType_MainTab )
@@ -156,9 +168,9 @@ function BlockButton( cwsRenderObj, blockObj )
 					var liTabTag = divTag.find( 'ul.tabs li[tabId="' + btnNo + '"]' );
 					var aContentTag = divTag.find( 'ul.tab_content li[tabId="' + btnNo + '"] a.expandable' );
 
-					liTabTag.append( '<img src="' + btnJson.imageSrc + '" class="tab-image"><label>' + btnJson.defaultLabel + '</label>' );
-					aContentTag.append( '<div class="icon-row"><img src="' + btnJson.imageSrc + '">' + btnJson.defaultLabel + '</div>' );
-					aContentTag.append( '<div class="icon-arrow"><img class="expandable-arrow" src="img/arrow_down.svg"></div>' );
+					liTabTag.append( $('<img src="' + btnJson.imageSrc + '" class="tab-image"><label>' + btnJson.defaultLabel + '</label>' ) );
+					aContentTag.append( $('<div class="icon-row"><img src="' + btnJson.imageSrc + '">' + btnJson.defaultLabel + '</div>') );
+					aContentTag.append( $('<div class="icon-arrow"><img class="expandable-arrow" src="img/arrow_down.svg"></div>') );
 
 					// In 'li' vs 'anchor' click action sync, 'anchor' is the main one called - 'FormUtil.setUpTabAnchorUI( tag )'
 					// Thus, set 'anchor' as the main tag..
@@ -177,9 +189,14 @@ function BlockButton( cwsRenderObj, blockObj )
 				}
 				else
 				{
-					btnTag = $( '<button class="btnType ' + btnJson.buttonType + '">' + btnJson.defaultLabel + '</button>' );
+					btnTag = $( '<button ranid="' + Util.generateRandomId() + '" class="tb-content-buttom ' + btnJson.buttonType + '" btnNo="' + btnNo + '">' + btnJson.defaultLabel + '</button>' );
 				}
-			}	
+			}
+			else if ( btnJson.buttonType === 'listRightImg' )
+			{
+				btnTag = $( '<img src="' + btnJson.img + '" style="cursor: pointer;" ranid="' + Util.generateRandomId() + '" class="btnType ' + btnJson.buttonType + '" btnNo="' + btnNo + '">' );
+				//btnTag = $( '<img src="' + btnJson.img + '" class="rotate90 ' + btnJson.buttonType + '" style="cursor: pointer;">' );
+			}
 		}
 
 		if ( btnTag === undefined )
@@ -195,26 +212,57 @@ function BlockButton( cwsRenderObj, blockObj )
 	{
 		if ( btnJson && btnTag )
 		{
+
 			if ( btnJson.onClick !== undefined )
-			{			
+			{
 				btnTag.click( function() {
-	
-					me.blockObj.actionObj.handleClickActions( btnTag, btnJson.onClick );
-	
-					console.log( 'button clicked' );
+
+					// display 'loading' image in place of click-img (assuming content will be replaced by new block)
+					if ( btnJson.buttonType === 'listRightImg' )
+					{
+						var loadingTag = $( '<div class="loadingImg" style="display: inline-block; margin-left: 8px;"><img src="images/loading.gif"></div>' );
+						btnTag.hide();
+						btnTag.parent().append( loadingTag );
+					} 
+
+					me.blockObj.actionObj.handleClickActions( $( this ), btnJson.onClick );
+
 				});
 			}
 			else if( btnJson.onClickItem !== undefined )
 			{
 				btnTag.click( function() {
-					var idx = btnTag.closest("itemBlock").attr("idx");
-					me.blockObj.actionObj.handleItemClickActions( btnTag, btnJson.onClickItem, idx, passedData );
+
+					// display 'loading' image in place of click-img (assuming content will be replaced by new block)
+					if ( btnJson.buttonType === 'listRightImg' )
+					{
+						var parentDiv = btnTag.parent().parent().parent().parent().parent()[0];
+
+						for( var i = 0; i < parentDiv.children.length; i++ )
+						{
+							let tbl = parentDiv.children[i];
+
+							if ( tbl != btnTag.parent().parent().parent().parent()[0] )
+							{
+								$( tbl ).css('opacity','0.5');
+							}
+
+						}
+
+						var loadingTag = $( '<div class="loadingImg" style="display: inline-block; margin-left: 8px;"><img src="images/loading.gif"></div>' );
+						btnTag.hide();
+						btnTag.parent().append( loadingTag );
+					} 
+
+					var idx = $( this ).closest(".itemBlock").attr("idx");
+					me.blockObj.actionObj.handleItemClickActions( $( this ), btnJson.onClickItem, idx, passedData );
+
 				});
 			}	
 		}
 	}
 
-		
+
 	me.renderBlockTabContent = function( liContentTag, onClick )
 	{
 		if ( onClick && onClick.length > 0 )

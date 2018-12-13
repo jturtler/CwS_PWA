@@ -8,10 +8,12 @@ function Login( cwsRenderObj )
 
 	me.loginFormDivTag = $( "#loginFormDiv" );
 	me.pageDivTag = $( "#pageDiv" );	// Get it from cwsRender object?
-	me.menuTopDivTag = $( '#menuTopDiv' );
+	me.menuTopDivTag; // = $( '#menuTopDiv' ); //edited by Greg (2018/12/10)
 
 	me.loggedInDivTag = $( '#loggedInDiv' );
 	me.spanOuNameTag = $( '#spanOuName' );
+	me.pageTitleDivTab = $( 'div.logo-desc-all' );
+
 
 
   // Greg added: 2018/11/23 -- below 3 lines
@@ -87,27 +89,6 @@ function Login( cwsRenderObj )
 		});
 	}
 
-
-	/*me.setSkipLoginBtnClick = function()
-	{
-		$( '#skipLoginDiv' ).click( function() {
-	
-			ConfigUtil.getDsConfigJson( me.cwsRenderObj.dsConfigLoc, function( configDataFile ) {
-
-				// Create fake 'loginData'?
-				var loginData = {};
-				loginData.orgUnitData = {};
-				loginData.orgUnitData.userName = "SKIP";
-				loginData.orgUnitData.ouName = "SKIP LOGIN - with Cached/Offline config";
-				
-				loginData.dcdConfig = configDataFile;
-
-				me.loginSuccessProcess( loginData );
-			});	
-
-		} );	
-	}*/
-
 	me.setloginBtnClearClick = function()
 	{
 		$( '.loginBtnClear' ).click( function() {
@@ -141,11 +122,20 @@ function Login( cwsRenderObj )
 
 	me.openForm = function()
 	{
-		//me.loginFormDivTag.dialog( "open" );	
 		me.pageDivTag.hide();		
 		me.loginFormDivTag.show( 'fast' );
-		me.menuTopDivTag.hide();
-		me.spanOuNameTag.text( '[Login]' ).attr( 'title', '' );
+
+		/* START > Added by Greg (2018/12/10) */
+		var divIcon = $( 'div.logo_top' );
+		divIcon.html( $( '<img src="img/logo_top.svg">' ) );
+		/*if ( me.cwsRenderObj.manifest )
+		{
+			me.pageTitleDivTab.show();
+			me.pageTitleDivTab.html ( JSON.parse(me.cwsRenderObj.manifest).short_name );
+		}*/
+		me.pageTitleDivTab.show();
+		me.pageTitleDivTab.html ( 'CONNECT' );
+		/* END > Added by Greg (2018/12/10) */
 
 	}
 
@@ -153,9 +143,8 @@ function Login( cwsRenderObj )
 	{
 		me.loginFormDivTag.hide();
 		me.pageDivTag.show( 'fast' );
-		me.menuTopDivTag.show();
+		me.configureMobileMenuIcon( $( '#menuDiv' ) );
 	}
-
 
 	me.processLogin = function( userName, password, server, btnTag )
 	{
@@ -222,23 +211,25 @@ function Login( cwsRenderObj )
 	{		
 
 		me.closeForm();
+		me.pageTitleDivTab.hide(); 
 
 		// Set Logged in orgUnit info
 		if ( loginData.orgUnitData )
 		{
 			me.loggedInDivTag.show();
+			me.spanOuNameTag.show();
 			me.spanOuNameTag.text( '[' + loginData.orgUnitData.userName + ']' ).attr( 'title', loginData.orgUnitData.ouName );	
 		} 
 
 		// Load config and continue the CWS App process
 		if ( loginData.dcdConfig ) 
 		{
+			FormUtil.dcdConfig = loginData.dcdConfig; 
 			// call CWS start with this config data..
 			me.cwsRenderObj.startWithConfigLoad( loginData.dcdConfig );
 		}
 
-		/* create/edit 'session' information block  */
-		/* START > added by Greg: 2018/11/23  */
+
 		var dtmNow = ( new Date() ).toISOString();
 
 		// if session data exists, update the lastUpdated date else create new session data
@@ -254,49 +245,13 @@ function Login( cwsRenderObj )
 			var newSaveObj = Object.assign( {} , loginData);
 
 			newSaveObj.mySession = { createdDate: dtmNow, lastUpdated: dtmNow, server: FormUtil.login_server, pin: me._pHash, stayLoggedIn: me._staySignedIn };
-			//newSaveObj.about = {  };
 
-			DataManager.saveData( me._userName, newSaveObj );	
+			DataManager.saveData( me._userName, newSaveObj );
+
+			FormUtil.dcdConfig = newSaveObj.dcdConfig; 
 		}
-		/* END > added by Greg: 2018/11/23  */
-
-
-		/* START > Greg added: 2018/12/06 */
-		$( '.floatListMenuSubIcons' ).empty();
-		//me.floatListMenuSubIconsTag.empty();
-
-		if ( loginData && loginData.dcdConfig && loginData.dcdConfig.favActionList )
-		{
-			for ( var f = 0; f < loginData.dcdConfig.favActionList.length; f++ )
-			{
-				favIcon = loginData.dcdConfig.favActionList[f];
-
-				me.createFavIconButton( favIcon, f );		
-			}
-		}
-		/* END > Greg added: 2018/12/06 */
 
 	}
-
-	/* START > Greg added: 2018/12/06 */
-	me.createFavIconButton = function( favIcon, f )
-	{
-
-		$.get( location.pathname +'img/'+ favIcon.img, function(data) {
-			//var unqID = Util.generateRandomId();
-			var divTag = $( '<div id="'+f+'" class="iconClicker pointer" />');
-			var svg = ( $(data)[0].documentElement );
-
-			$(svg).find("tspan").html(favIcon.name) 
-			$(divTag).on("click", function() {  alert ('thank you for clicking here' + favIcon.name)  } );
-
-			divTag.append( svg );
-
-			$( '.floatListMenuSubIcons' ).append( divTag );
-		});
-
-	}
-	/* END > Greg added: 2018/12/06 */
 
 	// --------------------------------------
 	
@@ -331,6 +286,32 @@ function Login( cwsRenderObj )
 			}			
 		});		
 	};
+
+	/* START > Greg added: 2018/12/10 */
+	me.configureMobileMenuIcon = function(targetDiv)
+	{
+		var destArea = $( 'div.headerLogo');
+
+		if ( destArea )
+		{
+			destArea.empty();
+
+			var dvContain = $( '<div id="menuTopDiv"></div>' );
+			var dvMenuObj = $( '<div id="menu_e"></div>' );
+			var imgMenuObj = $( '<img src="img/menu_icon.svg" style="margin: 0px;" >' );
+
+			destArea.append ( dvContain );
+			dvContain.append ( dvMenuObj );
+			dvMenuObj.append ( imgMenuObj );
+
+			cwsRenderObj.menuAppMenuIconTag = dvContain;
+
+			FormUtil.setClickSwitchEvent( dvContain, targetDiv, [ 'open', 'close' ], cwsRenderObj );
+
+		}
+
+	}
+	/* END > Greg added: 2018/12/10 */
 
 	// ================================
 

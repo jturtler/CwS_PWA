@@ -28,8 +28,6 @@ RESTUtil.retrieveJson = function( url, returnFunc )
 
 RESTUtil.performREST = function( url, payloadData, returnFunc )
 {
-    //console.log ( payloadData );
-
     fetch( url, payloadData )
     .then( response => {
         if ( response.ok ) return response.json();

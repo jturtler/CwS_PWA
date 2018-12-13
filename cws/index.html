@@ -16,6 +16,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="CwS">
     <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
+    
     <!-- Windows -->
     <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
     <meta name="msapplication-TileColor" content="#2F3BA2">
@@ -30,7 +31,7 @@
     <script type="text/javascript" src="scripts/libraries/jquery-dateformat.min.js"></script>
 
 
-    <script> var _ver = '1.0.20'; </script>
+    <script> var _ver = '1.0.22'; </script>
 
 
     <link rel="manifest" href="manifest.json">
@@ -47,21 +48,21 @@
 
   <nav class="bg-color-program">
       <div class='logo_top nav_child headerLogo'>
-        <img src='img/logo_top.svg'>
+        
       </div>
       <div class='logo_desc nav_child'>
         <div>
-          <div class="logo-desc-all">Service provision</div>
+          <div class="logo-desc-all" style='font-weight: 600;font-size: 18pt;position: relative;top: 10px;left: 4px;'></div>
         </div>
         <div>
-          <div style="display: inline-block;"><img src='img/net.svg' class="tab-image"></div>
-          <div id="loggedInDiv" style="display: inline-block; cursor: pointer;">
-            <span id="spanOuName" style="font-style: italic; color: darkseagreen;"></span>
+          <div style="display: none"><img src='img/net.svg' class="tab-image"></div>
+          <div id="loggedInDiv" style="display: none; cursor: pointer;">
+            <span id="spanOuName" style="color: darkseagreen;font-size: 18pt;position: relative; top: 9px;">[LogIn]</span>
           </div>      
         </div>
       </div>
 
-      <div id="pwa_tools" style="float: right; margin-right: 2px; margin-top: 5px;">
+      <div id="pwa_tools" style="float: right; margin-right: 3px; margin-top: 5px;">
         <table class="topIconsTbl" style="border-spacing: 0px;">
           <tr>
             <td>
@@ -70,8 +71,8 @@
                 </div>
             </td>
             <td>
-                <div id="swRefresh" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;">
-                    <img src='images/reload.png' style="width: 12px; height: 12px; vertical-align: bottom; margin-bottom: 0px;"/>
+                <div id="swRefresh" class="reget" title="reGet" style="font-size: 12px; cursor:pointer;display:none;">
+                    <img src='images/reload.png' style="width: 12px; height: 12px; vertical-align: bottom; margin-bottom: 0px;display:none;"/>
                 </div>
             </td>
             <td>          
@@ -80,14 +81,13 @@
               </div>   
             </td>
             <td>
-              <div id="divAppModeConnStatus" style="cursor:pointer;"><span id="appModeConnStatus" connStat="" style="font-size: 11px;"></span></div>
+              <div id="divAppModeConnStatus" style="cursor:pointer;"><span id="appModeConnStatus" connStat="" style="font-size: 11px;display:none;"></span></div>
             </td>
             <td>
-              <div id="divNetworkStatus"><img id="imgNetworkStatus" src='images/blank.gif' style="width: 10px; height: 10px; vertical-align: bottom; margin-bottom: 2px;border-radius:8px"/></div>
+              <div id="divNetworkStatus" style="padding: 3px;display: none;"><img id="imgNetworkStatus" src='images/offline.svg' style="width: 36px;height: 36px;vertical-align: bottom;margin-bottom: 2px;border-radius: 14px;opacity: 0.95;"/></div>
             </td>
-            <td>
+            <!-- <td>
               <div id="menuTopDiv">
-                <!-- fully expanded menu displayed on top?  No good?-->
                 <div class='m_top'>
                   <label id='menu_2' class="lab_m" for="">Menu 1</label>
                   <label id='menu_3' class="lab_m" for="">Menu 2</label>
@@ -97,7 +97,7 @@
                   <img src='img/menu_icon.svg' style="margin: -15px;">
                 </div>
               </div>        
-            </td>
+            </td> -->
           </tr>
         </table>
       </div>
@@ -109,7 +109,7 @@
         
     <div id="divMsgAreaWrap">
       <div id="divMsgArea" style="display:none;">
-        <span id="spanMsgAreaText">greg was here</span>
+        <span id="spanMsgAreaText"></span>
         <span id="spanMsgAreaClose">
           <img src="images/hide.png" title="Close" id="btnMsgAreaClose">
         </span>
@@ -131,12 +131,12 @@
           <ul class="tabs">
             <li tabId="1" class="active">
               <img src='img/key.svg' class="tab-image">
-              <label> Simple options</label>
+              <label> Login </label>
             </li>
-            <li tabId="2">
+            <!-- <li tabId="2">
               <img src='img/settings.svg' class="tab-image">
               <label> Advanced options(X)</label>
-            </li>
+            </li> -->
           </ul>
       
 
@@ -144,7 +144,7 @@
             <ul class="tab_content">
               <li tabId="1" class="active">
                 <a class="expandable expanded" id="s-opt">
-                  <div class="icon-row"><img src="img/key.svg"> Simple options</div>
+                  <div class="icon-row"><img src="img/key.svg"> Login </div>
                   <div class="icon-arrow"><img class="expandable-arrow" src="img/arrow_down.svg"></div>
                 </a>
                 <div>
@@ -169,7 +169,7 @@
                   </ul>
                 </div>
               </li>
-              <li tabId="2">
+              <li tabId="2" style="display:none;">
                 <a class="expandable" id="a-opt">
                   <div class="icon-row"><img src="img/settings.svg"> Advanced options</div>
                   <div class="icon-arrow"><img class="expandable-arrow" src="img/arrow_down.svg"></div>
@@ -212,7 +212,14 @@
       <!-- ABOUT FORM DIV -->
       <div id="aboutFormDiv" style="display:none;">
           <div id="aboutContentDiv" class="aboutListDiv" style="padding: 15px;" >
-              testing contents...
+            <table id="" class="" style="">
+              <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+              </tr>
+            </table>
+
           </div>
       </div>
 
@@ -253,9 +260,7 @@
         </div>
 
         <div class="floatListMenuSubIcons fixed_child">
-          <img class="pointer" src="img/request.svg">
-          <img class="pointer" src="img/contact.svg">
-          <img class="pointer" src="img/service.svg">
+
         </div>
         
       </div>
@@ -265,12 +270,15 @@
  
     <script type="text/javascript" src="scripts/utils/util.js"></script>
     <script type="text/javascript" src="scripts/utils/msgManager.js"></script>
+    <script type="text/javascript" src="scripts/utils/formMsgManager.js"></script>
     <script type="text/javascript" src="scripts/utils/restUtil.js"></script>
     <script type="text/javascript" src="scripts/utils/connManager.js"></script>
     <script type="text/javascript" src="scripts/utils/dataManager.js"></script>
     <script type="text/javascript" src="scripts/utils/formUtil.js"></script>
     <script type="text/javascript" src="scripts/utils/configUtil.js"></script>
 
+    <script type="text/javascript" src="scripts/classes/aboutApp.js"></script>	
+    <script type="text/javascript" src="scripts/classes/favIcon.js"></script>	
     <script type="text/javascript" src="scripts/classes/validation.js"></script>	
     <script type="text/javascript" src="scripts/classes/login.js"></script>
     <script type="text/javascript" src="scripts/classes/action.js"></script>

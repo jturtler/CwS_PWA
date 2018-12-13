@@ -14,6 +14,7 @@ FormUtil.dcdConfig;
 FormUtil.blockType_MainTab = 'mainTab';
 FormUtil.blockType_MainTabContent = 'mainTabContent';
 FormUtil._serverUrl = location.protocol + '//' + location.host;
+
 // 'https://apps.psi-mis.org';  <-- white listing try
 
 // ==== Methods ======================
@@ -52,6 +53,11 @@ FormUtil.getServerUrl = function()
 	
 };
 
+FormUtil.isAppsPsiServer = function()
+{
+	return ( location.host.indexOf( 'apps.psi-mis.org' ) >= 0 );
+}
+
 FormUtil.generateUrl = function( inputsJson, actionJson )
 {
 	var url;
@@ -89,35 +95,72 @@ FormUtil.generateUrl = function( inputsJson, actionJson )
 }
 
 
-FormUtil.generateInputJson = function( formDivSecTag )
+FormUtil.generateInputJson = function( formDivSecTag, getValList )
 {
 	// Input Tag values
 	var inputsJson = {};
-
 	var inputTags = formDivSecTag.find( 'input,select' );
 
 	inputTags.each( function()
-	{
+	{		
 		var inputTag = $(this);	
 		var attrDisplay = inputTag.attr( 'display' );
+		var nameVal = inputTag.attr( 'name' );
+		var getVal_visible = false;
 		var getVal = false;
 
-		if ( attrDisplay === 'hiddenVal' ) getVal = true;
-		else if ( inputTag.is( ':visible' ) ) getVal = true;
+		if ( attrDisplay === 'hiddenVal' ) getVal_visible = true;
+		else if ( inputTag.is( ':visible' ) ) getVal_visible = true;
+
+		if ( getVal_visible )
+		{
+			// Check if the submit var list exists (from config).  If so, only items on that list are added.
+			if ( getValList === undefined )
+			{			
+				getVal = true;
+			}
+			else
+			{
+				if ( getValList.indexOf( nameVal ) >= 0 ) getVal = true;
+			}
+		}
 
 		if ( getVal )
 		{
-			var val = inputTag.val();
-
+			var val = FormUtil.getTagVal( inputTag );
 			if ( val === null || val === undefined ) val = '';
 
-			var nameVal = inputTag.attr( 'name' );
 			inputsJson[ nameVal ] = val;
 		}
 	});		
 
 	return inputsJson;
 }
+
+// Temp use by 'dataList' for now - might populate it fully for more common use
+FormUtil.renderInputTag = function( dataJson, containerDivTag )
+{
+	var entryTag = $( '<input name="' + dataJson.id + '" uid="' + dataJson.uid + '" class="form-type-text" type="text" />' );
+	entryTag.attr( 'display', dataJson.display );
+
+	// If 'defaultValue' exists, set val
+	FormUtil.setTagVal( entryTag, dataJson.defaultValue );
+	
+	// If containerDivTag was passed in, append to it.
+	if ( containerDivTag )
+	{
+		containerDivTag.append( entryTag );
+
+		// Set Tag Visibility
+		if ( dataJson.display === "hiddenVal" || dataJson.display === "none" )
+		{
+			containerDivTag.hide();
+		}
+	}
+
+	return entryTag;
+}
+
 
 FormUtil.generateLoadingTag = function( btnTag )
 {
@@ -256,7 +299,7 @@ FormUtil.wsSubmitGeneral = function( url, payloadJson, loadingTag, returnFunc )
 }
 
 
-FormUtil.setClickSwitchEvent = function( mainIconTag, subListIconsTag, openCloseClass )
+FormUtil.setClickSwitchEvent = function( mainIconTag, subListIconsTag, openCloseClass, cwsRenderObj )
 {
 	mainIconTag.on('click', function( event )
 	{
@@ -278,6 +321,10 @@ FormUtil.setClickSwitchEvent = function( mainIconTag, subListIconsTag, openClose
 			thisTag.removeClass( className_Close );
 			thisTag.addClass( className_Open );
 			subListIconsTag.show();
+
+			//console.log(cwsRenderObj.favIconsObj);
+			//cwsRender.favIconsObj.setFavIconClickTarget
+
 		} 
 	});	
 }
@@ -481,7 +528,6 @@ FormUtil.setTagVal = function( tag, val, returnFunc )
 	}
 }
 
-
 FormUtil.getTagVal = function( tag )
 {
 	var val;
@@ -501,50 +547,63 @@ FormUtil.getTagVal = function( tag )
 	return val;
 }
 
-/* START > Added by Greg: 2018/12/04 */
-FormUtil.getAboutInfo = function()
+/* START > Added by Greg: 2018/12/10 */
+FormUtil.getManifest = function()	
 {
-	var userConfig = JSON.parse( localStorage.getItem( JSON.parse( localStorage.getItem('session') ).user ) );
-	var retObj = {};
-	var aboutApp = [];
-	var aboutSession = [];
-	var aboutBrowser = [];
-
-	aboutApp.push ( { name: 'appName', value: 'CwS: ' +$( 'div.logo-desc-all' ).html() } );
-	aboutApp.push ( { name: 'appVersion', value: $( '#spanVersion' ).html() } );
-	aboutApp.push ( { name: 'urlName', value: FormUtil.appUrlName } );
-	aboutApp.push ( { name: 'staticWSName', value: FormUtil.staticWSName } );
-
-	retObj.about = ( aboutApp );
-
-	/*for ( keyObj in navigator )
-	{
-		if ( !( typeof navigator[keyObj]  === 'object' ) && !( typeof navigator[keyObj]  === 'function' ) && !( navigator[keyObj] == '' ) )
+	$.get( location.pathname +'manifest.json', function( jsonData, status )
 		{
-			aboutBrowser.push ( { name: keyObj, value: navigator[keyObj] } );
+			if ( status == 'success' )
+			{
+				return jsonData
+			}
+
+		}
+	);
+
+}
+/* END > Added by Greg: 2018/12/10 */
+
+/* START > Added by Greg: 2018/12/103 */
+
+FormUtil.setLastPayload = function( jsonData )
+{
+
+	var sessionData = localStorage.getItem('session');
+
+	if ( sessionData )
+	{
+
+		var SessionObj = JSON.parse( sessionData );
+		//var payload = JSON.stringify( jsonData );
+
+		if ( SessionObj.last && SessionObj.last.payload )
+		{
+			SessionObj.last.payload = jsonData;
+		}
+		else
+		{
+			SessionObj.last = { 'payload': jsonData };
 		}
 
-		retObj.browser = ( aboutBrowser );
+		localStorage.setItem( 'session', JSON.stringify( SessionObj ) );
 
-	}*/
-
-	aboutBrowser.push ( { name: 'platform', value: navigator.platform } );
-	aboutBrowser.push ( { name: 'appVersion', value: navigator.appVersion } );
-	aboutBrowser.push ( { name: 'language', value: navigator.language } );
-	aboutBrowser.push ( { name: 'userAgent', value: navigator.userAgent } );
-
-	retObj.device_browser = ( aboutBrowser );
-
-	aboutSession.push ( { name: 'dcdVersion', value: userConfig.dcdConfig.version } );
-	aboutSession.push ( { name: 'dcdCountryCode', value: userConfig.dcdConfig.countryCode } );
-	aboutSession.push ( { name: 'dataServer', value: userConfig.orgUnitData.dhisServer } );
-	aboutSession.push ( { name: 'currentUser', value: FormUtil.login_UserName } );
-	aboutSession.push ( { name: 'authenticateServer', value: FormUtil.login_server } );
-	aboutSession.push ( { name: 'dateCreation', value: userConfig.mySession.createdDate } );
-	aboutSession.push ( { name: 'dateUpdated', value: userConfig.mySession.lastUpdated } );
-
-	retObj.advanced = ( aboutSession );
-
-	return retObj;
+	}
 }
-/* END > Added by Greg: 2018/12/04 */
+
+FormUtil.getLastPayload = function()
+{
+	var sessionData = localStorage.getItem('session');
+
+	if ( sessionData )
+	{
+		var SessionObj = JSON.parse( sessionData );
+
+		if ( SessionObj.last && SessionObj.last.payload )
+		{
+			return SessionObj.last.payload;
+		}
+
+	}
+}
+
+/* END > Added by Greg: 2018/12/13 */
